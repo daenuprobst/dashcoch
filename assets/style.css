@@ -1,0 +1,16 @@
+html,
+body {
+  background-color: #ecf0f1;
+}
+
+.Select-control {
+  background-color: #fff !important;
+}
+
+.Select-value-label {
+  color: #222 !important;
+}
+
+.Select-value-icon {
+  color: #e74c3c !important;
+}
