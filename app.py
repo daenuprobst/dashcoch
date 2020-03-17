@@ -96,7 +96,10 @@ app.layout = html.Div(
                     for i, canton in enumerate(data)
                     if canton != "Date"
                 ],
-                "layout": {"title": "Cases per Canton", "height": 750},
+                "layout": {
+                    "title": "Cases per Canton (per 10,000 Inhabitants)",
+                    "height": 750,
+                },
             },
         ),
         html.H1(children="Raw Data"),
