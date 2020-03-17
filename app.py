@@ -3,6 +3,7 @@ import dash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
@@ -65,44 +66,29 @@ app.title = "Swiss COVID19 Tracker"
 # Show the data
 app.layout = html.Div(
     children=[
-        html.H1(children="COVID19 Cases Switzerland"),
-        dcc.Graph(
-            id="case_graph",
-            figure={
-                "data": [
-                    {
-                        "x": data["Date"],
-                        "y": data[canton],
-                        "name": canton,
-                        "marker": {"color": colors[i - 1]},
-                    }
-                    for i, canton in enumerate(data)
-                    if canton != "Date"
-                ],
-                "layout": {"title": "Cases per Canton", "height": 750},
-            },
+        html.H3(children="COVID19 Cases Switzerland"),
+        dcc.RadioItems(
+            id="radio-scale",
+            options=[
+                {"label": "Linear Scale", "value": "linear"},
+                {"label": "Logarithmic Scale", "value": "log"},
+            ],
+            value="linear",
+            labelStyle={"display": "inline-block"},
         ),
-        html.H1(children="COVID19 Cases Switzerland per 10,000 Inhabitants"),
-        dcc.Graph(
-            id="case_pc_graph",
-            figure={
-                "data": [
-                    {
-                        "x": data_norm["Date"],
-                        "y": data_norm[canton],
-                        "name": canton,
-                        "marker": {"color": colors[i - 1]},
-                    }
-                    for i, canton in enumerate(data)
-                    if canton != "Date"
-                ],
-                "layout": {
-                    "title": "Cases per Canton (per 10,000 Inhabitants)",
-                    "height": 750,
-                },
-            },
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-graph")]
+                ),
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-pc-graph"),],
+                ),
+            ],
         ),
-        html.H1(children="Raw Data"),
+        html.Div(children=[dcc.Graph(id="case-ch-graph")]),
+        html.H4(children="Raw Data"),
         dash_table.DataTable(
             id="table",
             columns=[{"name": i, "id": i} for i in df.columns],
@@ -111,6 +97,70 @@ app.layout = html.Div(
     ]
 )
 
+# Callbacks
+@app.callback(Output("case-graph", "figure"), [Input("radio-scale", "value")])
+def update_case_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data["Date"],
+                "y": data[canton],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+            }
+            for i, canton in enumerate(data)
+            if canton != "Date" and canton != "CH"
+        ],
+        "layout": {
+            "title": "Cases per Canton",
+            "height": 750,
+            "yaxis": {"type": selected_scale},
+        },
+    }
+
+
+@app.callback(Output("case-pc-graph", "figure"), [Input("radio-scale", "value")])
+def update_case_pc_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data_norm["Date"],
+                "y": data_norm[canton],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+            }
+            for i, canton in enumerate(data)
+            if canton != "Date" and canton != "CH"
+        ],
+        "layout": {
+            "title": "Cases per Canton (per 10,000 Inhabitants)",
+            "height": 750,
+            "yaxis": {"type": selected_scale},
+        },
+    }
+
+
+@app.callback(Output("case-ch-graph", "figure"), [Input("radio-scale", "value")])
+def update_case_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data["Date"],
+                "y": data[canton],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+            }
+            for i, canton in enumerate(data)
+            if canton != "Date" and canton == "CH"
+        ],
+        "layout": {
+            "title": "Total Cases Switzerland",
+            "height": 300,
+            "yaxis": {"type": selected_scale},
+        },
+    }
+
+
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(debug=True)
 
