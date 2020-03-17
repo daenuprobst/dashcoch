@@ -162,5 +162,5 @@ def update_case_ch_graph(selected_scale):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server()
 
