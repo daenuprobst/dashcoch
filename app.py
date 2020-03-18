@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import geojson
 import dash
 import dash_table
 import dash_core_components as dcc
@@ -7,6 +8,7 @@ from dash.dependencies import Input, Output
 import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+
 
 #
 # Get the data
@@ -23,6 +25,11 @@ df_demo = pd.read_csv(url_demo, error_bad_lines=False, index_col=0)
 df_map = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv"
 )
+
+#
+# Load boundaries for the cantons
+#
+canton_boundaries = geojson.load(open("assets/switzerland.geojson", "r"))
 
 #
 # Centres of cantons
@@ -117,6 +124,25 @@ colors = [
     "#000000",
 ]
 
+color_scale = [
+    "#f2fffb",
+    "#bbffeb",
+    "#98ffe0",
+    "#79ffd6",
+    "#6df0c8",
+    "#69e7c0",
+    "#59dab2",
+    "#45d0a5",
+    "#31c194",
+    "#2bb489",
+    "#25a27b",
+    "#1e906d",
+    "#188463",
+    "#157658",
+    "#11684d",
+    "#10523e",
+]
+
 theme = {"background": "#252e3f", "foreground": "#2cfec1", "accent": "#7fafdf"}
 
 #
@@ -168,6 +194,21 @@ app.layout = html.Div(
         ),
         html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
         html.Br(),
+        html.H4(children="Data for Switzerland", style={"color": theme["accent"]}),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-ch-graph")]
+                ),
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="case-ch-graph-pred")],
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(children="Data per Canton", style={"color": theme["accent"]}),
         html.Div(
             id="plot-settings-container",
             children=[
@@ -199,21 +240,6 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(children="Data for Switzerland", style={"color": theme["accent"]}),
-        html.Div(
-            className="row",
-            children=[
-                html.Div(
-                    className="six columns", children=[dcc.Graph(id="case-ch-graph")]
-                ),
-                html.Div(
-                    className="six columns",
-                    children=[dcc.Graph(id="case-ch-graph-pred")],
-                ),
-            ],
-        ),
-        html.Br(),
-        html.H4(children="Data per Canton", style={"color": theme["accent"]}),
         html.Div(
             className="row",
             children=[
@@ -264,6 +290,20 @@ app.layout = html.Div(
 )
 def update_graph_map(selected_date_index):
     date = df["Date"].iloc[selected_date_index]
+    layers = []
+
+    for canton in centres_cantons:
+        layers.append(
+            {
+                "below": "traces",
+                "sourcetype": "geojson",
+                "source": "/assets/switzerland.geojson",
+                "type": "fill",
+                "color": color_scale[len(color_scale) - 1],
+                "opacity": 0.5,
+                "fill": {"outlinecolor": color_scale[12]},
+            }
+        )
 
     return {
         "data": [
@@ -284,14 +324,14 @@ def update_graph_map(selected_date_index):
                 "textfont": {
                     "family": "sans serif",
                     "size": 18,
-                    "color": theme["foreground"],
+                    "color": "white",
                     "weight": "bold",
                 },
             }
         ],
         "layout": {
             "mapbox": {
-                "layers": [],
+                "layers": layers,
                 "accesstoken": "pk.eyJ1IjoiZGFlbnVwcm9ic3QiLCJhIjoiY2s3eDR2dmRyMDg0ajN0cDlkaDNmM3J0NyJ9.tcJPFQkbsVGlWpyQaKPtiw",
                 "style": "mapbox://styles/plotlymapbox/cjvprkf3t1kns1cqjxuxmwixz",
                 "center": {"lat": 46.8181877, "lon": 8.2275124},
@@ -486,9 +526,9 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=5000,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )
 
