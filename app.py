@@ -213,7 +213,7 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(children="Data per Canton", style={"color": theme["accent"]}),
+        html.H4(children="Data per Canton (Interpolated)", style={"color": theme["accent"]}),
         html.Div(
             className="row",
             children=[
@@ -227,7 +227,7 @@ app.layout = html.Div(
         ),
         html.Br(),
         html.H4(
-            children="Interpolated and Predicted Data", style={"color": theme["accent"]}
+            children="Data per Canton (Interpolated and Predicted)", style={"color": theme["accent"]}
         ),
         html.Div(
             className="row",
@@ -321,7 +321,7 @@ def update_case_graph(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton",
+            "title": "Cases per Canton (Real)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -349,7 +349,7 @@ def update_case_pc_graph(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton (per 10,000 Inhabitants)",
+            "title": "Cases per Canton per 10,000 Inhabitants (Real)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -361,13 +361,13 @@ def update_case_pc_graph(selected_cantons, selected_scale):
 
 
 #
-# Total cases Switzerland
+# Total cases Switzerland (real)
 #
 @app.callback(
     Output("case-ch-graph", "figure"), [Input("radio-scale", "value")],
 )
 def update_case_ch_graph(selected_scale):
-    return {
+    trace = {
         "data": [
             {
                 "x": data["Date"],
@@ -375,12 +375,14 @@ def update_case_ch_graph(selected_scale):
                 "name": canton,
                 "marker": {"color": theme["foreground"]},
                 "type": "bar",
+                "text": data[canton],
+                "textposition": "auto",
             }
             for i, canton in enumerate(data)
             if canton != "Date" and canton == "CH"
         ],
         "layout": {
-            "title": "Total Cases Switzerland",
+            "title": "Total Cases Switzerland (Real)",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -388,7 +390,8 @@ def update_case_ch_graph(selected_scale):
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
-    }
+    }   
+    return trace
 
 
 #
@@ -398,7 +401,7 @@ def update_case_ch_graph(selected_scale):
     Output("case-ch-graph-pred", "figure"), [Input("radio-scale", "value")],
 )
 def update_case_ch_graph_pred(selected_scale):
-    return {
+    trace = {
         "data": [
             {
                 "x": data_pred["Date"],
@@ -406,12 +409,14 @@ def update_case_ch_graph_pred(selected_scale):
                 "name": canton,
                 "marker": {"color": theme["foreground"]},
                 "type": "bar",
+                "text": data_pred[canton],
+                "textposition": "auto",                
             }
             for i, canton in enumerate(data)
             if canton != "Date" and canton == "CH"
         ],
         "layout": {
-            "title": "Predicted Total Cases Switzerland",
+            "title": "Total Cases Switzerland (Predicted)",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -420,6 +425,7 @@ def update_case_ch_graph_pred(selected_scale):
             "font": {"color": theme["foreground"]},
         },
     }
+    return trace
 
 
 #
@@ -442,7 +448,7 @@ def update_case_graph_pred(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton",
+            "title": "Cases per Canton (Predicted)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -473,7 +479,7 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton (per 10,000 Inhabitants)",
+            "title": "Cases per Canton per 10,000 Inhabitants (Predicted)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
@@ -486,9 +492,9 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=5000,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=5000,
+        dev_tools_hot_reload_max_retry=30,
     )
 
