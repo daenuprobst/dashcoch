@@ -127,8 +127,10 @@ app.layout = html.Div(
                     id="description",
                     children=[
                         dcc.Markdown(
-                            """
-                        Number of COVID-19 Cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). Please direct any criticism or ideas to me. The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
+                        """
+                        Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). 
+                        Please direct any criticism or ideas to me.
+                        The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
                         """
                         )
                     ],
@@ -183,6 +185,24 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
+        html.H4(
+            children="Data for Switzerland", style={"color": theme["accent"]}
+        ),        
+        html.Div(
+            className="row",
+            children=[        
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-ch-graph")]
+                ),
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-ch-graph-pred")]
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(
+            children="Data per Canton", style={"color": theme["accent"]}
+        ),
         html.Div(
             className="row",
             children=[
@@ -195,7 +215,6 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.Div(children=[dcc.Graph(id="case-ch-graph")]),
         html.H4(
             children="Interpolated and Predicted Data", style={"color": theme["accent"]}
         ),
@@ -226,7 +245,9 @@ app.layout = html.Div(
     ],
 )
 
+# -------------------------------------------------------------------------------
 # Callbacks
+# -------------------------------------------------------------------------------
 @app.callback(
     Output("graph-map", "figure"), [Input("slider-date", "value")],
 )
@@ -291,7 +312,8 @@ def update_case_graph(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton",
             "height": 750,
-            "yaxis": {"type": selected_scale},
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
@@ -318,14 +340,77 @@ def update_case_pc_graph(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
-            "yaxis": {"type": selected_scale},
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
 
+#
+# Total cases Switzerland
+#
+@app.callback(
+    Output("case-ch-graph", "figure"), [Input("radio-scale", "value")],
+)
+def update_case_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data["Date"],
+                "y": data[canton],
+                "name": canton,
+                "marker": {"color": theme["foreground"]},
+                "type": "bar"
+            }
+            for i, canton in enumerate(data)
+            if canton != "Date" and canton == "CH"
+        ],
+        "layout": {
+            "title": "Total Cases Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},            
+            "plot_bgcolor": theme["background"],
+            "paper_bgcolor": theme["background"],
+            "font": {"color": theme["foreground"]},
+        },
+    }
 
+#
+# Total cases Switzerland (prediction)
+#
+@app.callback(
+    Output("case-ch-graph-pred", "figure"), [Input("radio-scale", "value")],
+)
+def update_case_ch_graph_pred(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data_pred["Date"],
+                "y": data_pred[canton],
+                "name": canton,
+                "marker": {"color": theme["foreground"]},
+                "type": "bar"
+            }
+            for i, canton in enumerate(data)
+            if canton != "Date" and canton == "CH"
+        ],
+        "layout": {
+            "title": "Predicted Total Cases Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "plot_bgcolor": theme["background"],
+            "paper_bgcolor": theme["background"],
+            "font": {"color": theme["foreground"]},
+        },
+    }
+
+#
+# Predictions: cases per canton
+#
 @app.callback(
     Output("case-graph-pred", "figure"),
     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
@@ -345,14 +430,17 @@ def update_case_graph_pred(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton",
             "height": 750,
-            "yaxis": {"type": selected_scale},
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
 
-
+#
+# Predictions: cases per canton (per 10'000 inhabitants)
+#
 @app.callback(
     Output("case-pc-graph-pred", "figure"),
     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
@@ -372,40 +460,18 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
-            "yaxis": {"type": selected_scale},
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
-
-
-@app.callback(
-    Output("case-ch-graph", "figure"), [Input("radio-scale", "value")],
-)
-def update_case_ch_graph(selected_scale):
-    return {
-        "data": [
-            {
-                "x": data["Date"],
-                "y": data[canton],
-                "name": canton,
-                "marker": {"color": theme["foreground"]},
-            }
-            for i, canton in enumerate(data)
-            if canton != "Date" and canton == "CH"
-        ],
-        "layout": {
-            "title": "Total Cases Switzerland",
-            "height": 300,
-            "yaxis": {"type": selected_scale},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
-        },
-    }
-
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    app.run_server(
+        debug=False,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=5000,
+        dev_tools_hot_reload_max_retry=30)
 
