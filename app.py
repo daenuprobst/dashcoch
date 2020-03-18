@@ -29,8 +29,8 @@ df_map = pd.read_csv(
 #
 centres_cantons = {
     "AG": {"lat": 47.40966, "lon": 8.15688},
-    "AR": {"lat": 47.366352, "lon": 9.36791},
-    "AI": {"lat": 47.317264, "lon": 9.416754},
+    "AR": {"lat": 47.366352 + 0.05, "lon": 9.36791},
+    "AI": {"lat": 47.317264, "lon": 9.416754 + 0.15},
     "BL": {"lat": 47.45176, "lon": 7.702414},
     "BS": {"lat": 47.564869, "lon": 7.615259},
     "BE": {"lat": 46.823608, "lon": 7.636667},
@@ -42,7 +42,7 @@ centres_cantons = {
     "LU": {"lat": 47.067763, "lon": 8.1102},
     "NE": {"lat": 46.995534, "lon": 6.780126},
     "NW": {"lat": 46.926755, "lon": 8.405302},
-    "OW": {"lat": 46.854527, "lon": 8.244317},
+    "OW": {"lat": 46.854527 - 0.05, "lon": 8.244317 - 0.1},
     "SH": {"lat": 47.71357, "lon": 8.59167},
     "SZ": {"lat": 47.061787, "lon": 8.756585},
     "SO": {"lat": 47.304135, "lon": 7.639388},
@@ -144,6 +144,7 @@ app.layout = html.Div(
                         Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). 
                         Please direct any criticism or ideas to me.
                         The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
+                        The scripts for generating the predictions are [available on Kaggle](https://www.kaggle.com/daenuprobst/covid-19-cases-in-switzerland-per-canton).
                         """
                         )
                     ],
@@ -485,9 +486,9 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=False,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=5000,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=5000,
+        # dev_tools_hot_reload_max_retry=30,
     )
 
