@@ -241,11 +241,11 @@ def update_graph_map(selected_date_index):
                 "text": [
                     # I know, I know it's hacky, but checking for nans is always ugly in Python and I can't be
                     # bothered to import numpy just for this
-                    n.replace(".0", "")
+                    n.replace(".0", "").replace("nan", "?")
                     for n in [
-                        str(df_by_date[canton][date]) for canton in centres_cantons
+                        canton + ": " + str(df_by_date[canton][date])
+                        for canton in centres_cantons
                     ]
-                    if n != "nan"
                 ],
                 "mode": "text",
                 "type": "scattermapbox",
