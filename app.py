@@ -407,7 +407,7 @@ def update_case_ch_graph_pred(selected_scale):
                 "x": data_pred["Date"],
                 "y": data_pred[canton],
                 "name": canton,
-                "marker": {"color": "#ffffff"},
+                "marker": {"color": theme["foreground"]},
                 "type": "bar",
                 "text": data_pred[canton],
                 "textposition": "auto",                
