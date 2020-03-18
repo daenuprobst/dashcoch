@@ -8,7 +8,9 @@ import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
+#
 # Get the data
+#
 url = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland.csv"
 df = pd.read_csv(url, error_bad_lines=False)
 
@@ -22,11 +24,13 @@ df_map = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv"
 )
 
+#
 # Centres of cantons
+#
 centres_cantons = {
     "AG": {"lat": 47.40966, "lon": 8.15688},
-    "AR": {"lat": 47.366352, "lon": 9.36791},
-    "AI": {"lat": 47.317264, "lon": 9.416754},
+    "AR": {"lat": 47.366352 + 0.05, "lon": 9.36791},
+    "AI": {"lat": 47.317264, "lon": 9.416754 + 0.15},
     "BL": {"lat": 47.45176, "lon": 7.702414},
     "BS": {"lat": 47.564869, "lon": 7.615259},
     "BE": {"lat": 46.823608, "lon": 7.636667},
@@ -38,7 +42,7 @@ centres_cantons = {
     "LU": {"lat": 47.067763, "lon": 8.1102},
     "NE": {"lat": 46.995534, "lon": 6.780126},
     "NW": {"lat": 46.926755, "lon": 8.405302},
-    "OW": {"lat": 46.854527, "lon": 8.244317},
+    "OW": {"lat": 46.854527 - 0.05, "lon": 8.244317 - 0.1},
     "SH": {"lat": 47.71357, "lon": 8.59167},
     "SZ": {"lat": 47.061787, "lon": 8.756585},
     "SO": {"lat": 47.304135, "lon": 7.639388},
@@ -52,7 +56,9 @@ centres_cantons = {
     "ZH": {"lat": 47.41275, "lon": 8.65508},
 }
 
+#
 # Wrangle the data
+#
 df_by_date = df.set_index("Date")
 data = df.to_dict("list")
 canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
@@ -65,7 +71,9 @@ data_norm = {
 }
 data_norm["Date"] = data["Date"]
 
+#
 # The predicted data
+#
 data_pred = df_pred.to_dict("list")
 data_pred_norm = {
     str(canton): [
@@ -76,7 +84,9 @@ data_pred_norm = {
 }
 data_pred_norm["Date"] = data_pred["Date"]
 
+#
 # Some nice differentiable colors for the cantons + CH
+#
 colors = [
     "#4bafd5",
     "#d65723",
@@ -109,13 +119,16 @@ colors = [
 
 theme = {"background": "#252e3f", "foreground": "#2cfec1", "accent": "#7fafdf"}
 
-
+#
 # General app settings
+#
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title = "Swiss COVID19 Tracker"
 
+#
 # Show the data
+#
 app.layout = html.Div(
     id="main",
     children=[
@@ -127,10 +140,11 @@ app.layout = html.Div(
                     id="description",
                     children=[
                         dcc.Markdown(
-                        """
+                            """
                         Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). 
                         Please direct any criticism or ideas to me.
                         The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
+                        The scripts for generating the predictions are [available on Kaggle](https://www.kaggle.com/daenuprobst/covid-19-cases-in-switzerland-per-canton).
                         """
                         )
                     ],
@@ -185,24 +199,21 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(
-            children="Data for Switzerland", style={"color": theme["accent"]}
-        ),        
+        html.H4(children="Data for Switzerland", style={"color": theme["accent"]}),
         html.Div(
             className="row",
-            children=[        
+            children=[
                 html.Div(
                     className="six columns", children=[dcc.Graph(id="case-ch-graph")]
                 ),
                 html.Div(
-                    className="six columns", children=[dcc.Graph(id="case-ch-graph-pred")]
+                    className="six columns",
+                    children=[dcc.Graph(id="case-ch-graph-pred")],
                 ),
             ],
         ),
         html.Br(),
-        html.H4(
-            children="Data per Canton", style={"color": theme["accent"]}
-        ),
+        html.H4(children="Data per Canton", style={"color": theme["accent"]}),
         html.Div(
             className="row",
             children=[
@@ -313,7 +324,7 @@ def update_case_graph(selected_cantons, selected_scale):
             "title": "Cases per Canton",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
@@ -341,12 +352,13 @@ def update_case_pc_graph(selected_cantons, selected_scale):
             "title": "Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
+
 
 #
 # Total cases Switzerland
@@ -362,7 +374,7 @@ def update_case_ch_graph(selected_scale):
                 "y": data[canton],
                 "name": canton,
                 "marker": {"color": theme["foreground"]},
-                "type": "bar"
+                "type": "bar",
             }
             for i, canton in enumerate(data)
             if canton != "Date" and canton == "CH"
@@ -371,12 +383,13 @@ def update_case_ch_graph(selected_scale):
             "title": "Total Cases Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},            
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
+
 
 #
 # Total cases Switzerland (prediction)
@@ -392,7 +405,7 @@ def update_case_ch_graph_pred(selected_scale):
                 "y": data_pred[canton],
                 "name": canton,
                 "marker": {"color": theme["foreground"]},
-                "type": "bar"
+                "type": "bar",
             }
             for i, canton in enumerate(data)
             if canton != "Date" and canton == "CH"
@@ -401,12 +414,13 @@ def update_case_ch_graph_pred(selected_scale):
             "title": "Predicted Total Cases Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
+
 
 #
 # Predictions: cases per canton
@@ -431,12 +445,13 @@ def update_case_graph_pred(selected_cantons, selected_scale):
             "title": "Cases per Canton",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
+
 
 #
 # Predictions: cases per canton (per 10'000 inhabitants)
@@ -461,17 +476,19 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
             "title": "Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},    
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
         },
     }
 
+
 if __name__ == "__main__":
     app.run_server(
-        debug=False,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=5000,
-        dev_tools_hot_reload_max_retry=30)
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=5000,
+        # dev_tools_hot_reload_max_retry=30,
+    )
 
