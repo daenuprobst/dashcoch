@@ -384,7 +384,7 @@ def update_case_ch_graph(selected_scale):
         "layout": {
             "title": "Total Cases Switzerland (Real)",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "tickangle": "-45"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
@@ -400,14 +400,14 @@ def update_case_ch_graph(selected_scale):
 @app.callback(
     Output("case-ch-graph-pred", "figure"), [Input("radio-scale", "value")],
 )
-def update_case_ch_graph_pred(selected_scale):
+def update_case_ch_graph_pred(selected_scale):   
     trace = {
         "data": [
             {
                 "x": data_pred["Date"],
                 "y": data_pred[canton],
                 "name": canton,
-                "marker": {"color": theme["foreground"]},
+                "marker": {"color": "#ffffff"},
                 "type": "bar",
                 "text": data_pred[canton],
                 "textposition": "auto",                
@@ -418,7 +418,7 @@ def update_case_ch_graph_pred(selected_scale):
         "layout": {
             "title": "Total Cases Switzerland (Predicted)",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "tickangle": "-45"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
@@ -492,9 +492,9 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=5000,
-        dev_tools_hot_reload_max_retry=30,
+        #debug=True,
+        #dev_tools_hot_reload=True,
+        #dev_tools_hot_reload_interval=5000,
+        #dev_tools_hot_reload_max_retry=30,
     )
 
