@@ -67,6 +67,15 @@ centres_cantons = {
 # Wrangle the data
 #
 df_by_date = df.set_index("Date")
+cantons_updated_today = [
+    canton
+    for canton in df_by_date.iloc[len(df_by_date) - 1][
+        df_by_date.iloc[len(df_by_date) - 1].notnull()
+    ].index
+]
+print(cantons_updated_today)
+df_by_date = df_by_date.fillna(method="ffill", axis=0)
+
 data = df.to_dict("list")
 canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
 data_norm = {
@@ -193,6 +202,12 @@ app.layout = html.Div(
             ],
         ),
         html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
+        html.Div(
+            children=[
+                "Cantons updated today: ",
+                html.Span(", ".join(cantons_updated_today)),
+            ]
+        ),
         html.Br(),
         html.H4(children="Data for Switzerland", style={"color": theme["accent"]}),
         html.Div(
@@ -290,6 +305,7 @@ app.layout = html.Div(
 )
 def update_graph_map(selected_date_index):
     date = df["Date"].iloc[selected_date_index]
+
     layers = []
 
     for canton in centres_cantons:
@@ -526,9 +542,9 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
 
