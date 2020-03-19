@@ -14,6 +14,7 @@ table td,
 table th {
   background-color: transparent !important;
   color: #2cfec1;
+  border: 1px solid #344158 !important;
 }
 
 table tr:hover {
@@ -38,6 +39,11 @@ table tr:hover {
   text-align: center;
   border: 1px solid #2cfec1;
   border-radius: 2px;
+}
+
+.dash-table-container {
+  padding: 10px;
+  background-color: #252e3f;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");

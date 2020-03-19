@@ -67,6 +67,8 @@ centres_cantons = {
 # Wrangle the data
 #
 df_by_date = df.set_index("Date")
+
+# Get the cantons that were updated today to display below the map
 cantons_updated_today = [
     canton
     for canton in df_by_date.iloc[len(df_by_date) - 1][
@@ -74,15 +76,17 @@ cantons_updated_today = [
     ].index
 ]
 
-total_new_today = df_by_date.diff().iloc[len(df_by_date) - 1].sum()
+cases_new = df_by_date.diff().iloc[len(df_by_date) - 1].sum()
 
+# Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
 
-total = (
+cases_total = (
     df_by_date.iloc[len(df_by_date) - 1].sum()
     - df_by_date.iloc[len(df_by_date) - 1]["CH"]
 )
 
+# Get the data in list form and normalize it
 data = df.to_dict("list")
 canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
 data_norm = {
@@ -204,7 +208,8 @@ app.layout = html.Div(
                             children=[
                                 html.P(className="total-title", children="Total Cases"),
                                 html.Div(
-                                    className="total-content", children=str(int(total)),
+                                    className="total-content",
+                                    children=str(int(cases_total)),
                                 ),
                             ],
                         ),
@@ -216,7 +221,7 @@ app.layout = html.Div(
                                 ),
                                 html.Div(
                                     className="total-content",
-                                    children="+" + str(int(total_new_today)),
+                                    children="+" + str(int(cases_new)),
                                 ),
                             ],
                         ),
