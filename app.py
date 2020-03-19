@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import date
 import geojson
 import dash
 import dash_table
@@ -8,7 +9,6 @@ from dash.dependencies import Input, Output
 import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
-
 
 #
 # Get the data
@@ -67,6 +67,7 @@ centres_cantons = {
 # Wrangle the data
 #
 df_by_date = df.set_index("Date")
+latest_date = df.iloc[len(df) - 1]["Date"]
 
 # Get the cantons that were updated today to display below the map
 cantons_updated_today = [
@@ -80,6 +81,10 @@ cases_new = (
     df_by_date.diff().iloc[len(df_by_date) - 1].sum()
     - df_by_date.diff().iloc[len(df_by_date) - 1]["CH"]
 )
+
+# If a new day starts and there is no info yet, show no new cases
+if date.fromisoformat(latest_date) != date.today():
+    cases_new = 0
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
