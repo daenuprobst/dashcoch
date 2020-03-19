@@ -83,8 +83,8 @@ cases_new = (
 )
 
 # If a new day starts and there is no info yet, show no new cases
-if date.fromisoformat(latest_date) != date.today():
-    cases_new = 0
+# if date.fromisoformat(latest_date) != date.today():
+#     cases_new = 0
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
