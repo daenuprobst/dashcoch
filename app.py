@@ -73,8 +73,15 @@ cantons_updated_today = [
         df_by_date.iloc[len(df_by_date) - 1].notnull()
     ].index
 ]
-print(cantons_updated_today)
+
+total_new_today = df_by_date.diff().iloc[len(df_by_date) - 1].sum()
+
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
+
+total = (
+    df_by_date.iloc[len(df_by_date) - 1].sum()
+    - df_by_date.iloc[len(df_by_date) - 1]["CH"]
+)
 
 data = df.to_dict("list")
 canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
@@ -186,6 +193,40 @@ app.layout = html.Div(
                 ),
             ],
         ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="twelve columns",
+                    children=[
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(className="total-title", children="Total Cases"),
+                                html.Div(
+                                    className="total-content", children=str(int(total)),
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(
+                                    className="total-title", children="New Cases Today"
+                                ),
+                                html.Div(
+                                    className="total-content",
+                                    children="+" + str(int(total_new_today)),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                html.Div(className="six columns"),
+                html.Div(className="six columns"),
+            ],
+        ),
+        html.Br(),
         html.Div(
             id="slider-container",
             children=[

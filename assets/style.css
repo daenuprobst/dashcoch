@@ -20,6 +20,26 @@ table tr:hover {
   background-color: #252e3f !important;
 }
 
+.total-container {
+  display: inline-block;
+  padding: 10px;
+  margin-right: 20px;
+  background-color: #252e3f;
+}
+
+.total-container .total-title {
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.total-container .total-content {
+  color: #2cfec1;
+  font-size: 2.5em;
+  text-align: center;
+  border: 1px solid #2cfec1;
+  border-radius: 2px;
+}
+
 @import url("https://fonts.googleapis.com/css?family=Open+Sans");
 @import url("https://fonts.googleapis.com/css?family=Playfair+Display");
 
