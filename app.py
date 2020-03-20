@@ -553,7 +553,7 @@ def update_case_ch_graph_pred(selected_scale):
             "xaxis": {
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Days Since >200 Cases",
+                "title": "Days Since Prevalence >0.4 per 10,000",
             },
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff",},
             "plot_bgcolor": theme["background"],
