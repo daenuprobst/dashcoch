@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import date
+from datetime import date, datetime
+from pytz import timezone
 import geojson
 import dash
 import dash_table
@@ -9,6 +10,7 @@ from dash.dependencies import Input, Output
 import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+
 
 #
 # Get the data
@@ -83,11 +85,17 @@ cases_new = (
 )
 
 # If a new day starts and there is no info yet, show no new cases
-# if date.fromisoformat(latest_date) != date.today():
-#     cases_new = 0
+if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
+    cases_new = 0
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
+df_by_date_pc = df_by_date.copy()
+print(df_demo["Population"]["AI"])
+for column in df_by_date_pc:
+    df_by_date_pc[column] = (
+        df_by_date_pc[column] / df_demo["Population"][column] * 10000
+    )
 
 cases_total = (
     df_by_date.iloc[len(df_by_date) - 1].sum()
@@ -481,19 +489,23 @@ def update_case_ch_graph(selected_scale):
         "data": [
             {
                 "x": data["Date"],
-                "y": data[canton],
-                "name": canton,
+                "y": data["CH"],
+                "name": "CH",
                 "marker": {"color": theme["foreground"]},
                 "type": "bar",
             }
-            for i, canton in enumerate(data)
-            if canton != "Date" and canton == "CH"
         ],
         "layout": {
             "title": "Total Cases Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "range": [0, max(max(data["CH"]), max(data_pred["CH"]))],
+            },
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
@@ -512,19 +524,22 @@ def update_case_ch_graph_pred(selected_scale):
         "data": [
             {
                 "x": data_pred["Date"],
-                "y": data_pred[canton],
-                "name": canton,
+                "y": data_pred["CH"],
+                "name": "CH",
                 "marker": {"color": theme["foreground"]},
                 "type": "bar",
             }
-            for i, canton in enumerate(data)
-            if canton != "Date" and canton == "CH"
         ],
         "layout": {
             "title": "Predicted Total Cases Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "range": [0, max(max(data["CH"]), max(data_pred["CH"]))],
+            },
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
@@ -596,9 +611,8 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )
-
