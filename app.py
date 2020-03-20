@@ -133,13 +133,11 @@ df_world.drop(
     inplace=True,
 )
 df_world.index = range(0, len(df_world))
-df_world[df_world < 200] = 0
+
 
 # Shift the data to the start (remove leading zeros in columns)
-for column in df_world:
-    while df_world[column].iloc[0] == 0:
-        df_world[column] = df_world[column].shift(-1)
-df_world.dropna(how="all", inplace=True)
+
+
 df_world["Switzerland"] = pd.Series(data["CH"])
 pop_world = {
     "France": 65273511,
@@ -151,6 +149,15 @@ pop_world = {
     "Switzerland": 8654622,
 }
 
+for column in df_world:
+    df_world[column] = df_world[column] / pop_world[column] * 10000
+# print(df_world)
+df_world[df_world < 0.4] = 0
+for column in df_world:
+    while df_world[column].iloc[0] == 0:
+        df_world[column] = df_world[column].shift(-1)
+df_world.dropna(how="all", inplace=True)
+# print(df_world)
 #
 # The predicted data
 #
@@ -532,7 +539,7 @@ def update_case_ch_graph_pred(selected_scale):
         "data": [
             {
                 "x": df_world.index.values,
-                "y": df_world[country] / pop_world[country] * 10000,
+                "y": df_world[country],
                 "name": country,
                 # "marker": {"color": theme["foreground"]},
                 # "type": "bar",
