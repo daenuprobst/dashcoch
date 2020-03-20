@@ -90,12 +90,11 @@ cases_new = (
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
-df_by_date_pc = df_by_date.copy()
-print(df_demo["Population"]["AI"])
-for column in df_by_date_pc:
-    df_by_date_pc[column] = (
-        df_by_date_pc[column] / df_demo["Population"][column] * 10000
-    )
+# df_by_date_pc = df_by_date.copy()
+# for column in df_by_date_pc:
+#     df_by_date_pc[column] = (
+#         df_by_date_pc[column] / df_demo["Population"][column] * 10000
+#     )
 
 cases_total = (
     df_by_date.iloc[len(df_by_date) - 1].sum()
