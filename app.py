@@ -39,13 +39,13 @@ canton_boundaries = geojson.load(open("assets/switzerland.geojson", "r"))
 centres_cantons = {
     "AG": {"lat": 47.40966, "lon": 8.15688},
     "AR": {"lat": 47.366352 + 0.05, "lon": 9.36791},
-    "AI": {"lat": 47.317264, "lon": 9.416754 + 0.15},
+    "AI": {"lat": 47.317264, "lon": 9.416754},
     "BL": {"lat": 47.45176, "lon": 7.702414},
     "BS": {"lat": 47.564869, "lon": 7.615259},
     "BE": {"lat": 46.823608, "lon": 7.636667},
     "FR": {"lat": 46.718391, "lon": 7.074008},
     "GE": {"lat": 46.220528, "lon": 6.132935},
-    "GL": {"lat": 46.981042, "lon": 9.065751},
+    "GL": {"lat": 46.981042 - 0.05, "lon": 9.065751},
     "GR": {"lat": 46.656248, "lon": 9.628198},
     "JU": {"lat": 47.350744, "lon": 7.156107},
     "LU": {"lat": 47.067763, "lon": 8.1102},
@@ -55,11 +55,11 @@ centres_cantons = {
     "SH": {"lat": 47.71357, "lon": 8.59167},
     "SZ": {"lat": 47.061787, "lon": 8.756585},
     "SO": {"lat": 47.304135, "lon": 7.639388},
-    "SG": {"lat": 47.2332, "lon": 9.274744},
+    "SG": {"lat": 47.2332 - 0.05, "lon": 9.274744},
     "TI": {"lat": 46.295617, "lon": 8.808924},
     "TG": {"lat": 47.568715, "lon": 9.091957},
     "UR": {"lat": 46.771849, "lon": 8.628586},
-    "VD": {"lat": 46.570091, "lon": 6.657809},
+    "VD": {"lat": 46.570091, "lon": 6.657809 - 0.1},
     "VS": {"lat": 46.209567, "lon": 7.604659},
     "ZG": {"lat": 47.157296, "lon": 8.537294},
     "ZH": {"lat": 47.41275, "lon": 8.65508},
@@ -85,8 +85,8 @@ cases_new = (
 )
 
 # If a new day starts and there is no info yet, show no new cases
-# if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
-#     cases_new = 0
+if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
+    cases_new = 0
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
@@ -130,32 +130,32 @@ data_pred_norm["Date"] = data_pred["Date"]
 # Some nice differentiable colors for the cantons + CH
 #
 colors = [
-    "#4bafd5",
-    "#d65723",
-    "#8a61d5",
-    "#69aa31",
-    "#d04dac",
-    "#55c160",
-    "#dc3d6f",
-    "#58c39a",
-    "#cd473d",
-    "#308b75",
-    "#88529e",
-    "#b0ba3b",
-    "#637fcb",
-    "#db9c30",
-    "#d18dd2",
-    "#3b7f3c",
-    "#a64b76",
-    "#a6ba70",
-    "#ab4a51",
-    "#769550",
-    "#e4828e",
-    "#8c8426",
-    "#e18a5f",
-    "#626524",
-    "#c7a05c",
-    "#995d2a",
+    "#7a8871",
+    "#a359e3",
+    "#91e63f",
+    "#dd47ba",
+    "#5ad358",
+    "#6e7edc",
+    "#d9dd3d",
+    "#c376bc",
+    "#a8cc5f",
+    "#d95479",
+    "#63de9f",
+    "#de4f37",
+    "#74deda",
+    "#dd892d",
+    "#71adcf",
+    "#dbbd59",
+    "#797ca6",
+    "#4e9648",
+    "#d4b7d8",
+    "#8a873d",
+    "#489889",
+    "#b1743d",
+    "#a8d5a2",
+    "#a87575",
+    "#d6cead",
+    "#e59780",
     "#000000",
 ]
 
@@ -260,6 +260,19 @@ app.layout = html.Div(
                     marks={i: d for i, d in enumerate(df["Date"])},
                     value=len(df["Date"]) - 1,
                 ),
+                html.Br(),
+                dcc.RadioItems(
+                    id="radio-prevalence",
+                    options=[
+                        {"label": "Number of Cases", "value": "number"},
+                        {"label": "Prevalence (per 10,000)", "value": "prevalence"},
+                    ],
+                    value="number",
+                    labelStyle={
+                        "display": "inline-block",
+                        "color": theme["foreground"],
+                    },
+                ),
             ],
         ),
         html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
@@ -328,6 +341,16 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="twelve columns",
+                    children=[dcc.Graph(id="case-graph-diff")],
+                ),
+            ],
+        ),
+        html.Br(),
         html.H4(
             children="Interpolated and Predicted Data", style={"color": theme["accent"]}
         ),
@@ -362,40 +385,30 @@ app.layout = html.Div(
 # Callbacks
 # -------------------------------------------------------------------------------
 @app.callback(
-    Output("graph-map", "figure"), [Input("slider-date", "value")],
+    Output("graph-map", "figure"),
+    [Input("slider-date", "value"), Input("radio-prevalence", "value")],
 )
-def update_graph_map(selected_date_index):
+def update_graph_map(selected_date_index, mode):
     date = df["Date"].iloc[selected_date_index]
 
-    layers = []
+    map_data = df_by_date
+    labels = [
+        canton + ": " + str(int(map_data[canton][date])) for canton in centres_cantons
+    ]
 
-    for canton in centres_cantons:
-        layers.append(
-            {
-                "below": "traces",
-                "sourcetype": "geojson",
-                "source": "/assets/switzerland.geojson",
-                "type": "fill",
-                "color": color_scale[len(color_scale) - 1],
-                "opacity": 0.5,
-                "fill": {"outlinecolor": color_scale[12]},
-            }
-        )
+    if mode == "prevalence":
+        map_data = df_by_date_pc
+        labels = [
+            canton + ": " + str(round((map_data[canton][date]), 1))
+            for canton in centres_cantons
+        ]
 
     return {
         "data": [
             {
                 "lat": [centres_cantons[canton]["lat"] for canton in centres_cantons],
                 "lon": [centres_cantons[canton]["lon"] for canton in centres_cantons],
-                "text": [
-                    # I know, I know it's hacky, but checking for nans is always ugly in Python and I can't be
-                    # bothered to import numpy just for this
-                    n.replace(".0", "").replace("nan", "?")
-                    for n in [
-                        canton + ": " + str(df_by_date[canton][date])
-                        for canton in centres_cantons
-                    ]
-                ],
+                "text": labels,
                 "mode": "text",
                 "type": "scattermapbox",
                 "textfont": {
@@ -404,11 +417,23 @@ def update_graph_map(selected_date_index):
                     "color": "white",
                     "weight": "bold",
                 },
-            }
+            },
+            {
+                "type": "choroplethmapbox",
+                "locations": canton_labels,
+                "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
+                "colorscale": [(0, "#7F2238"), (1, "#FF3867")],
+                "geojson": "/assets/switzerland.geojson",
+                "marker": {"line": {"width": 0.0, "color": "#08302A"}},
+                "colorbar": {
+                    "thickness": 10,
+                    "bgcolor": "#1f2630",
+                    "tickfont": {"color": "white"},
+                },
+            },
         ],
         "layout": {
             "mapbox": {
-                "layers": layers,
                 "accesstoken": "pk.eyJ1IjoiZGFlbnVwcm9ic3QiLCJhIjoiY2s3eDR2dmRyMDg0ajN0cDlkaDNmM3J0NyJ9.tcJPFQkbsVGlWpyQaKPtiw",
                 "style": "mapbox://styles/plotlymapbox/cjvprkf3t1kns1cqjxuxmwixz",
                 "center": {"lat": 46.8181877, "lon": 8.2275124},
@@ -417,62 +442,8 @@ def update_graph_map(selected_date_index):
             },
             "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
             "height": 600,
-        },
-    }
-
-
-@app.callback(
-    Output("case-graph", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
-)
-def update_case_graph(selected_cantons, selected_scale):
-    return {
-        "data": [
-            {
-                "x": data["Date"],
-                "y": data[canton],
-                "name": canton,
-                "marker": {"color": colors[i - 1]},
-            }
-            for i, canton in enumerate(data)
-            if canton in selected_cantons
-        ],
-        "layout": {
-            "title": "Cases per Canton",
-            "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
-        },
-    }
-
-
-@app.callback(
-    Output("case-pc-graph", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
-)
-def update_case_pc_graph(selected_cantons, selected_scale):
-    return {
-        "data": [
-            {
-                "x": data_norm["Date"],
-                "y": data_norm[canton],
-                "name": canton,
-                "marker": {"color": colors[i - 1]},
-            }
-            for i, canton in enumerate(data)
-            if canton in selected_cantons
-        ],
-        "layout": {
-            "title": "Cases per Canton (per 10,000 Inhabitants)",
-            "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": "#1f2630",
+            "paper_bgcolor": "#1f2630",
         },
     }
 
@@ -546,6 +517,92 @@ def update_case_ch_graph_pred(selected_scale):
     }
 
 
+@app.callback(
+    Output("case-graph", "figure"),
+    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+)
+def update_case_graph(selected_cantons, selected_scale):
+    return {
+        "data": [
+            {
+                "x": data["Date"],
+                "y": data[canton],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+            }
+            for i, canton in enumerate(data)
+            if canton in selected_cantons
+        ],
+        "layout": {
+            "title": "Cases per Canton",
+            "height": 750,
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "plot_bgcolor": theme["background"],
+            "paper_bgcolor": theme["background"],
+            "font": {"color": theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("case-pc-graph", "figure"),
+    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+)
+def update_case_pc_graph(selected_cantons, selected_scale):
+    return {
+        "data": [
+            {
+                "x": data_norm["Date"],
+                "y": data_norm[canton],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+            }
+            for i, canton in enumerate(data)
+            if canton in selected_cantons
+        ],
+        "layout": {
+            "title": "Cases per Canton (per 10,000 Inhabitants)",
+            "height": 750,
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "plot_bgcolor": theme["background"],
+            "paper_bgcolor": theme["background"],
+            "font": {"color": theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("case-graph-diff", "figure"),
+    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+)
+def update_case_graph_diff(selected_cantons, selected_scale):
+    return {
+        "data": [
+            {
+                "x": data["Date"],
+                "y": [0] + [j - i for i, j in zip(data[canton][:-1], data[canton][1:])],
+                "name": canton,
+                "marker": {"color": colors[i - 1]},
+                "type": "bar",
+            }
+            for i, canton in enumerate(data)
+            if canton in selected_cantons
+        ],
+        "layout": {
+            "title": "New Cases per Canton",
+            "height": 750,
+            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "plot_bgcolor": theme["background"],
+            "paper_bgcolor": theme["background"],
+            "font": {"color": theme["foreground"]},
+            "barmode": "stack",
+        },
+    }
+
+
 #
 # Predictions: cases per canton
 #
@@ -610,8 +667,8 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )
