@@ -85,8 +85,8 @@ cases_new = (
 )
 
 # If a new day starts and there is no info yet, show no new cases
-if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
-    cases_new = 0
+# if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
+#     cases_new = 0
 
 # Fill all the missing data by previously reported data
 df_by_date = df_by_date.fillna(method="ffill", axis=0)
@@ -611,8 +611,8 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
