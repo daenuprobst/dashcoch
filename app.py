@@ -28,6 +28,9 @@ df_map = pd.read_csv(
     "https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv"
 )
 
+url_world = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
+df_world = pd.read_csv(url_world)
+
 #
 # Load boundaries for the cantons
 #
@@ -112,6 +115,41 @@ data_norm = {
     if canton != "Date"
 }
 data_norm["Date"] = data["Date"]
+
+#
+# World data
+#
+df_world.drop(columns=["Lat", "Long"], inplace=True)
+df_world["Province/State"].fillna("", inplace=True)
+df_world = df_world.rename(columns={"Country/Region": "Day"})
+df_world = df_world.groupby("Day").sum()
+df_world = df_world.T
+
+df_world.drop(
+    df_world.columns.difference(
+        ["France", "Germany", "Italy", "Spain", "United Kingdom", "US"]
+    ),
+    1,
+    inplace=True,
+)
+df_world.index = range(0, len(df_world))
+df_world[df_world < 200] = 0
+
+# Shift the data to the start (remove leading zeros in columns)
+for column in df_world:
+    while df_world[column].iloc[0] == 0:
+        df_world[column] = df_world[column].shift(-1)
+df_world.dropna(how="all", inplace=True)
+df_world["Switzerland"] = pd.Series(data["CH"])
+pop_world = {
+    "France": 65273511,
+    "Germany": 83783942,
+    "Italy": 60461826,
+    "Spain": 46754778,
+    "US": 331002651,
+    "United Kingdom": 67886011,
+    "Switzerland": 8654622,
+}
 
 #
 # The predicted data
@@ -493,23 +531,24 @@ def update_case_ch_graph_pred(selected_scale):
     return {
         "data": [
             {
-                "x": data_pred["Date"],
-                "y": data_pred["CH"],
-                "name": "CH",
-                "marker": {"color": theme["foreground"]},
-                "type": "bar",
+                "x": df_world.index.values,
+                "y": df_world[country] / pop_world[country] * 10000,
+                "name": country,
+                # "marker": {"color": theme["foreground"]},
+                # "type": "bar",
             }
+            for country in df_world
+            if country != "Day"
         ],
         "layout": {
-            "title": "Predicted Total Cases Switzerland",
+            "title": "Prelavence per 10,000 Inhabitants",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {
-                "type": selected_scale,
+            "xaxis": {
                 "showgrid": True,
                 "color": "#ffffff",
-                "range": [0, max(max(data["CH"]), max(data_pred["CH"]))],
+                "title": "Days Since >200 Cases",
             },
+            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff",},
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
             "font": {"color": theme["foreground"]},
@@ -667,8 +706,8 @@ def update_case_pc_graph_pred(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
