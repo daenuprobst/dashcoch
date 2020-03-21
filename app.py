@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import math
 from datetime import date, datetime
 from pytz import timezone
 import geojson
@@ -18,6 +19,9 @@ external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 url = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland.csv"
 df = pd.read_csv(url, error_bad_lines=False)
 
+url_fatalities = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland.csv"
+df_fatalities = pd.read_csv(url_fatalities, error_bad_lines=False)
+
 url_pred = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/predicted.csv"
 df_pred = pd.read_csv(url_pred, error_bad_lines=False)
 
@@ -30,6 +34,9 @@ df_map = pd.read_csv(
 
 url_world = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
 df_world = pd.read_csv(url_world)
+
+url_world_fatalities = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
+df_world_fatalities = pd.read_csv(url_world_fatalities)
 
 #
 # Load boundaries for the cantons
@@ -72,6 +79,7 @@ centres_cantons = {
 # Wrangle the data
 #
 df_by_date = df.set_index("Date")
+df_fatalities_by_date = df_fatalities.set_index("Date")
 latest_date = df.iloc[len(df) - 1]["Date"]
 
 # Get the cantons that were updated today to display below the map
@@ -104,6 +112,12 @@ cases_total = (
     - df_by_date.iloc[len(df_by_date) - 1]["CH"]
 )
 
+fatalities_total = (
+    df_fatalities_by_date.iloc[len(df_fatalities_by_date) - 1].sum()
+    - df_fatalities_by_date.iloc[len(df_fatalities_by_date) - 1]["CH"]
+)
+
+
 # Get the data in list form and normalize it
 data = df.to_dict("list")
 canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
@@ -124,7 +138,6 @@ df_world["Province/State"].fillna("", inplace=True)
 df_world = df_world.rename(columns={"Country/Region": "Day"})
 df_world = df_world.groupby("Day").sum()
 df_world = df_world.T
-
 df_world.drop(
     df_world.columns.difference(
         ["France", "Germany", "Italy", "Spain", "United Kingdom", "US"]
@@ -132,12 +145,10 @@ df_world.drop(
     1,
     inplace=True,
 )
+
 df_world.index = range(0, len(df_world))
 
-
 # Shift the data to the start (remove leading zeros in columns)
-
-
 df_world["Switzerland"] = pd.Series(data["CH"])
 pop_world = {
     "France": 65273511,
@@ -151,13 +162,13 @@ pop_world = {
 
 for column in df_world:
     df_world[column] = df_world[column] / pop_world[column] * 10000
-# print(df_world)
+
 df_world[df_world < 0.4] = 0
 for column in df_world:
     while df_world[column].iloc[0] == 0:
         df_world[column] = df_world[column].shift(-1)
 df_world.dropna(how="all", inplace=True)
-# print(df_world)
+
 #
 # The predicted data
 #
@@ -285,6 +296,18 @@ app.layout = html.Div(
                                 ),
                             ],
                         ),
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(
+                                    className="total-title", children="Total Fatalities"
+                                ),
+                                html.Div(
+                                    className="total-content",
+                                    children=str(int(fatalities_total)),
+                                ),
+                            ],
+                        ),
                     ],
                 ),
                 html.Div(className="six columns"),
@@ -311,6 +334,7 @@ app.layout = html.Div(
                     options=[
                         {"label": "Number of Cases", "value": "number"},
                         {"label": "Prevalence (per 10,000)", "value": "prevalence"},
+                        {"label": "Number of Fatalities", "value": "fatalities"},
                     ],
                     value="number",
                     labelStyle={
@@ -337,10 +361,23 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     className="six columns",
-                    children=[dcc.Graph(id="case-ch-graph-pred")],
+                    children=[dcc.Graph(id="case-world-graph")],
                 ),
             ],
         ),
+        # html.Div(
+        #     className="row",
+        #     children=[
+        #         html.Div(
+        #             className="six columns",
+        #             children=[dcc.Graph(id="fatalities-ch-graph")],
+        #         ),
+        #         html.Div(
+        #             className="six columns",
+        #             children=[dcc.Graph(id="fatalities-world-graph")],
+        #         ),
+        #     ],
+        # ),
         html.Br(),
         html.H4(children="Data per Canton", style={"color": theme["accent"]}),
         html.Div(
@@ -396,21 +433,21 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(
-            children="Interpolated and Predicted Data", style={"color": theme["accent"]}
-        ),
-        html.Div(
-            className="row",
-            children=[
-                html.Div(
-                    className="six columns", children=[dcc.Graph(id="case-graph-pred")]
-                ),
-                html.Div(
-                    className="six columns",
-                    children=[dcc.Graph(id="case-pc-graph-pred"),],
-                ),
-            ],
-        ),
+        # html.H4(
+        #     children="Interpolated and Predicted Data", style={"color": theme["accent"]}
+        # ),
+        # html.Div(
+        #     className="row",
+        #     children=[
+        #         html.Div(
+        #             className="six columns", children=[dcc.Graph(id="case-graph-pred")]
+        #         ),
+        #         html.Div(
+        #             className="six columns",
+        #             children=[dcc.Graph(id="case-pc-graph-pred"),],
+        #         ),
+        #     ],
+        # ),
         html.H4(children="Raw Data", style={"color": theme["accent"]}),
         dash_table.DataTable(
             id="table",
@@ -445,6 +482,14 @@ def update_graph_map(selected_date_index, mode):
         map_data = df_by_date_pc
         labels = [
             canton + ": " + str(round((map_data[canton][date]), 1))
+            for canton in centres_cantons
+        ]
+    elif mode == "fatalities":
+        map_data = df_fatalities_by_date
+        labels = [
+            canton + ": " + str(int(map_data[canton][date]))
+            if not math.isnan(float(map_data[canton][date]))
+            else ""
             for canton in centres_cantons
         ]
 
@@ -519,7 +564,6 @@ def update_case_ch_graph(selected_scale):
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
-                "range": [0, max(max(data["CH"]), max(data_pred["CH"]))],
             },
             "plot_bgcolor": theme["background"],
             "paper_bgcolor": theme["background"],
@@ -528,13 +572,44 @@ def update_case_ch_graph(selected_scale):
     }
 
 
+# @app.callback(
+#     Output("fatalities-ch-graph", "figure"), [Input("radio-scale", "value")],
+# )
+# def update_fatalities_ch_graph(selected_scale):
+#     return {
+#         "data": [
+#             {
+#                 "x": df_fatalities["Date"],
+#                 "y": df_fatalities["CH"],
+#                 "name": "CH",
+#                 "marker": {"color": theme["foreground"]},
+#                 "type": "bar",
+#             }
+#         ],
+#         "layout": {
+#             "title": "Total Fatalities Switzerland",
+#             "height": 400,
+#             "xaxis": {"showgrid": True, "color": "#ffffff"},
+#             "yaxis": {
+#                 "type": selected_scale,
+#                 "showgrid": True,
+#                 "color": "#ffffff",
+#                 "rangemode": "tozero",
+#             },
+#             "plot_bgcolor": theme["background"],
+#             "paper_bgcolor": theme["background"],
+#             "font": {"color": theme["foreground"]},
+#         },
+#     }
+
+
 #
-# Total cases Switzerland (prediction)
+# Total cases world
 #
 @app.callback(
-    Output("case-ch-graph-pred", "figure"), [Input("radio-scale", "value")],
+    Output("case-world-graph", "figure"), [Input("radio-scale", "value")],
 )
-def update_case_ch_graph_pred(selected_scale):
+def update_case_world_graph(selected_scale):
     return {
         "data": [
             {
@@ -563,6 +638,9 @@ def update_case_ch_graph_pred(selected_scale):
     }
 
 
+#
+# Cantonal Data
+#
 @app.callback(
     Output("case-graph", "figure"),
     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
@@ -649,66 +727,66 @@ def update_case_graph_diff(selected_cantons, selected_scale):
     }
 
 
-#
-# Predictions: cases per canton
-#
-@app.callback(
-    Output("case-graph-pred", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
-)
-def update_case_graph_pred(selected_cantons, selected_scale):
-    return {
-        "data": [
-            {
-                "x": data_pred["Date"],
-                "y": data_pred[canton],
-                "name": canton,
-                "marker": {"color": colors[i - 1]},
-            }
-            for i, canton in enumerate(data_pred)
-            if canton in selected_cantons
-        ],
-        "layout": {
-            "title": "Cases per Canton",
-            "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
-        },
-    }
+# #
+# # Predictions: cases per canton
+# #
+# @app.callback(
+#     Output("case-graph-pred", "figure"),
+#     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+# )
+# def update_case_graph_pred(selected_cantons, selected_scale):
+#     return {
+#         "data": [
+#             {
+#                 "x": data_pred["Date"],
+#                 "y": data_pred[canton],
+#                 "name": canton,
+#                 "marker": {"color": colors[i - 1]},
+#             }
+#             for i, canton in enumerate(data_pred)
+#             if canton in selected_cantons
+#         ],
+#         "layout": {
+#             "title": "Cases per Canton",
+#             "height": 750,
+#             "xaxis": {"showgrid": True, "color": "#ffffff"},
+#             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+#             "plot_bgcolor": theme["background"],
+#             "paper_bgcolor": theme["background"],
+#             "font": {"color": theme["foreground"]},
+#         },
+#     }
 
 
-#
-# Predictions: cases per canton (per 10'000 inhabitants)
-#
-@app.callback(
-    Output("case-pc-graph-pred", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
-)
-def update_case_pc_graph_pred(selected_cantons, selected_scale):
-    return {
-        "data": [
-            {
-                "x": data_pred_norm["Date"],
-                "y": data_pred_norm[canton],
-                "name": canton,
-                "marker": {"color": colors[i - 1]},
-            }
-            for i, canton in enumerate(data_pred)
-            if canton in selected_cantons
-        ],
-        "layout": {
-            "title": "Cases per Canton (per 10,000 Inhabitants)",
-            "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
-        },
-    }
+# #
+# # Predictions: cases per canton (per 10'000 inhabitants)
+# #
+# @app.callback(
+#     Output("case-pc-graph-pred", "figure"),
+#     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+# )
+# def update_case_pc_graph_pred(selected_cantons, selected_scale):
+#     return {
+#         "data": [
+#             {
+#                 "x": data_pred_norm["Date"],
+#                 "y": data_pred_norm[canton],
+#                 "name": canton,
+#                 "marker": {"color": colors[i - 1]},
+#             }
+#             for i, canton in enumerate(data_pred)
+#             if canton in selected_cantons
+#         ],
+#         "layout": {
+#             "title": "Cases per Canton (per 10,000 Inhabitants)",
+#             "height": 750,
+#             "xaxis": {"showgrid": True, "color": "#ffffff"},
+#             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+#             "plot_bgcolor": theme["background"],
+#             "paper_bgcolor": theme["background"],
+#             "font": {"color": theme["foreground"]},
+#         },
+#    }
 
 
 if __name__ == "__main__":
