@@ -638,7 +638,7 @@ def update_case_world_graph(selected_scale):
             if country != "Day"
         ],
         "layout": {
-            "title": "Prelavence per 10,000 Inhabitants",
+            "title": "Prevalence per 10,000 Inhabitants",
             "height": 400,
             "xaxis": {
                 "showgrid": True,
