@@ -100,11 +100,6 @@ cantons_updated_today = [
     ].index
 ]
 
-cases_new = (
-    df_by_date.diff().iloc[len(df_by_date) - 1].sum()
-    - df_by_date.diff().iloc[len(df_by_date) - 1]["CH"]
-)
-
 # If a new day starts and there is no info yet, show no new cases
 if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
     cases_new = 0
@@ -116,6 +111,11 @@ for column in df_by_date_pc:
     df_by_date_pc[column] = (
         df_by_date_pc[column] / df_demo["Population"][column] * 10000
     )
+
+cases_new = (
+    df_by_date.diff().iloc[len(df_by_date) - 1].sum()
+    - df_by_date.diff().iloc[len(df_by_date) - 1]["CH"]
+)
 
 cases_total = (
     df_by_date.iloc[len(df_by_date) - 1].sum()
@@ -775,8 +775,8 @@ def update_case_graph_diff(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
