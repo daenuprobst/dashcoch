@@ -668,7 +668,7 @@ def update_fatalities_ch_graph(selected_scale):
             }
         ],
         "layout": {
-            "title": "Case Fatality Rates (Cases / Fatalities)",
+            "title": "Case Fatality Rates (Fatalities / Cases)",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {
