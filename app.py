@@ -261,7 +261,6 @@ app.layout = html.Div(
                         Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). 
                         Please direct any criticism or ideas to me.
                         The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
-                        The scripts for generating the predictions are [available on Kaggle](https://www.kaggle.com/daenuprobst/covid-19-cases-in-switzerland-per-canton).
                         """
                         )
                     ],
@@ -325,7 +324,10 @@ app.layout = html.Div(
                     id="slider-date",
                     min=0,
                     max=len(df["Date"]) - 1,
-                    marks={i: d for i, d in enumerate(df["Date"])},
+                    marks={
+                        i: date.fromisoformat(d).strftime("%d. %m.")
+                        for i, d in enumerate(df["Date"])
+                    },
                     value=len(df["Date"]) - 1,
                 ),
                 html.Br(),
@@ -500,7 +502,7 @@ def update_graph_map(selected_date_index, mode):
                 "lon": [centres_cantons[canton]["lon"] for canton in centres_cantons],
                 "text": labels,
                 "mode": "text",
-                "type": "scattermapbox",
+                "type": "scattergeo",
                 "textfont": {
                     "family": "sans serif",
                     "size": 18,
@@ -509,7 +511,7 @@ def update_graph_map(selected_date_index, mode):
                 },
             },
             {
-                "type": "choroplethmapbox",
+                "type": "choropleth",
                 "locations": canton_labels,
                 "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
                 "colorscale": [(0, "#7F2238"), (1, "#FF3867")],
@@ -517,24 +519,38 @@ def update_graph_map(selected_date_index, mode):
                 "marker": {"line": {"width": 0.0, "color": "#08302A"}},
                 "colorbar": {
                     "thickness": 10,
-                    "bgcolor": "#1f2630",
+                    "bgcolor": "#252e3f",
                     "tickfont": {"color": "white"},
                 },
             },
         ],
         "layout": {
-            "mapbox": {
-                "accesstoken": "pk.eyJ1IjoiZGFlbnVwcm9ic3QiLCJhIjoiY2s3eDR2dmRyMDg0ajN0cDlkaDNmM3J0NyJ9.tcJPFQkbsVGlWpyQaKPtiw",
-                "style": "mapbox://styles/plotlymapbox/cjvprkf3t1kns1cqjxuxmwixz",
-                "center": {"lat": 46.8181877, "lon": 8.2275124},
-                "pitch": 0,
-                "zoom": 7,
+            "geo": {
+                "visible": False,
+                "fitbounds": "locations",
+                "projection": {"type": "transverse mercator"},
+                # "landcolor": "#1f2630",
+                # "showland": True,
+                # "showcountries": True,
             },
             "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
             "height": 600,
-            "plot_bgcolor": "#1f2630",
-            "paper_bgcolor": "#1f2630",
-        },
+            "plot_bgcolor": "#252e3f",
+            "paper_bgcolor": "#252e3f",
+        }
+        # "layout": {
+        #     "mapbox": {
+        #         "accesstoken": "pk.eyJ1IjoiZGFlbnVwcm9ic3QiLCJhIjoiY2s3eDR2dmRyMDg0ajN0cDlkaDNmM3J0NyJ9.tcJPFQkbsVGlWpyQaKPtiw",
+        #         "style": "mapbox://styles/plotlymapbox/cjvprkf3t1kns1cqjxuxmwixz",
+        #         "center": {"lat": 46.8181877, "lon": 8.2275124},
+        #         "pitch": 0,
+        #         "zoom": 7,
+        #     },
+        #     "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
+        #     "height": 600,
+        #     "plot_bgcolor": "#1f2630",
+        #     "paper_bgcolor": "#1f2630",
+        # },
     }
 
 
