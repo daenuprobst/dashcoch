@@ -39,10 +39,14 @@ class DataLoader:
             self.total_swiss_fatalities / self.total_swiss_cases
         )
 
+        # Put the date at the end
         self.swiss_cases_as_dict = self.swiss_cases.to_dict("list")
+        date_tmp = self.swiss_cases_as_dict.pop("Date")
+        self.swiss_cases_as_dict["Date"] = date_tmp
         self.swiss_cases_normalized_as_dict = (
             self.__get_swiss_cases_as_normalized_dict()
         )
+
         self.swiss_fatalities_as_dict = self.swiss_fatalities.to_dict("list")
         self.canton_labels = [
             canton
@@ -110,19 +114,21 @@ class DataLoader:
         )
 
     def __get_swiss_cases_as_normalized_dict(self):
-        tmp = {
-            str(canton): [
-                round(i, 2)
-                for i in self.swiss_cases_as_dict[canton]
-                / self.swiss_demography["Population"][canton]
-                * 10000
-            ]
+        tmp = [
+            (
+                str(canton),
+                [
+                    round(i, 2)
+                    for i in self.swiss_cases_as_dict[canton]
+                    / self.swiss_demography["Population"][canton]
+                    * 10000
+                ],
+            )
             for canton in self.swiss_cases_as_dict
             if canton != "Date"
-        }
-        tmp["Date"] = self.swiss_cases_as_dict["Date"]
-
-        return tmp
+        ]
+        tmp.append(("Date", self.swiss_cases_as_dict["Date"]))
+        return dict(tmp)
 
     def __simplify_world_data(self, df: pd.DataFrame):
         df.drop(columns=["Lat", "Long"], inplace=True)

@@ -27,7 +27,6 @@ class StyleLoader:
             "#a87575",
             "#d6cead",
             "#e59780",
-            "#000000",
         ]
 
         self.color_scale = [
