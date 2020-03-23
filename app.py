@@ -748,11 +748,31 @@ def update_case_pc_graph(selected_cantons, selected_scale):
     [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
 )
 def update_case_graph_diff(selected_cantons, selected_scale):
+    data_non_nan = {}
+    data_non_nan["Date"] = data["Date"]
+
+    for canton in data:
+        if canton == "Date":
+            continue
+        values = []
+        last_value = 0
+        for i, v in enumerate(data[canton]):
+            if math.isnan(float(v)):
+                values.append(last_value)
+            else:
+                last_value = v
+                values.append(v)
+        data_non_nan[canton] = values
+
     return {
         "data": [
             {
-                "x": data["Date"],
-                "y": [0] + [j - i for i, j in zip(data[canton][:-1], data[canton][1:])],
+                "x": data_non_nan["Date"],
+                "y": [0]
+                + [
+                    j - i
+                    for i, j in zip(data_non_nan[canton][:-1], data_non_nan[canton][1:])
+                ],
                 "name": canton,
                 "marker": {"color": colors[i - 1]},
                 "type": "bar",
@@ -775,8 +795,8 @@ def update_case_graph_diff(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )
