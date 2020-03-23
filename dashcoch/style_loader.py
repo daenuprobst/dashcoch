@@ -54,3 +54,13 @@ class StyleLoader:
             "foreground": "#2cfec1",
             "accent": "#7fafdf",
         }
+
+        self.turbo = self.get_turbo()
+
+    def get_turbo(self):
+        scale = [
+            "#2D384D",
+            "#DB4453",
+        ]
+
+        return [(x / (len(scale) - 1), s) for x, s, in enumerate(scale)]

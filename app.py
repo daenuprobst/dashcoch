@@ -288,7 +288,7 @@ def update_graph_map(selected_date_index, mode):
                 "type": "choropleth",
                 "locations": data.canton_labels,
                 "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
-                "colorscale": [(0, "#7F2238"), (1, "#FF3867")],
+                "colorscale": style.turbo,
                 "geojson": "/assets/switzerland.geojson",
                 "marker": {"line": {"width": 0.0, "color": "#08302A"}},
                 "colorbar": {
@@ -301,7 +301,10 @@ def update_graph_map(selected_date_index, mode):
         "layout": {
             "geo": {
                 "visible": False,
-                "fitbounds": "locations",
+                "center": {"lat": 46.80111, "lon": 8.22667},
+                "lataxis": {"range": [45.7845, 47.8406]},
+                "lonaxis": {"range": [5.5223, 10.5421]},
+                # "fitbounds": "geojson",
                 "projection": {"type": "transverse mercator"},
                 # "landcolor": "#1f2630",
                 # "showland": True,
