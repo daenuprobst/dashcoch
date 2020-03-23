@@ -3,3 +3,4 @@ dash==1.8.0
 pandas==0.25.1
 gunicorn==20.0.4
 pytz==2019.2
+python-i18n[YAML]==0.3.7

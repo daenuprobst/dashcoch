@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import i18n
 from dashcoch import DataLoader, StyleLoader
 import math
 from configparser import ConfigParser
@@ -571,8 +572,8 @@ def update_case_graph_diff(selected_cantons, selected_scale):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
