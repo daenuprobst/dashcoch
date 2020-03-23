@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from dashcoch import DataLoader, StyleLoader
 import math
+from configparser import ConfigParser
 from datetime import date, datetime
 from pytz import timezone
 import geojson
@@ -11,250 +13,12 @@ from dash.dependencies import Input, Output
 import pandas as pd
 
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+parser = ConfigParser()
+parser.read("settings.ini")
 
+data = DataLoader(parser)
+style = StyleLoader()
 
-#
-# Get the data
-#
-url = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland.csv"
-df = pd.read_csv(url, error_bad_lines=False)
-
-url_fatalities = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland.csv"
-df_fatalities = pd.read_csv(url_fatalities, error_bad_lines=False)
-
-url_pred = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/predicted.csv"
-df_pred = pd.read_csv(url_pred, error_bad_lines=False)
-
-url_demo = "https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv"
-df_demo = pd.read_csv(url_demo, error_bad_lines=False, index_col=0)
-
-df_map = pd.read_csv(
-    "https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv"
-)
-
-url_world = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv"
-df_world = pd.read_csv(url_world)
-
-url_world_fatalities = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Deaths.csv"
-df_world_fatalities = pd.read_csv(url_world_fatalities)
-
-pop_world = {
-    "France": 65273511,
-    "Germany": 83783942,
-    "Italy": 60461826,
-    "Spain": 46754778,
-    "US": 331002651,
-    "United Kingdom": 67886011,
-    "Switzerland": 8654622,
-}
-
-#
-# Load boundaries for the cantons
-#
-canton_boundaries = geojson.load(open("assets/switzerland.geojson", "r"))
-
-#
-# Centres of cantons
-#
-centres_cantons = {
-    "AG": {"lat": 47.40966, "lon": 8.15688},
-    "AR": {"lat": 47.366352 + 0.05, "lon": 9.36791},
-    "AI": {"lat": 47.317264, "lon": 9.416754},
-    "BL": {"lat": 47.45176, "lon": 7.702414},
-    "BS": {"lat": 47.564869, "lon": 7.615259},
-    "BE": {"lat": 46.823608, "lon": 7.636667},
-    "FR": {"lat": 46.718391, "lon": 7.074008},
-    "GE": {"lat": 46.220528, "lon": 6.132935},
-    "GL": {"lat": 46.981042 - 0.05, "lon": 9.065751},
-    "GR": {"lat": 46.656248, "lon": 9.628198},
-    "JU": {"lat": 47.350744, "lon": 7.156107},
-    "LU": {"lat": 47.067763, "lon": 8.1102},
-    "NE": {"lat": 46.995534, "lon": 6.780126},
-    "NW": {"lat": 46.926755, "lon": 8.405302},
-    "OW": {"lat": 46.854527 - 0.05, "lon": 8.244317 - 0.1},
-    "SH": {"lat": 47.71357, "lon": 8.59167},
-    "SZ": {"lat": 47.061787, "lon": 8.756585},
-    "SO": {"lat": 47.304135, "lon": 7.639388},
-    "SG": {"lat": 47.2332 - 0.05, "lon": 9.274744},
-    "TI": {"lat": 46.295617, "lon": 8.808924},
-    "TG": {"lat": 47.568715, "lon": 9.091957},
-    "UR": {"lat": 46.771849, "lon": 8.628586},
-    "VD": {"lat": 46.570091, "lon": 6.657809 - 0.1},
-    "VS": {"lat": 46.209567, "lon": 7.604659},
-    "ZG": {"lat": 47.157296, "lon": 8.537294},
-    "ZH": {"lat": 47.41275, "lon": 8.65508},
-}
-
-#
-# Wrangle the data
-#
-df_by_date = df.set_index("Date")
-df_fatalities_by_date = df_fatalities.set_index("Date")
-latest_date = df.iloc[len(df) - 1]["Date"]
-
-# Get the cantons that were updated today to display below the map
-cantons_updated_today = [
-    canton
-    for canton in df_by_date.iloc[len(df_by_date) - 1][
-        df_by_date.iloc[len(df_by_date) - 1].notnull()
-    ].index
-]
-
-# If a new day starts and there is no info yet, show no new cases
-if date.fromisoformat(latest_date) != datetime.now(timezone("Europe/Zurich")).date():
-    cases_new = 0
-
-# Fill all the missing data by previously reported data
-df_by_date = df_by_date.fillna(method="ffill", axis=0)
-df_by_date_pc = df_by_date.copy()
-for column in df_by_date_pc:
-    df_by_date_pc[column] = (
-        df_by_date_pc[column] / df_demo["Population"][column] * 10000
-    )
-
-cases_new = (
-    df_by_date.diff().iloc[len(df_by_date) - 1].sum()
-    - df_by_date.diff().iloc[len(df_by_date) - 1]["CH"]
-)
-
-cases_total = (
-    df_by_date.iloc[len(df_by_date) - 1].sum()
-    - df_by_date.iloc[len(df_by_date) - 1]["CH"]
-)
-
-fatalities_total = (
-    df_fatalities_by_date.iloc[len(df_fatalities_by_date) - 1].sum()
-    - df_fatalities_by_date.iloc[len(df_fatalities_by_date) - 1]["CH"]
-)
-
-cfr_ch = fatalities_total / cases_total
-
-# Get the data in list form and normalize it
-data = df.to_dict("list")
-data_fatalities = df_fatalities.to_dict("list")
-canton_labels = [canton for canton in data if canton != "CH" and canton != "Date"]
-data_norm = {
-    str(canton): [
-        round(i, 2) for i in data[canton] / df_demo["Population"][canton] * 10000
-    ]
-    for canton in data
-    if canton != "Date"
-}
-data_fatalities_norm = {
-    str(canton): [
-        round(i, 2) for i in data_norm[canton] / df_demo["Population"][canton] * 10000
-    ]
-    for canton in data
-    if canton != "Date"
-}
-data_norm["Date"] = data["Date"]
-data_fatalities_norm["Date"] = data_fatalities["Date"]
-
-#
-# World data
-#
-
-# Number of Cases
-df_world.drop(columns=["Lat", "Long"], inplace=True)
-df_world["Province/State"].fillna("", inplace=True)
-df_world = df_world.rename(columns={"Country/Region": "Day"})
-df_world = df_world.groupby("Day").sum()
-df_world = df_world.T
-df_world.drop(
-    df_world.columns.difference(
-        ["France", "Germany", "Italy", "Spain", "United Kingdom", "US"]
-    ),
-    1,
-    inplace=True,
-)
-
-df_world.index = range(0, len(df_world))
-
-df_world_total = df_world.copy()
-
-# Shift the data to the start (remove leading zeros in columns)
-df_world["Switzerland"] = pd.Series(data["CH"])
-
-for column in df_world:
-    df_world[column] = df_world[column] / pop_world[column] * 10000
-
-df_world[df_world < 0.4] = 0
-for column in df_world:
-    while df_world[column].iloc[0] == 0:
-        df_world[column] = df_world[column].shift(-1)
-df_world.dropna(how="all", inplace=True)
-
-# Fatalities
-df_world_fatalities.drop(columns=["Lat", "Long"], inplace=True)
-df_world_fatalities["Province/State"].fillna("", inplace=True)
-df_world_fatalities = df_world_fatalities.rename(columns={"Country/Region": "Day"})
-df_world_fatalities = df_world_fatalities.groupby("Day").sum()
-df_world_fatalities = df_world_fatalities.T
-df_world_fatalities.drop(
-    df_world_fatalities.columns.difference(
-        ["France", "Germany", "Italy", "Spain", "United Kingdom", "US"]
-    ),
-    1,
-    inplace=True,
-)
-
-df_world_fatalities.index = range(0, len(df_world_fatalities))
-
-cfr_world = df_world_fatalities.iloc[-1] / df_world_total.iloc[-1]
-
-#
-# Some nice differentiable colors for the cantons + CH
-#
-colors = [
-    "#7a8871",
-    "#a359e3",
-    "#91e63f",
-    "#dd47ba",
-    "#5ad358",
-    "#6e7edc",
-    "#d9dd3d",
-    "#c376bc",
-    "#a8cc5f",
-    "#d95479",
-    "#63de9f",
-    "#de4f37",
-    "#74deda",
-    "#dd892d",
-    "#71adcf",
-    "#dbbd59",
-    "#797ca6",
-    "#4e9648",
-    "#d4b7d8",
-    "#8a873d",
-    "#489889",
-    "#b1743d",
-    "#a8d5a2",
-    "#a87575",
-    "#d6cead",
-    "#e59780",
-    "#000000",
-]
-
-color_scale = [
-    "#f2fffb",
-    "#bbffeb",
-    "#98ffe0",
-    "#79ffd6",
-    "#6df0c8",
-    "#69e7c0",
-    "#59dab2",
-    "#45d0a5",
-    "#31c194",
-    "#2bb489",
-    "#25a27b",
-    "#1e906d",
-    "#188463",
-    "#157658",
-    "#11684d",
-    "#10523e",
-]
-
-theme = {"background": "#252e3f", "foreground": "#2cfec1", "accent": "#7fafdf"}
 
 #
 # General app settings
@@ -299,7 +63,7 @@ app.layout = html.Div(
                                 html.P(className="total-title", children="Total Cases"),
                                 html.Div(
                                     className="total-content",
-                                    children=str(int(cases_total)),
+                                    children=str(int(data.total_swiss_cases)),
                                 ),
                             ],
                         ),
@@ -311,7 +75,7 @@ app.layout = html.Div(
                                 ),
                                 html.Div(
                                     className="total-content",
-                                    children="+" + str(int(cases_new)),
+                                    children="+" + str(int(data.new_swiss_cases)),
                                 ),
                             ],
                         ),
@@ -323,7 +87,7 @@ app.layout = html.Div(
                                 ),
                                 html.Div(
                                     className="total-content",
-                                    children=str(int(fatalities_total)),
+                                    children=str(int(data.total_swiss_fatalities)),
                                 ),
                             ],
                         ),
@@ -343,12 +107,12 @@ app.layout = html.Div(
                 dcc.Slider(
                     id="slider-date",
                     min=0,
-                    max=len(df["Date"]) - 1,
+                    max=len(data.swiss_cases["Date"]) - 1,
                     marks={
                         i: date.fromisoformat(d).strftime("%d. %m.")
-                        for i, d in enumerate(df["Date"])
+                        for i, d in enumerate(data.swiss_cases["Date"])
                     },
-                    value=len(df["Date"]) - 1,
+                    value=len(data.swiss_cases["Date"]) - 1,
                 ),
                 html.Br(),
                 dcc.RadioItems(
@@ -361,7 +125,7 @@ app.layout = html.Div(
                     value="number",
                     labelStyle={
                         "display": "inline-block",
-                        "color": theme["foreground"],
+                        "color": style.theme["foreground"],
                     },
                 ),
             ],
@@ -370,11 +134,13 @@ app.layout = html.Div(
         html.Div(
             children=[
                 "Cantons updated today: ",
-                html.Span(", ".join(cantons_updated_today)),
+                html.Span(", ".join(data.updated_cantons)),
             ]
         ),
         html.Br(),
-        html.H4(children="Data for Switzerland", style={"color": theme["accent"]}),
+        html.H4(
+            children="Data for Switzerland", style={"color": style.theme["accent"]}
+        ),
         html.Div(
             className="row",
             children=[
@@ -401,7 +167,7 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(children="Data per Canton", style={"color": theme["accent"]}),
+        html.H4(children="Data per Canton", style={"color": style.theme["accent"]}),
         html.Div(
             id="plot-settings-container",
             children=[
@@ -418,16 +184,17 @@ app.layout = html.Div(
                     value="linear",
                     labelStyle={
                         "display": "inline-block",
-                        "color": theme["foreground"],
+                        "color": style.theme["foreground"],
                     },
                 ),
                 html.Br(),
                 dcc.Dropdown(
                     id="dropdown-cantons",
                     options=[
-                        {"label": canton, "value": canton} for canton in canton_labels
+                        {"label": canton, "value": canton}
+                        for canton in data.canton_labels
                     ],
-                    value=canton_labels,
+                    value=data.canton_labels,
                     multi=True,
                 ),
             ],
@@ -455,11 +222,11 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
-        html.H4(children="Raw Data", style={"color": theme["accent"]}),
+        html.H4(children="Raw Data", style={"color": style.theme["accent"]}),
         dash_table.DataTable(
             id="table",
-            columns=[{"name": i, "id": i} for i in df.columns],
-            data=df.to_dict("records"),
+            columns=[{"name": i, "id": i} for i in data.swiss_cases.columns],
+            data=data.swiss_cases.to_dict("records"),
         ),
     ],
 )
@@ -472,33 +239,40 @@ app.layout = html.Div(
     [Input("slider-date", "value"), Input("radio-prevalence", "value")],
 )
 def update_graph_map(selected_date_index, mode):
-    date = df["Date"].iloc[selected_date_index]
+    date = data.swiss_cases["Date"].iloc[selected_date_index]
 
-    map_data = df_by_date
+    map_data = data.swiss_cases_by_date_filled
     labels = [
-        canton + ": " + str(int(map_data[canton][date])) for canton in centres_cantons
+        canton + ": " + str(int(map_data[canton][date]))
+        for canton in data.cantonal_centres
     ]
 
     if mode == "prevalence":
-        map_data = df_by_date_pc
+        map_data = data.swiss_cases_by_date_filled_per_capita
         labels = [
             canton + ": " + str(round((map_data[canton][date]), 1))
-            for canton in centres_cantons
+            for canton in data.cantonal_centres
         ]
     elif mode == "fatalities":
-        map_data = df_fatalities_by_date
+        map_data = data.swiss_fatalities_by_date
         labels = [
             canton + ": " + str(int(map_data[canton][date]))
             if not math.isnan(float(map_data[canton][date]))
             else ""
-            for canton in centres_cantons
+            for canton in data.cantonal_centres
         ]
 
     return {
         "data": [
             {
-                "lat": [centres_cantons[canton]["lat"] for canton in centres_cantons],
-                "lon": [centres_cantons[canton]["lon"] for canton in centres_cantons],
+                "lat": [
+                    data.cantonal_centres[canton]["lat"]
+                    for canton in data.cantonal_centres
+                ],
+                "lon": [
+                    data.cantonal_centres[canton]["lon"]
+                    for canton in data.cantonal_centres
+                ],
                 "text": labels,
                 "mode": "text",
                 "type": "scattergeo",
@@ -511,7 +285,7 @@ def update_graph_map(selected_date_index, mode):
             },
             {
                 "type": "choropleth",
-                "locations": canton_labels,
+                "locations": data.canton_labels,
                 "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
                 "colorscale": [(0, "#7F2238"), (1, "#FF3867")],
                 "geojson": "/assets/switzerland.geojson",
@@ -563,10 +337,10 @@ def update_case_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data["Date"],
-                "y": data["CH"],
+                "x": data.swiss_cases_as_dict["Date"],
+                "y": data.swiss_cases_as_dict["CH"],
                 "name": "CH",
-                "marker": {"color": theme["foreground"]},
+                "marker": {"color": style.theme["foreground"]},
                 "type": "bar",
             }
         ],
@@ -580,9 +354,9 @@ def update_case_ch_graph(selected_scale):
                 "color": "#ffffff",
                 "rangemode": "tozero",
             },
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -594,10 +368,10 @@ def update_fatalities_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": df_fatalities["Date"],
-                "y": df_fatalities["CH"],
+                "x": data.swiss_fatalities["Date"],
+                "y": data.swiss_fatalities["CH"],
                 "name": "CH",
-                "marker": {"color": theme["foreground"]},
+                "marker": {"color": style.theme["foreground"]},
                 "type": "bar",
             }
         ],
@@ -611,9 +385,9 @@ def update_fatalities_ch_graph(selected_scale):
                 "color": "#ffffff",
                 "rangemode": "tozero",
             },
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -628,13 +402,13 @@ def update_case_world_graph(selected_scale):
     return {
         "data": [
             {
-                "x": df_world.index.values,
-                "y": df_world[country],
+                "x": data.world_cases.index.values,
+                "y": data.world_cases[country],
                 "name": country,
                 # "marker": {"color": theme["foreground"]},
                 # "type": "bar",
             }
-            for country in df_world
+            for country in data.world_cases
             if country != "Day"
         ],
         "layout": {
@@ -646,9 +420,9 @@ def update_case_world_graph(selected_scale):
                 "title": "Days Since Prevalence >0.4 per 10,000",
             },
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff",},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -656,14 +430,16 @@ def update_case_world_graph(selected_scale):
 @app.callback(
     Output("fatalities-world-graph", "figure"), [Input("radio-scale", "value")],
 )
-def update_fatalities_ch_graph(selected_scale):
+def update_fatalities_world_graph(selected_scale):
     return {
         "data": [
             {
-                "x": ["Switzerland"] + cfr_world.index.values.tolist(),
-                "y": [cfr_ch] + [val for val in cfr_world],
+                "x": ["Switzerland"]
+                + data.world_case_fatality_rate.index.values.tolist(),
+                "y": [data.swiss_case_fatality_rate]
+                + [val for val in data.world_case_fatality_rate],
                 "name": "CH",
-                "marker": {"color": theme["foreground"]},
+                "marker": {"color": style.theme["foreground"]},
                 "type": "bar",
             }
         ],
@@ -677,9 +453,9 @@ def update_fatalities_ch_graph(selected_scale):
                 "color": "#ffffff",
                 "rangemode": "tozero",
             },
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -695,12 +471,12 @@ def update_case_graph(selected_cantons, selected_scale):
     return {
         "data": [
             {
-                "x": data["Date"],
-                "y": data[canton],
+                "x": data.swiss_cases_as_dict["Date"],
+                "y": data.swiss_cases_as_dict[canton],
                 "name": canton,
-                "marker": {"color": colors[i - 1]},
+                "marker": {"color": style.colors[i - 1]},
             }
-            for i, canton in enumerate(data)
+            for i, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -708,9 +484,9 @@ def update_case_graph(selected_cantons, selected_scale):
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -723,12 +499,12 @@ def update_case_pc_graph(selected_cantons, selected_scale):
     return {
         "data": [
             {
-                "x": data_norm["Date"],
-                "y": data_norm[canton],
+                "x": data.swiss_cases_normalized_as_dict["Date"],
+                "y": data.swiss_cases_normalized_as_dict[canton],
                 "name": canton,
-                "marker": {"color": colors[i - 1]},
+                "marker": {"color": style.colors[i - 1]},
             }
-            for i, canton in enumerate(data)
+            for i, canton in enumerate(data.swiss_cases_normalized_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -736,9 +512,9 @@ def update_case_pc_graph(selected_cantons, selected_scale):
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 
@@ -749,14 +525,14 @@ def update_case_pc_graph(selected_cantons, selected_scale):
 )
 def update_case_graph_diff(selected_cantons, selected_scale):
     data_non_nan = {}
-    data_non_nan["Date"] = data["Date"]
+    data_non_nan["Date"] = data.swiss_cases_as_dict["Date"]
 
-    for canton in data:
+    for canton in data.swiss_cases_as_dict:
         if canton == "Date":
             continue
         values = []
         last_value = 0
-        for i, v in enumerate(data[canton]):
+        for _, v in enumerate(data.swiss_cases_as_dict[canton]):
             if math.isnan(float(v)):
                 values.append(last_value)
             else:
@@ -774,10 +550,10 @@ def update_case_graph_diff(selected_cantons, selected_scale):
                     for i, j in zip(data_non_nan[canton][:-1], data_non_nan[canton][1:])
                 ],
                 "name": canton,
-                "marker": {"color": colors[i - 1]},
+                "marker": {"color": style.colors[i - 1]},
                 "type": "bar",
             }
-            for i, canton in enumerate(data)
+            for i, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -785,9 +561,9 @@ def update_case_graph_diff(selected_cantons, selected_scale):
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff"},
             "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
-            "plot_bgcolor": theme["background"],
-            "paper_bgcolor": theme["background"],
-            "font": {"color": theme["foreground"]},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
             "barmode": "stack",
         },
     }
