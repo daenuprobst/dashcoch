@@ -43,6 +43,7 @@ app.layout = html.Div(
                     children=[
                         dcc.Markdown(
                             """
+                            **All data shown on this website was collected from the cantonal data published on the cantonal websites**
                         Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@sketpeis](https://twitter.com/skepteis). 
                         Please direct any criticism or ideas to me.
                         The data source can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
