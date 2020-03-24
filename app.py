@@ -383,7 +383,7 @@ def update_case_ch_graph(selected_scale):
                 "y": data.swiss_cases_as_dict["CH"],
                 "name": "CH",
                 "marker": {"color": style.theme["foreground"]},
-                "type": "bar",
+                # "type": "bar",
             }
         ],
         "layout": {
@@ -416,7 +416,7 @@ def update_fatalities_ch_graph(selected_scale):
                 "y": data.swiss_fatalities["CH"],
                 "name": "CH",
                 "marker": {"color": style.theme["foreground"]},
-                "type": "bar",
+                # "type": "bar",
             }
         ],
         "layout": {
