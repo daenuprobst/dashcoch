@@ -50,6 +50,23 @@ app.layout = html.Div(
                     ],
                 ),
                 html.P(
+                    id="glueckskette",
+                    children=[
+                        html.A(
+                            [
+                                html.Span(
+                                    "Here's a link to the fundraiser by Glückskette. This outbreak is hitting a lot of people really hard. We're all in this together, let's look out for each other! (Glückskette is not affiliated with this project)"
+                                ),
+                                html.Br(),
+                                html.Img(
+                                    src="https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg",
+                                    style={"width": "200px"},
+                                ),
+                            ]
+                        ),
+                    ],
+                ),
+                html.P(
                     id="important",
                     children=[
                         "All data shown on this website was collected from the cantonal data published on the cantonal websites. No data is being taken from news websites, newspapers, etc."
@@ -283,7 +300,7 @@ def update_graph_map(selected_date_index, mode):
                 "mode": "text",
                 "type": "scattergeo",
                 "textfont": {
-                    "family": "sans serif",
+                    "family": "Arial, sans-serif",
                     "size": 18,
                     "color": "white",
                     "weight": "bold",
