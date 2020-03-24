@@ -120,24 +120,9 @@ app.layout = html.Div(
                 html.Div(className="six columns"),
             ],
         ),
-        html.Br(),
         html.Div(
-            id="slider-container",
+            className="slider-container",
             children=[
-                html.P(
-                    id="slider-text", children="Drag the slider to change the date:",
-                ),
-                dcc.Slider(
-                    id="slider-date",
-                    min=0,
-                    max=len(data.swiss_cases["Date"]) - 1,
-                    marks={
-                        i: date.fromisoformat(d).strftime("%d. %m.")
-                        for i, d in enumerate(data.swiss_cases["Date"])
-                    },
-                    value=len(data.swiss_cases["Date"]) - 1,
-                ),
-                html.Br(),
                 dcc.RadioItems(
                     id="radio-prevalence",
                     options=[
@@ -155,6 +140,24 @@ app.layout = html.Div(
         ),
         html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
         html.Div(
+            className="slider-container",
+            children=[
+                html.P(
+                    id="slider-text", children="Drag the slider to change the date:",
+                ),
+                dcc.Slider(
+                    id="slider-date",
+                    min=0,
+                    max=len(data.swiss_cases["Date"]) - 1,
+                    marks={
+                        i: date.fromisoformat(d).strftime("%d. %m.")
+                        for i, d in enumerate(data.swiss_cases["Date"])
+                    },
+                    value=len(data.swiss_cases["Date"]) - 1,
+                ),
+            ],
+        ),
+        html.Div(
             children=[
                 "Cantons updated today: ",
                 html.Span(", ".join(data.updated_cantons)),
@@ -163,6 +166,23 @@ app.layout = html.Div(
         html.Br(),
         html.H4(
             children="Data for Switzerland", style={"color": style.theme["accent"]}
+        ),
+        html.Div(
+            className="slider-container",
+            children=[
+                dcc.RadioItems(
+                    id="radio-scale-switzerland",
+                    options=[
+                        {"label": "Linear Scale", "value": "linear"},
+                        {"label": "Logarithmic Scale", "value": "log"},
+                    ],
+                    value="linear",
+                    labelStyle={
+                        "display": "inline-block",
+                        "color": style.theme["foreground"],
+                    },
+                ),
+            ],
         ),
         html.Div(
             className="row",
@@ -194,12 +214,8 @@ app.layout = html.Div(
         html.Div(
             id="plot-settings-container",
             children=[
-                html.P(
-                    id="plot-settings-text",
-                    children="Select scale and cantons to show in the plots:",
-                ),
                 dcc.RadioItems(
-                    id="radio-scale",
+                    id="radio-scale-cantons",
                     options=[
                         {"label": "Linear Scale", "value": "linear"},
                         {"label": "Logarithmic Scale", "value": "log"},
@@ -357,7 +373,7 @@ def update_graph_map(selected_date_index, mode):
 # Total cases Switzerland
 #
 @app.callback(
-    Output("case-ch-graph", "figure"), [Input("radio-scale", "value")],
+    Output("case-ch-graph", "figure"), [Input("radio-scale-switzerland", "value")],
 )
 def update_case_ch_graph(selected_scale):
     return {
@@ -373,12 +389,13 @@ def update_case_ch_graph(selected_scale):
         "layout": {
             "title": "Total Cases Switzerland",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
+                "title": "Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -388,7 +405,8 @@ def update_case_ch_graph(selected_scale):
 
 
 @app.callback(
-    Output("fatalities-ch-graph", "figure"), [Input("radio-scale", "value")],
+    Output("fatalities-ch-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
 )
 def update_fatalities_ch_graph(selected_scale):
     return {
@@ -404,12 +422,13 @@ def update_fatalities_ch_graph(selected_scale):
         "layout": {
             "title": "Total Fatalities Switzerland",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
+                "title": "Fatalities",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -422,7 +441,7 @@ def update_fatalities_ch_graph(selected_scale):
 # Total cases world
 #
 @app.callback(
-    Output("case-world-graph", "figure"), [Input("radio-scale", "value")],
+    Output("case-world-graph", "figure"), [Input("radio-scale-switzerland", "value")],
 )
 def update_case_world_graph(selected_scale):
     return {
@@ -445,7 +464,12 @@ def update_case_world_graph(selected_scale):
                 "color": "#ffffff",
                 "title": "Days Since Prevalence >0.4 per 10,000",
             },
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff",},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Cases / Population * 10,000",
+            },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -454,7 +478,8 @@ def update_case_world_graph(selected_scale):
 
 
 @app.callback(
-    Output("fatalities-world-graph", "figure"), [Input("radio-scale", "value")],
+    Output("fatalities-world-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
 )
 def update_fatalities_world_graph(selected_scale):
     return {
@@ -472,12 +497,13 @@ def update_fatalities_world_graph(selected_scale):
         "layout": {
             "title": "Case Fatality Rates (Fatalities / Cases)",
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Country"},
             "yaxis": {
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
+                "title": "Fatalities / Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -491,7 +517,7 @@ def update_fatalities_world_graph(selected_scale):
 #
 @app.callback(
     Output("case-graph", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+    [Input("dropdown-cantons", "value"), Input("radio-scale-cantons", "value")],
 )
 def update_case_graph(selected_cantons, selected_scale):
     return {
@@ -508,8 +534,13 @@ def update_case_graph(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton",
             "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Cases",
+            },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -519,7 +550,7 @@ def update_case_graph(selected_cantons, selected_scale):
 
 @app.callback(
     Output("case-pc-graph", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+    [Input("dropdown-cantons", "value"), Input("radio-scale-cantons", "value")],
 )
 def update_case_pc_graph(selected_cantons, selected_scale):
     return {
@@ -536,8 +567,13 @@ def update_case_pc_graph(selected_cantons, selected_scale):
         "layout": {
             "title": "Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Cases / Population * 10,000",
+            },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -547,7 +583,7 @@ def update_case_pc_graph(selected_cantons, selected_scale):
 
 @app.callback(
     Output("case-graph-diff", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale", "value")],
+    [Input("dropdown-cantons", "value"), Input("radio-scale-cantons", "value")],
 )
 def update_case_graph_diff(selected_cantons, selected_scale):
     data_non_nan = {}
@@ -585,8 +621,13 @@ def update_case_graph_diff(selected_cantons, selected_scale):
         "layout": {
             "title": "New Cases per Canton",
             "height": 750,
-            "xaxis": {"showgrid": True, "color": "#ffffff"},
-            "yaxis": {"type": selected_scale, "showgrid": True, "color": "#ffffff"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Cases   ",
+            },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
