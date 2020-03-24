@@ -26,6 +26,12 @@ g.layer rect {
   fill: #252e3f !important;
 }
 
+#important {
+  color: #c72e10;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
 .total-container {
   display: inline-block;
   padding: 10px;

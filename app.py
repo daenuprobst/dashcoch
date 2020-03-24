@@ -42,14 +42,17 @@ app.layout = html.Div(
                     id="description",
                     children=[
                         dcc.Markdown(
-                            """
-                            Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
-                        **All data shown on this website was collected from the cantonal data published on the cantonal websites**
-                        No data is taken from news websites, news papers, etc.
+                            """Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
                         The data sources can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
                         Please direct any criticism or ideas to me.
                         """
                         )
+                    ],
+                ),
+                html.P(
+                    id="important",
+                    children=[
+                        "All data shown on this website was collected from the cantonal data published on the cantonal websites. No data is being taken from news websites, newspapers, etc."
                     ],
                 ),
             ],
