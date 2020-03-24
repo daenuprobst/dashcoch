@@ -406,13 +406,13 @@ def update_case_world_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.world_cases.index.values,
-                "y": data.world_cases[country],
+                "x": data.swiss_world_cases_normalized.index.values,
+                "y": data.swiss_world_cases_normalized[country],
                 "name": country,
                 # "marker": {"color": theme["foreground"]},
                 # "type": "bar",
             }
-            for country in data.world_cases
+            for country in data.swiss_world_cases_normalized
             if country != "Day"
         ],
         "layout": {
