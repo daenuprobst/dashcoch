@@ -238,7 +238,6 @@ app.layout = html.Div(
                 ),
             ],
         ),
-        html.Br(),
         html.Div(
             className="row",
             children=[
@@ -623,10 +622,10 @@ def update_case_graph_diff(selected_cantons, selected_scale):
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
-                "type": selected_scale,
+                "type": "linear",
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Cases   ",
+                "title": "Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
