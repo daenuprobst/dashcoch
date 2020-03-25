@@ -22,8 +22,23 @@ class DataLoader:
         self.swiss_cases_by_date = self.swiss_cases.set_index("Date")
         self.swiss_fatalities_by_date = self.swiss_fatalities.set_index("Date")
 
+        self.swiss_cases_by_date_diff = self.swiss_cases_by_date.diff().replace(
+            0, float("nan")
+        )
+        self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace(
+            0, float("nan")
+        )
+
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
+        )
+
+        self.swiss_fatalities_by_date_filled = self.swiss_fatalities_by_date.fillna(
+            method="ffill", axis=0
+        )
+
+        self.swiss_case_fatality_rates = (
+            self.swiss_fatalities_by_date_filled / self.swiss_cases_by_date_filled
         )
 
         self.swiss_cases_by_date_filled_per_capita = (
@@ -138,7 +153,15 @@ class DataLoader:
         df = df.T
         df.drop(
             df.columns.difference(
-                ["France", "Germany", "Italy", "Spain", "United Kingdom", "US"]
+                [
+                    "France",
+                    "Germany",
+                    "Italy",
+                    "Korea, South",
+                    "Spain",
+                    "United Kingdom",
+                    "US",
+                ]
             ),
             1,
             inplace=True,
@@ -170,6 +193,7 @@ class DataLoader:
             "US": 331002651,
             "United Kingdom": 67886011,
             "Switzerland": 8654622,
+            "Korea, South": 51269185,
         }
 
     def __get_cantonal_centres(self):

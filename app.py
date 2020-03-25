@@ -84,7 +84,10 @@ app.layout = html.Div(
                         html.Div(
                             className="total-container",
                             children=[
-                                html.P(className="total-title", children="Total Cases"),
+                                html.P(
+                                    className="total-title",
+                                    children="Total Reported Cases",
+                                ),
                                 html.Div(
                                     className="total-content",
                                     children=str(int(data.total_swiss_cases)),
@@ -95,7 +98,8 @@ app.layout = html.Div(
                             className="total-container",
                             children=[
                                 html.P(
-                                    className="total-title", children="New Cases Today"
+                                    className="total-title",
+                                    children="Reported Cases Today",
                                 ),
                                 html.Div(
                                     className="total-content",
@@ -127,9 +131,11 @@ app.layout = html.Div(
                 dcc.RadioItems(
                     id="radio-prevalence",
                     options=[
-                        {"label": "Number of Cases", "value": "number"},
+                        {"label": "Total Reported Cases", "value": "number"},
+                        {"label": "Newly Reported Cases", "value": "new"},
                         {"label": "Prevalence (per 10,000)", "value": "prevalence"},
-                        {"label": "Number of Fatalities", "value": "fatalities"},
+                        {"label": "New Fatalities", "value": "new_fatalities"},
+                        {"label": "Total Fatalities", "value": "fatalities"},
                     ],
                     value="number",
                     labelStyle={
@@ -261,6 +267,22 @@ app.layout = html.Div(
             ],
         ),
         html.Br(),
+        html.H4(
+            children="Demographic Correlations", style={"color": style.theme["accent"]}
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="prevalence-density-graph")],
+                ),
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="cfr-age-graph")]
+                ),
+            ],
+        ),
+        html.Br(),
         html.H4(children="Raw Data", style={"color": style.theme["accent"]}),
         dash_table.DataTable(
             id="table",
@@ -294,6 +316,22 @@ def update_graph_map(selected_date_index, mode):
         ]
     elif mode == "fatalities":
         map_data = data.swiss_fatalities_by_date
+        labels = [
+            canton + ": " + str(int(map_data[canton][date]))
+            if not math.isnan(float(map_data[canton][date]))
+            else ""
+            for canton in data.cantonal_centres
+        ]
+    elif mode == "new":
+        map_data = data.swiss_cases_by_date_diff
+        labels = [
+            canton + ": " + str(int(map_data[canton][date]))
+            if not math.isnan(float(map_data[canton][date]))
+            else ""
+            for canton in data.cantonal_centres
+        ]
+    elif mode == "new_fatalities":
+        map_data = data.swiss_fatalities_by_date_diff
         labels = [
             canton + ": " + str(int(map_data[canton][date]))
             if not math.isnan(float(map_data[canton][date]))
@@ -526,9 +564,9 @@ def update_case_graph(selected_cantons, selected_scale):
                 "x": data.swiss_cases_as_dict["Date"],
                 "y": data.swiss_cases_as_dict[canton],
                 "name": canton,
-                "marker": {"color": style.colors[i - 1]},
+                "marker": {"color": style.canton_colors[canton]},
             }
-            for i, canton in enumerate(data.swiss_cases_as_dict)
+            for _, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -559,9 +597,9 @@ def update_case_pc_graph(selected_cantons, selected_scale):
                 "x": data.swiss_cases_normalized_as_dict["Date"],
                 "y": data.swiss_cases_normalized_as_dict[canton],
                 "name": canton,
-                "marker": {"color": style.colors[i - 1]},
+                "marker": {"color": style.canton_colors[canton]},
             }
-            for i, canton in enumerate(data.swiss_cases_normalized_as_dict)
+            for _, canton in enumerate(data.swiss_cases_normalized_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -612,7 +650,7 @@ def update_case_graph_diff(selected_cantons, selected_scale):
                     for i, j in zip(data_non_nan[canton][:-1], data_non_nan[canton][1:])
                 ],
                 "name": canton,
-                "marker": {"color": style.colors[i - 1]},
+                "marker": {"color": style.canton_colors[canton]},
                 "type": "bar",
             }
             for i, canton in enumerate(data.swiss_cases_as_dict)
@@ -632,6 +670,80 @@ def update_case_graph_diff(selected_cantons, selected_scale):
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
             "barmode": "stack",
+        },
+    }
+
+
+#
+# Demographic Correlations
+#
+@app.callback(
+    Output("prevalence-density-graph", "figure"), [Input("dropdown-cantons", "value")],
+)
+def update_prevalence_density_graph(selected_cantons):
+    return {
+        "data": [
+            {
+                "x": [data.swiss_demography["Density"][canton]],
+                "y": [data.swiss_cases_by_date_filled_per_capita.iloc[-1][canton]],
+                "name": canton,
+                "mode": "markers",
+                "marker": {"color": style.canton_colors[canton], "size": 10.0},
+            }
+            for _, canton in enumerate(data.swiss_cases_as_dict)
+            if canton in selected_cantons
+        ],
+        "layout": {
+            "title": "Prevalence vs Population Density",
+            "hovermode": "closest",
+            "height": 750,
+            "xaxis": {
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Population Density [Inhabitants/km2]",
+            },
+            "yaxis": {"showgrid": True, "color": "#ffffff", "title": "Prevalence",},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("cfr-age-graph", "figure"), [Input("dropdown-cantons", "value")],
+)
+def update_cfr_age_graph(selected_cantons):
+    return {
+        "data": [
+            {
+                "x": [data.swiss_demography["O65"][canton] * 100],
+                "y": [data.swiss_case_fatality_rates.iloc[-1][canton]],
+                "name": canton,
+                "mode": "markers",
+                "marker": {"color": style.canton_colors[canton], "size": 10.0},
+            }
+            for _, canton in enumerate(data.swiss_cases_normalized_as_dict)
+            if canton in selected_cantons
+        ],
+        "layout": {
+            "title": "Case Fatality Rate vs Population over 65",
+            "hovermode": "closest",
+            "height": 750,
+            "xaxis": {
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Population over 65 [%]",
+            },
+            "yaxis": {
+                "type": "linear",
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Case Fatality Rate",
+            },
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
         },
     }
 

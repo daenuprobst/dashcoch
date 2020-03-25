@@ -48,6 +48,35 @@ class StyleLoader:
             "#10523e",
         ]
 
+        self.canton_colors = {
+            "AG": "#87ceeb",
+            "AI": "#57606f",
+            "AR": "#57606f",
+            "BE": "#EE5A24",
+            "BL": "#e9403c",
+            "BS": "#F8EFBA",
+            "FR": "#ffffff",
+            "GE": "#ffd134",
+            "GL": "#B53471",
+            "GR": "#eccc68",
+            "JU": "#6D214F",
+            "LU": "#258bcc",
+            "NE": "#17a74e",
+            "NW": "#e7423e",
+            "OW": "#D980FA",
+            "SG": "#17a74e",
+            "SH": "#ffd829",
+            "SO": "#e8423f",
+            "SZ": "#ff0000",
+            "TG": "#12CBC4",
+            "TI": "#0271ac",
+            "UR": "#ffd72e",
+            "VD": "#007f01",
+            "VS": "#e8423f",
+            "ZG": "#278bcc",
+            "ZH": "#0abde3",
+        }
+
         self.theme = {
             "background": "#252e3f",
             "foreground": "#2cfec1",
