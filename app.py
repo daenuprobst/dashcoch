@@ -62,7 +62,8 @@ app.layout = html.Div(
                                     src="https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg",
                                     style={"width": "200px"},
                                 ),
-                            ]
+                            ],
+                            href="https://www.glueckskette.ch/",
                         ),
                     ],
                 ),
