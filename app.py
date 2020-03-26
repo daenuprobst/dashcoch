@@ -31,14 +31,14 @@ server = app.server
 app.title = "Swiss COVID19 Tracker"
 
 style = StyleLoader()
-
+data = DataLoader(parser)
 
 cache = Cache(app.server, config={"CACHE_TYPE": "simple",})
 
 
 @cache.memoize(timeout=600)
 def get_data():
-    return DataLoader(parser)
+    return data
 
 
 def serve_layout():
