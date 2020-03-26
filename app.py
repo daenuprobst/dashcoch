@@ -61,7 +61,7 @@ app.layout = html.Div(
                         dcc.Markdown(
                             """Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
                         The data sources can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
-                        Please direct any criticism or ideas to me.
+                        Please direct any criticism or ideas to me. In addition, visitors on this website are counted by the privacy-focused analytics platform [Simple Analytics](https://simpleanalytics.com/corona-data.ch). All data can be viewed [here](https://simpleanalytics.com/corona-data.ch).
                         """
                         )
                     ],
@@ -766,7 +766,7 @@ def update_cfr_age_graph(selected_cantons):
 
 
 if __name__ == "__main__":
-    tl.start(block=False)
+    # tl.start(block=False)
     app.run_server(
         # debug=True,
         # dev_tools_hot_reload=True,
