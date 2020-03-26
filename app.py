@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-import threading
 import i18n
 from dashcoch import DataLoader, StyleLoader
+from timeloop import Timeloop
 import math
 from configparser import ConfigParser
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pytz import timezone
 import geojson
 import dash
@@ -21,14 +20,13 @@ parser.read("settings.ini")
 data = DataLoader(parser)
 style = StyleLoader()
 
+tl = Timeloop()
 
+
+@tl.job(interval=timedelta(seconds=600))
 def reload_data():
     global data
     data = DataLoader(parser)
-
-
-def data_updater():
-    threading.Timer(60 * 10, reload_data).start()
 
 
 #
@@ -759,6 +757,7 @@ def update_cfr_age_graph(selected_cantons):
 
 
 if __name__ == "__main__":
+    tl.start(block=False)
     app.run_server(
         # debug=True,
         # dev_tools_hot_reload=True,
