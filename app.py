@@ -766,7 +766,7 @@ def update_cfr_age_graph(selected_cantons):
 
 
 if __name__ == "__main__":
-    # tl.start(block=False)
+    tl.start(block=False)
     app.run_server(
         # debug=True,
         # dev_tools_hot_reload=True,
