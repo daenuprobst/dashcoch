@@ -13,6 +13,11 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import pandas as pd
 
+
+external_scripts = [
+    "https://cdn.simpleanalytics.io/hello.js",
+]
+
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 parser = ConfigParser()
 parser.read("settings.ini")
@@ -32,7 +37,11 @@ def reload_data():
 #
 # General app settings
 #
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(
+    __name__,
+    external_stylesheets=external_stylesheets,
+    external_scripts=external_scripts,
+)
 server = app.server
 app.title = "Swiss COVID19 Tracker"
 
