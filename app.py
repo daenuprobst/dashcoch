@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import threading
 import i18n
 from dashcoch import DataLoader, StyleLoader
 import math
@@ -19,6 +20,15 @@ parser.read("settings.ini")
 
 data = DataLoader(parser)
 style = StyleLoader()
+
+
+def reload_data():
+    global data
+    data = DataLoader(parser)
+
+
+def data_updater():
+    threading.Timer(60 * 10, reload_data).start()
 
 
 #
