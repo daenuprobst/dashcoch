@@ -366,7 +366,7 @@ def update_graph_map(selected_date_index, mode):
             for canton in data.cantonal_centres
         ]
     elif mode == "fatalities":
-        map_data = data.swiss_fatalities_by_date
+        map_data = data.swiss_fatalities_by_date_filled
         labels = [
             canton + ": " + str(int(map_data[canton][d]))
             if not math.isnan(float(map_data[canton][d]))
