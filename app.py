@@ -148,6 +148,7 @@ app.layout = html.Div(
                 ),
             ],
         ),
+        html.Div(id="date-container", className="slider-container"),
         html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
         html.Div(
             className="slider-container",
@@ -160,7 +161,7 @@ app.layout = html.Div(
                     min=0,
                     max=len(data.swiss_cases["Date"]) - 1,
                     marks={
-                        i: date.fromisoformat(d).strftime("%d. %m.")
+                        i: date.fromisoformat(d).strftime("%d.")
                         for i, d in enumerate(data.swiss_cases["Date"])
                     },
                     value=len(data.swiss_cases["Date"]) - 1,
@@ -170,6 +171,14 @@ app.layout = html.Div(
         html.Br(),
         html.H4(
             children="Data for Switzerland", style={"color": style.theme["accent"]}
+        ),
+        html.Div(
+            className="info-container",
+            children=[
+                html.P(
+                    children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
+                )
+            ],
         ),
         html.Div(
             className="slider-container",
@@ -215,6 +224,14 @@ app.layout = html.Div(
         ),
         html.Br(),
         html.H4(children="Data per Canton", style={"color": style.theme["accent"]}),
+        html.Div(
+            className="info-container",
+            children=[
+                html.P(
+                    children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
+                )
+            ],
+        ),
         html.Div(
             id="plot-settings-container",
             children=[
@@ -294,45 +311,58 @@ app.layout = html.Div(
 # Callbacks
 # -------------------------------------------------------------------------------
 @app.callback(
+    dash.dependencies.Output("date-container", "children"),
+    [dash.dependencies.Input("slider-date", "value")],
+)
+def update_map_date(selected_date_index):
+    d = date.fromisoformat(data.swiss_cases["Date"].iloc[selected_date_index])
+    return d.strftime("%d. %m. %Y")
+
+
+@app.callback(
     Output("graph-map", "figure"),
     [Input("slider-date", "value"), Input("radio-prevalence", "value")],
 )
 def update_graph_map(selected_date_index, mode):
-    date = data.swiss_cases["Date"].iloc[selected_date_index]
+    d = data.swiss_cases["Date"].iloc[selected_date_index]
 
     map_data = data.swiss_cases_by_date_filled
     labels = [
-        canton + ": " + str(int(map_data[canton][date]))
+        canton + ": " + str(int(map_data[canton][d]))
+        if not math.isnan(float(map_data[canton][d]))
+        else ""
         for canton in data.cantonal_centres
     ]
 
     if mode == "prevalence":
         map_data = data.swiss_cases_by_date_filled_per_capita
         labels = [
-            canton + ": " + str(round((map_data[canton][date]), 1))
+            canton + ": " + str(round((map_data[canton][d]), 1))
+            if not math.isnan(float(map_data[canton][d]))
+            else ""
             for canton in data.cantonal_centres
         ]
     elif mode == "fatalities":
         map_data = data.swiss_fatalities_by_date
         labels = [
-            canton + ": " + str(int(map_data[canton][date]))
-            if not math.isnan(float(map_data[canton][date]))
+            canton + ": " + str(int(map_data[canton][d]))
+            if not math.isnan(float(map_data[canton][d]))
             else ""
             for canton in data.cantonal_centres
         ]
     elif mode == "new":
         map_data = data.swiss_cases_by_date_diff
         labels = [
-            canton + ": " + str(int(map_data[canton][date]))
-            if not math.isnan(float(map_data[canton][date]))
+            canton + ": " + str(int(map_data[canton][d]))
+            if not math.isnan(float(map_data[canton][d]))
             else ""
             for canton in data.cantonal_centres
         ]
     elif mode == "new_fatalities":
         map_data = data.swiss_fatalities_by_date_diff
         labels = [
-            canton + ": " + str(int(map_data[canton][date]))
-            if not math.isnan(float(map_data[canton][date]))
+            canton + ": " + str(int(map_data[canton][d]))
+            if not math.isnan(float(map_data[canton][d]))
             else ""
             for canton in data.cantonal_centres
         ]
@@ -361,7 +391,7 @@ def update_graph_map(selected_date_index, mode):
             {
                 "type": "choropleth",
                 "locations": data.canton_labels,
-                "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
+                "z": [map_data[canton][d] for canton in map_data if canton != "CH"],
                 "colorscale": style.turbo,
                 "geojson": "/assets/switzerland.geojson",
                 "marker": {"line": {"width": 0.0, "color": "#08302A"}},
