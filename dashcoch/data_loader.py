@@ -8,6 +8,13 @@ class DataLoader:
     def __init__(self, parser: ConfigParser):
         self.swiss_cases = pd.read_csv(parser.get("urls", "swiss_cases"))
         self.swiss_fatalities = pd.read_csv(parser.get("urls", "swiss_fatalities"))
+        self.swiss_hospitalizations = pd.read_csv(
+            parser.get("urls", "swiss_hospitalizations")
+        )
+        self.swiss_icu = pd.read_csv(parser.get("urls", "swiss_icu"))
+        self.swiss_vent = pd.read_csv(parser.get("urls", "swiss_vent"))
+        self.swiss_releases = pd.read_csv(parser.get("urls", "swiss_releases"))
+
         self.swiss_demography = pd.read_csv(
             parser.get("urls", "swiss_demography"), index_col=0
         )
@@ -17,10 +24,14 @@ class DataLoader:
         self.world_fataltities = self.__simplify_world_data(
             pd.read_csv(parser.get("urls", "world_fatalities"))
         )
+
         self.world_population = self.__get_world_population()
 
         self.swiss_cases_by_date = self.swiss_cases.set_index("Date")
         self.swiss_fatalities_by_date = self.swiss_fatalities.set_index("Date")
+        self.swiss_hospitalizations_by_date = self.swiss_hospitalizations.set_index(
+            "Date"
+        )
 
         self.swiss_cases_by_date_diff = self.swiss_cases_by_date.diff().replace(
             0, float("nan")
@@ -29,11 +40,19 @@ class DataLoader:
             0, float("nan")
         )
 
+        self.swiss_hospitalizations_by_date_diff = self.swiss_hospitalizations_by_date.diff().replace(
+            0, float("nan")
+        )
+
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
         )
 
         self.swiss_fatalities_by_date_filled = self.swiss_fatalities_by_date.fillna(
+            method="ffill", axis=0
+        )
+
+        self.swiss_hospitalizations_by_date_filled = self.swiss_hospitalizations_by_date.fillna(
             method="ffill", axis=0
         )
 

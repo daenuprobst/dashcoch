@@ -153,7 +153,7 @@ g.layer rect {
 
   .column,
   .columns {
-    margin-left: 4%;
+    margin-left: 1%;
   }
 
   .column:first-child,
@@ -183,7 +183,7 @@ g.layer rect {
   }
 
   .six.columns {
-    width: 48%;
+    width: 49.5%;
   }
 
   .seven.columns {

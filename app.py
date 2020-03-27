@@ -137,6 +137,14 @@ app.layout = html.Div(
                         {"label": "Total Reported Cases", "value": "number"},
                         {"label": "Newly Reported Cases", "value": "new"},
                         {"label": "Prevalence (per 10,000)", "value": "prevalence"},
+                        {
+                            "label": "New Hospitalizations",
+                            "value": "new_hospitalizations",
+                        },
+                        {
+                            "label": "Total Reported Hospitalizations",
+                            "value": "hospitalizations",
+                        },
                         {"label": "New Fatalities", "value": "new_fatalities"},
                         {"label": "Total Fatalities", "value": "fatalities"},
                     ],
@@ -209,6 +217,21 @@ app.layout = html.Div(
                 ),
             ],
         ),
+        html.Br(),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="hospitalizations-ch-graph")],
+                ),
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="releases-ch-graph")],
+                ),
+            ],
+        ),
+        html.Br(),
         html.Div(
             className="row",
             children=[
@@ -366,6 +389,22 @@ def update_graph_map(selected_date_index, mode):
             else ""
             for canton in data.cantonal_centres
         ]
+    elif mode == "new_hospitalizations":
+        map_data = data.swiss_hospitalizations_by_date_diff
+        labels = [
+            canton + ": " + str(int(map_data[canton][d]))
+            if not math.isnan(float(map_data[canton][d]))
+            else ""
+            for canton in data.cantonal_centres
+        ]
+    elif mode == "hospitalizations":
+        map_data = data.swiss_hospitalizations_by_date_filled
+        labels = [
+            canton + ": " + str(int(map_data[canton][d]))
+            if not math.isnan(float(map_data[canton][d]))
+            else ""
+            for canton in data.cantonal_centres
+        ]
 
     return {
         "data": [
@@ -390,16 +429,17 @@ def update_graph_map(selected_date_index, mode):
             },
             {
                 "type": "choropleth",
+                "showscale": False,
                 "locations": data.canton_labels,
                 "z": [map_data[canton][d] for canton in map_data if canton != "CH"],
                 "colorscale": style.turbo,
                 "geojson": "/assets/switzerland.geojson",
                 "marker": {"line": {"width": 0.0, "color": "#08302A"}},
-                "colorbar": {
-                    "thickness": 10,
-                    "bgcolor": "#252e3f",
-                    "tickfont": {"color": "white"},
-                },
+                # "colorbar": {
+                #     "thickness": 10,
+                #     "bgcolor": "#252e3f",
+                #     "tickfont": {"color": "white"},
+                # },
             },
         ],
         "layout": {
@@ -453,7 +493,7 @@ def update_case_ch_graph(selected_scale):
             }
         ],
         "layout": {
-            "title": "Total Cases Switzerland",
+            "title": "Total Reported Cases Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
@@ -486,7 +526,7 @@ def update_fatalities_ch_graph(selected_scale):
             }
         ],
         "layout": {
-            "title": "Total Fatalities Switzerland",
+            "title": "Total Reported Fatalities Switzerland",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
@@ -495,6 +535,85 @@ def update_fatalities_ch_graph(selected_scale):
                 "color": "#ffffff",
                 "rangemode": "tozero",
                 "title": "Fatalities",
+            },
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("hospitalizations-ch-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
+)
+def update_hospitalizations_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_hospitalizations["Date"],
+                "y": data.swiss_hospitalizations["CH"],
+                "name": "Regular",
+                "marker": {"color": style.theme["yellow"]},
+                # "type": "bar",
+            },
+            {
+                "x": data.swiss_icu["Date"],
+                "y": data.swiss_icu["CH"],
+                "name": "Intensive",
+                "marker": {"color": style.theme["red"]},
+                # "type": "bar",
+            },
+            {
+                "x": data.swiss_vent["Date"],
+                "y": data.swiss_vent["CH"],
+                "name": "Ventilated",
+                "marker": {"color": style.theme["blue"]},
+                # "type": "bar",
+            },
+        ],
+        "layout": {
+            "title": "Total Reported Hospitalizations Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Hospitalizations",
+            },
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("releases-ch-graph", "figure"), [Input("radio-scale-switzerland", "value")],
+)
+def update_releases_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_releases["Date"],
+                "y": data.swiss_releases["CH"],
+                "name": "Regular",
+                "marker": {"color": style.theme["foreground"]},
+                # "type": "bar",
+            },
+        ],
+        "layout": {
+            "title": "Total Reported Hospital Releases Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Releases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],

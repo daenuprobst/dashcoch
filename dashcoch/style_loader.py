@@ -81,6 +81,9 @@ class StyleLoader:
             "background": "#252e3f",
             "foreground": "#2cfec1",
             "accent": "#7fafdf",
+            "red": "#fc5c65",
+            "yellow": "#fed330",
+            "blue": "#45aaf2",
         }
 
         self.turbo = self.get_turbo()
