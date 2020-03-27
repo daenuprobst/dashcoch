@@ -33,289 +33,261 @@ app.title = "Swiss COVID19 Tracker"
 style = StyleLoader()
 data = DataLoader(parser)
 
-cache = Cache(app.server, config={"CACHE_TYPE": "simple",})
-
-
-@cache.memoize(timeout=600)
-def get_data():
-    return data
-
-
-def serve_layout():
-    return html.Div(
-        id="main",
-        children=[
-            html.Div(
-                id="header",
-                children=[
-                    html.H4(children="COVID-19 Cases Switzerland"),
-                    html.P(
-                        id="description",
-                        children=[
-                            dcc.Markdown(
-                                """Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
-                            The data sources can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
-                            Please direct any criticism or ideas to me. In addition, visitors on this website are counted by the privacy-focused analytics platform [Simple Analytics](https://simpleanalytics.com?ref=http://corona-data.ch). All data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=http://corona-data.ch).
-                            """
-                            )
-                        ],
-                    ),
-                    html.P(
-                        id="glueckskette",
-                        children=[
-                            html.A(
-                                [
-                                    html.Span(
-                                        "Here's a link to the fundraiser by Glückskette. This outbreak is hitting a lot of people really hard. We're all in this together, let's look out for each other! (Glückskette is not affiliated with this project)"
-                                    ),
-                                    html.Br(),
-                                    html.Img(
-                                        src="https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg",
-                                        style={"width": "200px"},
-                                    ),
-                                ],
-                                href="https://www.glueckskette.ch/",
-                            ),
-                        ],
-                    ),
-                    html.P(
-                        id="important",
-                        children=[
-                            "All data shown on this website was collected from the cantonal data published on the cantonal websites. No data is being taken from news websites, newspapers, etc."
-                        ],
-                    ),
-                ],
-            ),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="twelve columns",
-                        children=[
-                            html.Div(
-                                className="total-container",
-                                children=[
-                                    html.P(
-                                        className="total-title",
-                                        children="Total Reported Cases",
-                                    ),
-                                    html.Div(
-                                        className="total-content",
-                                        children=str(int(get_data().total_swiss_cases)),
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="total-container",
-                                children=[
-                                    html.P(
-                                        className="total-title",
-                                        children="Reported Cases Today",
-                                    ),
-                                    html.Div(
-                                        className="total-content",
-                                        children="+"
-                                        + str(int(get_data().new_swiss_cases)),
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                className="total-container",
-                                children=[
-                                    html.P(
-                                        className="total-title",
-                                        children="Total Fatalities",
-                                    ),
-                                    html.Div(
-                                        className="total-content",
-                                        children=str(
-                                            int(get_data().total_swiss_fatalities)
-                                        ),
-                                    ),
-                                ],
-                            ),
-                        ],
-                    ),
-                    html.Div(className="six columns"),
-                    html.Div(className="six columns"),
-                ],
-            ),
-            html.Div(
-                className="slider-container",
-                children=[
-                    dcc.RadioItems(
-                        id="radio-prevalence",
-                        options=[
-                            {"label": "Total Reported Cases", "value": "number"},
-                            {"label": "Newly Reported Cases", "value": "new"},
-                            {"label": "Prevalence (per 10,000)", "value": "prevalence"},
-                            {"label": "New Fatalities", "value": "new_fatalities"},
-                            {"label": "Total Fatalities", "value": "fatalities"},
-                        ],
-                        value="number",
-                        labelStyle={
-                            "display": "inline-block",
-                            "color": style.theme["foreground"],
-                        },
-                    ),
-                ],
-            ),
-            html.Div(
-                children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]
-            ),
-            html.Div(
-                className="slider-container",
-                children=[
-                    html.P(
-                        id="slider-text",
-                        children="Drag the slider to change the date:",
-                    ),
-                    dcc.Slider(
-                        id="slider-date",
-                        min=0,
-                        max=len(get_data().swiss_cases["Date"]) - 1,
-                        marks={
-                            i: date.fromisoformat(d).strftime("%d. %m.")
-                            for i, d in enumerate(get_data().swiss_cases["Date"])
-                        },
-                        value=len(get_data().swiss_cases["Date"]) - 1,
-                    ),
-                ],
-            ),
-            html.Div(
-                children=[
-                    "Cantons updated today: ",
-                    html.Span(", ".join(get_data().updated_cantons)),
-                ]
-            ),
-            html.Br(),
-            html.H4(
-                children="Data for Switzerland", style={"color": style.theme["accent"]}
-            ),
-            html.Div(
-                className="slider-container",
-                children=[
-                    dcc.RadioItems(
-                        id="radio-scale-switzerland",
-                        options=[
-                            {"label": "Linear Scale", "value": "linear"},
-                            {"label": "Logarithmic Scale", "value": "log"},
-                        ],
-                        value="linear",
-                        labelStyle={
-                            "display": "inline-block",
-                            "color": style.theme["foreground"],
-                        },
-                    ),
-                ],
-            ),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="case-ch-graph")],
-                    ),
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="case-world-graph")],
-                    ),
-                ],
-            ),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="fatalities-ch-graph")],
-                    ),
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="fatalities-world-graph")],
-                    ),
-                ],
-            ),
-            html.Br(),
-            html.H4(children="Data per Canton", style={"color": style.theme["accent"]}),
-            html.Div(
-                id="plot-settings-container",
-                children=[
-                    dcc.RadioItems(
-                        id="radio-scale-cantons",
-                        options=[
-                            {"label": "Linear Scale", "value": "linear"},
-                            {"label": "Logarithmic Scale", "value": "log"},
-                        ],
-                        value="linear",
-                        labelStyle={
-                            "display": "inline-block",
-                            "color": style.theme["foreground"],
-                        },
-                    ),
-                    html.Br(),
-                    dcc.Dropdown(
-                        id="dropdown-cantons",
-                        options=[
-                            {"label": canton, "value": canton}
-                            for canton in get_data().canton_labels
-                        ],
-                        value=get_data().canton_labels,
-                        multi=True,
-                    ),
-                ],
-            ),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="six columns", children=[dcc.Graph(id="case-graph")]
-                    ),
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="case-pc-graph"),],
-                    ),
-                ],
-            ),
-            html.Br(),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="twelve columns",
-                        children=[dcc.Graph(id="case-graph-diff")],
-                    ),
-                ],
-            ),
-            html.Br(),
-            html.H4(
-                children="Demographic Correlations",
-                style={"color": style.theme["accent"]},
-            ),
-            html.Div(
-                className="row",
-                children=[
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="prevalence-density-graph")],
-                    ),
-                    html.Div(
-                        className="six columns",
-                        children=[dcc.Graph(id="cfr-age-graph")],
-                    ),
-                ],
-            ),
-            html.Br(),
-            html.H4(children="Raw Data", style={"color": style.theme["accent"]}),
-            dash_table.DataTable(
-                id="table",
-                columns=[{"name": i, "id": i} for i in get_data().swiss_cases.columns],
-                data=get_data().swiss_cases.to_dict("records"),
-            ),
-        ],
-    )
-
-
-app.layout = serve_layout
+app.layout = html.Div(
+    id="main",
+    children=[
+        html.Div(
+            id="header",
+            children=[
+                html.H4(children="COVID-19 Cases Switzerland"),
+                html.P(
+                    id="description",
+                    children=[
+                        dcc.Markdown(
+                            """Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
+                        The data sources can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
+                        Please direct any criticism or ideas to me. In addition, visitors on this website are counted by the privacy-focused analytics platform [Simple Analytics](https://simpleanalytics.com?ref=http://corona-data.ch). All data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=http://corona-data.ch).
+                        """
+                        )
+                    ],
+                ),
+                html.P(
+                    id="glueckskette",
+                    children=[
+                        html.A(
+                            [
+                                html.Span(
+                                    "Here's a link to the fundraiser by Glückskette. This outbreak is hitting a lot of people really hard. We're all in this together, let's look out for each other! (Glückskette is not affiliated with this project)"
+                                ),
+                                html.Br(),
+                                html.Img(
+                                    src="https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg",
+                                    style={"width": "200px"},
+                                ),
+                            ],
+                            href="https://www.glueckskette.ch/",
+                        ),
+                    ],
+                ),
+                html.P(
+                    id="important",
+                    children=[
+                        "All data shown on this website was collected from the cantonal data published on the cantonal websites. No data is being taken from news websites, newspapers, etc."
+                    ],
+                ),
+            ],
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="twelve columns",
+                    children=[
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(
+                                    className="total-title",
+                                    children="Total Reported Cases",
+                                ),
+                                html.Div(
+                                    className="total-content",
+                                    children=str(int(data.total_swiss_cases)),
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(
+                                    className="total-title",
+                                    children="Reported Cases Today",
+                                ),
+                                html.Div(
+                                    className="total-content",
+                                    children="+" + str(int(data.new_swiss_cases)),
+                                ),
+                            ],
+                        ),
+                        html.Div(
+                            className="total-container",
+                            children=[
+                                html.P(
+                                    className="total-title",
+                                    children="Total Fatalities",
+                                ),
+                                html.Div(
+                                    className="total-content",
+                                    children=str(int(data.total_swiss_fatalities)),
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                html.Div(className="six columns"),
+                html.Div(className="six columns"),
+            ],
+        ),
+        html.Div(
+            className="slider-container",
+            children=[
+                dcc.RadioItems(
+                    id="radio-prevalence",
+                    options=[
+                        {"label": "Total Reported Cases", "value": "number"},
+                        {"label": "Newly Reported Cases", "value": "new"},
+                        {"label": "Prevalence (per 10,000)", "value": "prevalence"},
+                        {"label": "New Fatalities", "value": "new_fatalities"},
+                        {"label": "Total Fatalities", "value": "fatalities"},
+                    ],
+                    value="number",
+                    labelStyle={
+                        "display": "inline-block",
+                        "color": style.theme["foreground"],
+                    },
+                ),
+            ],
+        ),
+        html.Div(children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]),
+        html.Div(
+            className="slider-container",
+            children=[
+                html.P(
+                    id="slider-text", children="Drag the slider to change the date:",
+                ),
+                dcc.Slider(
+                    id="slider-date",
+                    min=0,
+                    max=len(data.swiss_cases["Date"]) - 1,
+                    marks={
+                        i: date.fromisoformat(d).strftime("%d. %m.")
+                        for i, d in enumerate(data.swiss_cases["Date"])
+                    },
+                    value=len(data.swiss_cases["Date"]) - 1,
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(
+            children="Data for Switzerland", style={"color": style.theme["accent"]}
+        ),
+        html.Div(
+            className="slider-container",
+            children=[
+                dcc.RadioItems(
+                    id="radio-scale-switzerland",
+                    options=[
+                        {"label": "Linear Scale", "value": "linear"},
+                        {"label": "Logarithmic Scale", "value": "log"},
+                    ],
+                    value="linear",
+                    labelStyle={
+                        "display": "inline-block",
+                        "color": style.theme["foreground"],
+                    },
+                ),
+            ],
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-ch-graph")],
+                ),
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="case-world-graph")],
+                ),
+            ],
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="fatalities-ch-graph")],
+                ),
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="fatalities-world-graph")],
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(children="Data per Canton", style={"color": style.theme["accent"]}),
+        html.Div(
+            id="plot-settings-container",
+            children=[
+                dcc.RadioItems(
+                    id="radio-scale-cantons",
+                    options=[
+                        {"label": "Linear Scale", "value": "linear"},
+                        {"label": "Logarithmic Scale", "value": "log"},
+                    ],
+                    value="linear",
+                    labelStyle={
+                        "display": "inline-block",
+                        "color": style.theme["foreground"],
+                    },
+                ),
+                html.Br(),
+                dcc.Dropdown(
+                    id="dropdown-cantons",
+                    options=[
+                        {"label": canton, "value": canton}
+                        for canton in data.canton_labels
+                    ],
+                    value=data.canton_labels,
+                    multi=True,
+                ),
+            ],
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-graph")]
+                ),
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="case-pc-graph"),],
+                ),
+            ],
+        ),
+        html.Br(),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="twelve columns",
+                    children=[dcc.Graph(id="case-graph-diff")],
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(
+            children="Demographic Correlations", style={"color": style.theme["accent"]},
+        ),
+        html.Div(
+            className="row",
+            children=[
+                html.Div(
+                    className="six columns",
+                    children=[dcc.Graph(id="prevalence-density-graph")],
+                ),
+                html.Div(
+                    className="six columns", children=[dcc.Graph(id="cfr-age-graph")],
+                ),
+            ],
+        ),
+        html.Br(),
+        html.H4(children="Raw Data", style={"color": style.theme["accent"]}),
+        dash_table.DataTable(
+            id="table",
+            columns=[{"name": i, "id": i} for i in data.swiss_cases.columns],
+            data=data.swiss_cases.to_dict("records"),
+        ),
+    ],
+)
 
 
 # -------------------------------------------------------------------------------
@@ -326,55 +298,55 @@ app.layout = serve_layout
     [Input("slider-date", "value"), Input("radio-prevalence", "value")],
 )
 def update_graph_map(selected_date_index, mode):
-    date = get_data().swiss_cases["Date"].iloc[selected_date_index]
+    date = data.swiss_cases["Date"].iloc[selected_date_index]
 
-    map_data = get_data().swiss_cases_by_date_filled
+    map_data = data.swiss_cases_by_date_filled
     labels = [
         canton + ": " + str(int(map_data[canton][date]))
-        for canton in get_data().cantonal_centres
+        for canton in data.cantonal_centres
     ]
 
     if mode == "prevalence":
-        map_data = get_data().swiss_cases_by_date_filled_per_capita
+        map_data = data.swiss_cases_by_date_filled_per_capita
         labels = [
             canton + ": " + str(round((map_data[canton][date]), 1))
-            for canton in get_data().cantonal_centres
+            for canton in data.cantonal_centres
         ]
     elif mode == "fatalities":
-        map_data = get_data().swiss_fatalities_by_date
+        map_data = data.swiss_fatalities_by_date
         labels = [
             canton + ": " + str(int(map_data[canton][date]))
             if not math.isnan(float(map_data[canton][date]))
             else ""
-            for canton in get_data().cantonal_centres
+            for canton in data.cantonal_centres
         ]
     elif mode == "new":
-        map_data = get_data().swiss_cases_by_date_diff
+        map_data = data.swiss_cases_by_date_diff
         labels = [
             canton + ": " + str(int(map_data[canton][date]))
             if not math.isnan(float(map_data[canton][date]))
             else ""
-            for canton in get_data().cantonal_centres
+            for canton in data.cantonal_centres
         ]
     elif mode == "new_fatalities":
-        map_data = get_data().swiss_fatalities_by_date_diff
+        map_data = data.swiss_fatalities_by_date_diff
         labels = [
             canton + ": " + str(int(map_data[canton][date]))
             if not math.isnan(float(map_data[canton][date]))
             else ""
-            for canton in get_data().cantonal_centres
+            for canton in data.cantonal_centres
         ]
 
     return {
         "data": [
             {
                 "lat": [
-                    get_data().cantonal_centres[canton]["lat"]
-                    for canton in get_data().cantonal_centres
+                    data.cantonal_centres[canton]["lat"]
+                    for canton in data.cantonal_centres
                 ],
                 "lon": [
-                    get_data().cantonal_centres[canton]["lon"]
-                    for canton in get_data().cantonal_centres
+                    data.cantonal_centres[canton]["lon"]
+                    for canton in data.cantonal_centres
                 ],
                 "text": labels,
                 "mode": "text",
@@ -388,7 +360,7 @@ def update_graph_map(selected_date_index, mode):
             },
             {
                 "type": "choropleth",
-                "locations": get_data().canton_labels,
+                "locations": data.canton_labels,
                 "z": [map_data[canton][date] for canton in map_data if canton != "CH"],
                 "colorscale": style.turbo,
                 "geojson": "/assets/switzerland.geojson",
@@ -443,8 +415,8 @@ def update_case_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": get_data().swiss_cases_as_dict["Date"],
-                "y": get_data().swiss_cases_as_dict["CH"],
+                "x": data.swiss_cases_as_dict["Date"],
+                "y": data.swiss_cases_as_dict["CH"],
                 "name": "CH",
                 "marker": {"color": style.theme["foreground"]},
                 # "type": "bar",
@@ -476,8 +448,8 @@ def update_fatalities_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": get_data().swiss_fatalities["Date"],
-                "y": get_data().swiss_fatalities["CH"],
+                "x": data.swiss_fatalities["Date"],
+                "y": data.swiss_fatalities["CH"],
                 "name": "CH",
                 "marker": {"color": style.theme["foreground"]},
                 # "type": "bar",
@@ -511,13 +483,13 @@ def update_case_world_graph(selected_scale):
     return {
         "data": [
             {
-                "x": get_data().swiss_world_cases_normalized.index.values,
-                "y": get_data().swiss_world_cases_normalized[country],
+                "x": data.swiss_world_cases_normalized.index.values,
+                "y": data.swiss_world_cases_normalized[country],
                 "name": country,
                 # "marker": {"color": theme["foreground"]},
                 # "type": "bar",
             }
-            for country in get_data().swiss_world_cases_normalized
+            for country in data.swiss_world_cases_normalized
             if country != "Day"
         ],
         "layout": {
@@ -550,9 +522,9 @@ def update_fatalities_world_graph(selected_scale):
         "data": [
             {
                 "x": ["Switzerland"]
-                + get_data().world_case_fatality_rate.index.values.tolist(),
-                "y": [get_data().swiss_case_fatality_rate]
-                + [val for val in get_data().world_case_fatality_rate],
+                + data.world_case_fatality_rate.index.values.tolist(),
+                "y": [data.swiss_case_fatality_rate]
+                + [val for val in data.world_case_fatality_rate],
                 "name": "CH",
                 "marker": {"color": style.theme["foreground"]},
                 "type": "bar",
@@ -587,12 +559,12 @@ def update_case_graph(selected_cantons, selected_scale):
     return {
         "data": [
             {
-                "x": get_data().swiss_cases_as_dict["Date"],
-                "y": get_data().swiss_cases_as_dict[canton],
+                "x": data.swiss_cases_as_dict["Date"],
+                "y": data.swiss_cases_as_dict[canton],
                 "name": canton,
                 "marker": {"color": style.canton_colors[canton]},
             }
-            for _, canton in enumerate(get_data().swiss_cases_as_dict)
+            for _, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -620,12 +592,12 @@ def update_case_pc_graph(selected_cantons, selected_scale):
     return {
         "data": [
             {
-                "x": get_data().swiss_cases_normalized_as_dict["Date"],
-                "y": get_data().swiss_cases_normalized_as_dict[canton],
+                "x": data.swiss_cases_normalized_as_dict["Date"],
+                "y": data.swiss_cases_normalized_as_dict[canton],
                 "name": canton,
                 "marker": {"color": style.canton_colors[canton]},
             }
-            for _, canton in enumerate(get_data().swiss_cases_normalized_as_dict)
+            for _, canton in enumerate(data.swiss_cases_normalized_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -651,14 +623,14 @@ def update_case_pc_graph(selected_cantons, selected_scale):
 )
 def update_case_graph_diff(selected_cantons, selected_scale):
     data_non_nan = {}
-    data_non_nan["Date"] = get_data().swiss_cases_as_dict["Date"]
+    data_non_nan["Date"] = data.swiss_cases_as_dict["Date"]
 
-    for canton in get_data().swiss_cases_as_dict:
+    for canton in data.swiss_cases_as_dict:
         if canton == "Date":
             continue
         values = []
         last_value = 0
-        for _, v in enumerate(get_data().swiss_cases_as_dict[canton]):
+        for _, v in enumerate(data.swiss_cases_as_dict[canton]):
             if math.isnan(float(v)):
                 values.append(last_value)
             else:
@@ -679,7 +651,7 @@ def update_case_graph_diff(selected_cantons, selected_scale):
                 "marker": {"color": style.canton_colors[canton]},
                 "type": "bar",
             }
-            for i, canton in enumerate(get_data().swiss_cases_as_dict)
+            for i, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -710,15 +682,13 @@ def update_prevalence_density_graph(selected_cantons):
     return {
         "data": [
             {
-                "x": [get_data().swiss_demography["Density"][canton]],
-                "y": [
-                    get_data().swiss_cases_by_date_filled_per_capita.iloc[-1][canton]
-                ],
+                "x": [data.swiss_demography["Density"][canton]],
+                "y": [data.swiss_cases_by_date_filled_per_capita.iloc[-1][canton]],
                 "name": canton,
                 "mode": "markers",
                 "marker": {"color": style.canton_colors[canton], "size": 10.0},
             }
-            for _, canton in enumerate(get_data().swiss_cases_as_dict)
+            for _, canton in enumerate(data.swiss_cases_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
@@ -745,13 +715,13 @@ def update_cfr_age_graph(selected_cantons):
     return {
         "data": [
             {
-                "x": [get_data().swiss_demography["O65"][canton] * 100],
-                "y": [get_data().swiss_case_fatality_rates.iloc[-1][canton]],
+                "x": [data.swiss_demography["O65"][canton] * 100],
+                "y": [data.swiss_case_fatality_rates.iloc[-1][canton]],
                 "name": canton,
                 "mode": "markers",
                 "marker": {"color": style.canton_colors[canton], "size": 10.0},
             }
-            for _, canton in enumerate(get_data().swiss_cases_normalized_as_dict)
+            for _, canton in enumerate(data.swiss_cases_normalized_as_dict)
             if canton in selected_cantons
         ],
         "layout": {
