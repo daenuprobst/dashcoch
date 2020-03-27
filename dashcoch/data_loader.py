@@ -141,11 +141,7 @@ class DataLoader:
         )
 
     def __get_total_swiss_fatalities(self):
-        l = len(self.swiss_fatalities_by_date)
-        return (
-            self.swiss_fatalities_by_date.iloc[l - 1].sum()
-            - self.swiss_fatalities_by_date.iloc[l - 1]["CH"]
-        )
+        return self.swiss_fatalities_by_date_filled.iloc[-1]["CH"]
 
     def __get_swiss_cases_as_normalized_dict(self):
         tmp = [
