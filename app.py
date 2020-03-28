@@ -39,12 +39,12 @@ app.layout = html.Div(
         html.Div(
             id="header",
             children=[
-                html.H4(children="COVID-19 Cases Switzerland"),
+                html.H4(children="COVID-19 Information for Switzerland"),
                 html.P(
                     id="description",
                     children=[
                         dcc.Markdown(
-                            """Number of COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
+                            """Number of reported COVID-19 cases in Switzerland. Data compiled and visualised by [@skepteis](https://twitter.com/skepteis).
                         The data sources can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland).
                         Please direct any criticism or ideas to me. In addition, visitors on this website are counted by the privacy-focused analytics platform [Simple Analytics](https://simpleanalytics.com?ref=http://corona-data.ch). All data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=http://corona-data.ch).
                         """
@@ -501,7 +501,7 @@ def update_case_ch_graph(selected_scale):
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
-                "title": "Cases",
+                "title": "Reported Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -653,7 +653,7 @@ def update_case_world_graph(selected_scale):
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Cases / Population * 10,000",
+                "title": "Reported Cases / Population * 10,000",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -680,7 +680,7 @@ def update_fatalities_world_graph(selected_scale):
             }
         ],
         "layout": {
-            "title": "Case Fatality Rates (Fatalities / Cases)",
+            "title": "Case Fatality Ratios (Fatalities / Reported Cases)",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Country"},
             "yaxis": {
@@ -688,7 +688,7 @@ def update_fatalities_world_graph(selected_scale):
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
-                "title": "Fatalities / Cases",
+                "title": "Fatalities / Reported Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -717,14 +717,14 @@ def update_case_graph(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton",
+            "title": "Reported Cases per Canton",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Cases",
+                "title": "Reported Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -750,14 +750,14 @@ def update_case_pc_graph(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Cases per Canton (per 10,000 Inhabitants)",
+            "title": "Reported Cases per Canton (per 10,000 Inhabitants)",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
                 "type": selected_scale,
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Cases / Population * 10,000",
+                "title": "Reported Cases / Population * 10,000",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -804,14 +804,14 @@ def update_case_graph_diff(selected_cantons, selected_scale):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "New Cases per Canton",
+            "title": "Newly Reported Cases per Canton",
             "height": 750,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
                 "type": "linear",
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Cases",
+                "title": "Reported Cases",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -874,7 +874,7 @@ def update_cfr_age_graph(selected_cantons):
             if canton in selected_cantons
         ],
         "layout": {
-            "title": "Case Fatality Rate vs Population over 65",
+            "title": "Case Fatality Ratio vs Population over 65",
             "hovermode": "closest",
             "height": 750,
             "xaxis": {
@@ -886,7 +886,7 @@ def update_cfr_age_graph(selected_cantons):
                 "type": "linear",
                 "showgrid": True,
                 "color": "#ffffff",
-                "title": "Case Fatality Rate",
+                "title": "Case Fatality Ratio",
             },
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
