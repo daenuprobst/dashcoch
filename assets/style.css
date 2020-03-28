@@ -171,8 +171,8 @@ g.layer rect {
 /* For devices larger than 400px */
 @media (min-width: 400px) and (max-width: 899px) {
   .container {
-    width: 85%;
-    padding: 0;
+    width: 85% !important;
+    padding: 0 !important;
   }
 }
 

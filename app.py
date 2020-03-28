@@ -20,14 +20,23 @@ external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
 ]
 
+external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+
 meta_tags = [{"name": "viewport", "content": "width=device-width, user-scalable=no"}]
 
-app = dash.Dash(__name__, external_scripts=external_scripts, meta_tags=meta_tags,)
+app = dash.Dash(
+    __name__,
+    external_scripts=external_scripts,
+    external_stylesheets=external_stylesheets,
+    meta_tags=meta_tags,
+)
+
 server = app.server
 
 style = StyleLoader()
 data = DataLoader(parser)
 
+app.title = "COVID-19 Information Switzerland"
 app.layout = html.Div(
     id="main",
     children=[

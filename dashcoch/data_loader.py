@@ -41,7 +41,11 @@ class DataLoader:
             "Date"
         )
 
-        self.swiss_cases_by_date_diff = self.swiss_cases_by_date.diff().replace(
+        self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
+            method="ffill", axis=0
+        )
+
+        self.swiss_cases_by_date_diff = self.swiss_cases_by_date_filled.diff().replace(
             0, float("nan")
         )
         self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace(
