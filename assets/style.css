@@ -2,6 +2,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 div#main {
@@ -157,7 +158,7 @@ g.layer rect {
 }
 
 /* For devices larger than 400px */
-@media (min-width: 400px) and (max-width: 549px) {
+@media (min-width: 400px) and (max-width: 899px) {
   .container {
     width: 85%;
     padding: 0;
@@ -165,7 +166,7 @@ g.layer rect {
 }
 
 /* For devices larger than 550px */
-@media (min-width: 550px) {
+@media (min-width: 900px) {
   .container {
     width: 80%;
   }
@@ -341,13 +342,13 @@ body {
   margin: 0;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 900px) {
   #root {
     padding: 2rem;
   }
 }
 
-@media (min-width: 551px) {
+@media (min-width: 901px) {
   #root {
     padding: 5rem;
   }

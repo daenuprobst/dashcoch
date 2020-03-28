@@ -20,15 +20,9 @@ external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
 ]
 
-external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+meta_tags = [{"name": "viewport", "content": "width=device-width, user-scalable=no"}]
 
-app = dash.Dash(
-    __name__,
-    external_stylesheets=external_stylesheets,
-    external_scripts=external_scripts,
-)
-server = app.server
-app.title = "Swiss COVID19 Tracker"
+app = dash.Dash(__name__, external_scripts=external_scripts, meta_tags=meta_tags,)
 
 style = StyleLoader()
 data = DataLoader(parser)
@@ -527,6 +521,7 @@ def update_case_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Reported Cases",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -560,6 +555,7 @@ def update_fatalities_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Fatalities",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -607,6 +603,7 @@ def update_hospitalizations_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Hospitalizations",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -639,6 +636,7 @@ def update_releases_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Releases",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -679,6 +677,7 @@ def update_case_world_graph(selected_scale):
                 "color": "#ffffff",
                 "title": "Reported Cases / Population * 10,000",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -714,6 +713,7 @@ def update_fatalities_world_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Fatalities / Reported Cases",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -750,6 +750,7 @@ def update_case_graph(selected_cantons, selected_scale):
                 "color": "#ffffff",
                 "title": "Reported Cases",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -783,6 +784,7 @@ def update_case_pc_graph(selected_cantons, selected_scale):
                 "color": "#ffffff",
                 "title": "Reported Cases / Population * 10,000",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -837,6 +839,7 @@ def update_case_graph_diff(selected_cantons, selected_scale):
                 "color": "#ffffff",
                 "title": "Reported Cases",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -874,6 +877,7 @@ def update_prevalence_density_graph(selected_cantons):
                 "title": "Population Density [Inhabitants/km2]",
             },
             "yaxis": {"showgrid": True, "color": "#ffffff", "title": "Prevalence",},
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -912,6 +916,7 @@ def update_cfr_age_graph(selected_cantons):
                 "color": "#ffffff",
                 "title": "Case Fatality Ratio",
             },
+            "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
