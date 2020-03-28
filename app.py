@@ -23,6 +23,7 @@ external_scripts = [
 meta_tags = [{"name": "viewport", "content": "width=device-width, user-scalable=no"}]
 
 app = dash.Dash(__name__, external_scripts=external_scripts, meta_tags=meta_tags,)
+server = app.server
 
 style = StyleLoader()
 data = DataLoader(parser)
