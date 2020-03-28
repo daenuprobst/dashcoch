@@ -6,6 +6,14 @@ from pytz import timezone
 
 class DataLoader:
     def __init__(self, parser: ConfigParser):
+        # Load info on the latest updates
+        self.last_updated = pd.read_csv(
+            parser.get("urls", "last_updated"), index_col=[0]
+        ).sort_values(by=["Date", "Time"], ascending=False)
+
+        self.last_updated = self.__get_iso(self.last_updated)
+
+        # Load the actual data
         self.swiss_cases = pd.read_csv(parser.get("urls", "swiss_cases"))
         self.swiss_fatalities = pd.read_csv(parser.get("urls", "swiss_fatalities"))
         self.swiss_hospitalizations = pd.read_csv(
@@ -98,6 +106,22 @@ class DataLoader:
         )
 
         self.swiss_world_cases_normalized = self.__get_swiss_world_cases_normalized()
+
+    def __get_iso(self, df):
+        isos = []
+        updated_today = []
+        for i, row in df.iterrows():
+            t = row["Time"]
+            if len(t) == 4:
+                t = "0" + t
+            iso = datetime.fromisoformat(row["Date"] + "T" + t + ":00")
+            isos.append(iso)
+            updated_today.append(iso.date() == datetime.today().date())
+
+        df["ISO"] = isos
+        df["Updated_Today"] = updated_today
+
+        return df
 
     def __get_latest_date(self):
         return self.swiss_cases.iloc[len(self.swiss_cases) - 1]["Date"]
