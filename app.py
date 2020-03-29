@@ -43,7 +43,7 @@ app.layout = html.Div(
         html.Div(
             id="header",
             children=[
-                html.H4(children="COVID-19 Information for Switzerland"),
+                html.H3(children="COVID-19 Information for Switzerland"),
                 html.P(
                     children=[
                         dcc.Markdown(
@@ -463,7 +463,7 @@ def update_graph_map(selected_date_index, mode):
                 "type": "scattergeo",
                 "textfont": {
                     "family": "Arial, sans-serif",
-                    "size": 18,
+                    "size": 16,
                     "color": "white",
                     "weight": "bold",
                 },

@@ -103,6 +103,12 @@ class DataLoader:
         self.cantonal_centres = self.__get_cantonal_centres()
 
         #
+        # Moving average showing development
+        #
+
+        self.__get_moving_total(self.swiss_cases_by_date)
+
+        #
         # World related data
         #
 
@@ -261,6 +267,9 @@ class DataLoader:
                 slope * df.iloc[0].max() + intercept,
             ],
         }
+
+    def __get_moving_total(self, df, days=7):
+        return df
 
     def __get_world_population(self):
         return {
