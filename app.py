@@ -489,30 +489,13 @@ def update_graph_map(selected_date_index, mode):
                 "center": {"lat": 46.80111, "lon": 8.22667},
                 "lataxis": {"range": [45.7845, 47.8406]},
                 "lonaxis": {"range": [5.5223, 10.5421]},
-                # "fitbounds": "geojson",
                 "projection": {"type": "transverse mercator"},
-                # "landcolor": "#1f2630",
-                # "showland": True,
-                # "showcountries": True,
             },
             "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
             "height": 600,
             "plot_bgcolor": "#252e3f",
             "paper_bgcolor": "#252e3f",
-        }
-        # "layout": {
-        #     "mapbox": {
-        #         "accesstoken": "pk.eyJ1IjoiZGFlbnVwcm9ic3QiLCJhIjoiY2s3eDR2dmRyMDg0ajN0cDlkaDNmM3J0NyJ9.tcJPFQkbsVGlWpyQaKPtiw",
-        #         "style": "mapbox://styles/plotlymapbox/cjvprkf3t1kns1cqjxuxmwixz",
-        #         "center": {"lat": 46.8181877, "lon": 8.2275124},
-        #         "pitch": 0,
-        #         "zoom": 7,
-        #     },
-        #     "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
-        #     "height": 600,
-        #     "plot_bgcolor": "#1f2630",
-        #     "paper_bgcolor": "#1f2630",
-        # },
+        },
     }
 
 
@@ -526,12 +509,22 @@ def update_case_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_cases_as_dict["Date"],
-                "y": data.swiss_cases_as_dict["CH"],
+                "x": data.swiss_cases.iloc[:-2]["Date"],
+                "y": data.swiss_cases.iloc[:-2]["CH"],
                 "name": "CH",
+                "mode": "lines",
                 "marker": {"color": style.theme["foreground"]},
-                # "type": "bar",
-            }
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_cases.iloc[-3:]["Date"],
+                "y": data.swiss_cases.iloc[-3:]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
         ],
         "layout": {
             "title": "Total Reported Cases Switzerland",
@@ -544,6 +537,7 @@ def update_case_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Reported Cases",
             },
+            "hovermode": "closest",
             "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -560,12 +554,22 @@ def update_fatalities_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_fatalities["Date"],
-                "y": data.swiss_fatalities["CH"],
+                "x": data.swiss_fatalities[:-2]["Date"],
+                "y": data.swiss_fatalities[:-2]["CH"],
                 "name": "CH",
+                "mode": "lines",
                 "marker": {"color": style.theme["foreground"]},
-                # "type": "bar",
-            }
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_fatalities.iloc[-3:]["Date"],
+                "y": data.swiss_fatalities.iloc[-3:]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
         ],
         "layout": {
             "title": "Total Reported Fatalities Switzerland",
@@ -578,6 +582,7 @@ def update_fatalities_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Fatalities",
             },
+            "hovermode": "closest",
             "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -594,25 +599,55 @@ def update_hospitalizations_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_hospitalizations["Date"],
-                "y": data.swiss_hospitalizations["CH"],
+                "x": data.swiss_hospitalizations[:-2]["Date"],
+                "y": data.swiss_hospitalizations[:-2]["CH"],
                 "name": "Regular",
+                "mode": "lines",
                 "marker": {"color": style.theme["yellow"]},
-                # "type": "bar",
+                "showlegend": False,
             },
             {
-                "x": data.swiss_icu["Date"],
-                "y": data.swiss_icu["CH"],
+                "x": data.swiss_icu[:-2]["Date"],
+                "y": data.swiss_icu[:-2]["CH"],
                 "name": "Intensive",
+                "mode": "lines",
                 "marker": {"color": style.theme["red"]},
-                # "type": "bar",
+                "showlegend": False,
             },
             {
-                "x": data.swiss_vent["Date"],
-                "y": data.swiss_vent["CH"],
+                "x": data.swiss_vent[:-2]["Date"],
+                "y": data.swiss_vent[:-2]["CH"],
                 "name": "Ventilated",
+                "mode": "lines",
                 "marker": {"color": style.theme["blue"]},
-                # "type": "bar",
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_hospitalizations.iloc[-3:]["Date"],
+                "y": data.swiss_hospitalizations.iloc[-3:]["CH"],
+                "name": "Regular",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["yellow"]},
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_icu.iloc[-3:]["Date"],
+                "y": data.swiss_icu.iloc[-3:]["CH"],
+                "name": "Intensive",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["red"]},
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_vent.iloc[-3:]["Date"],
+                "y": data.swiss_vent.iloc[-3:]["CH"],
+                "name": "Ventilated",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["blue"]},
+                "showlegend": False,
             },
         ],
         "layout": {
@@ -626,6 +661,7 @@ def update_hospitalizations_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Hospitalizations",
             },
+            "hovermode": "closest",
             "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
@@ -641,11 +677,21 @@ def update_releases_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_releases["Date"],
-                "y": data.swiss_releases["CH"],
+                "x": data.swiss_releases[:-2]["Date"],
+                "y": data.swiss_releases[:-2]["CH"],
                 "name": "Regular",
+                "mode": "lines",
                 "marker": {"color": style.theme["foreground"]},
-                # "type": "bar",
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_releases.iloc[-3:]["Date"],
+                "y": data.swiss_releases.iloc[-3:]["CH"],
+                "name": "Regular",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
             },
         ],
         "layout": {
@@ -659,6 +705,7 @@ def update_releases_ch_graph(selected_scale):
                 "rangemode": "tozero",
                 "title": "Releases",
             },
+            "hovermode": "closest",
             "dragmode": False,
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],

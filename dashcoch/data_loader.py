@@ -227,7 +227,8 @@ class DataLoader:
 
     def __get_swiss_world_cases_normalized(self, min_prevalence: int = 0.4):
         tmp = self.world_cases.copy()
-        tmp["Switzerland"] = pd.Series(self.swiss_cases_as_dict["CH"])
+        # Don't take today from switzerland, as values are usually very incomplete
+        tmp["Switzerland"] = pd.Series(self.swiss_cases_as_dict["CH"][:-1])
 
         for column in tmp:
             tmp[column] = tmp[column] / self.world_population[column] * 10000
