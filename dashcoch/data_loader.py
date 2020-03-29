@@ -2,6 +2,7 @@ from configparser import ConfigParser
 from datetime import date, datetime
 import pandas as pd
 from pytz import timezone
+from scipy import stats
 
 
 class DataLoader:
@@ -111,10 +112,22 @@ class DataLoader:
 
         self.swiss_world_cases_normalized = self.__get_swiss_world_cases_normalized()
 
+        #
+        # Some regression analysis on the data
+        #
+        self.prevalence_density_regression = self.__get_regression(
+            self.swiss_demography["Density"],
+            self.swiss_cases_by_date_filled_per_capita.iloc[-1],
+        )
+
+        self.cfr_age_regression = self.__get_regression(
+            self.swiss_demography["O65"], self.swiss_case_fatality_rates.iloc[-1]
+        )
+
     def __get_iso(self, df):
         isos = []
         updated_today = []
-        for i, row in df.iterrows():
+        for _, row in df.iterrows():
             t = row["Time"]
             if len(t) == 4:
                 t = "0" + t
@@ -226,6 +239,27 @@ class DataLoader:
         tmp.dropna(how="all", inplace=True)
 
         return tmp
+
+    def __get_regression(self, x, y):
+        df = pd.DataFrame([x, y])
+        df = df.dropna(axis=1, how="any")
+        slope, intercept, r_value, p_value, std_err = stats.linregress(
+            df.iloc[0], df.iloc[1]
+        )
+        m = df.iloc[0].min() + (df.iloc[0].max() - df.iloc[0].min()) / 2
+        return {
+            "slope": slope,
+            "intercept": intercept,
+            "r_value": r_value,
+            "p_value": p_value,
+            "std_err": std_err,
+            "x": [df.iloc[0].min(), m, df.iloc[0].max()],
+            "y": [
+                slope * df.iloc[0].min() + intercept,
+                slope * m + intercept,
+                slope * df.iloc[0].max() + intercept,
+            ],
+        }
 
     def __get_world_population(self):
         return {

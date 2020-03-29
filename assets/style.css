@@ -169,7 +169,7 @@ g.layer rect {
 }
 
 /* For devices larger than 400px */
-@media (min-width: 400px) and (max-width: 899px) {
+@media (min-width: 400px) and (max-width: 1365px) {
   .container {
     width: 85% !important;
     padding: 0 !important;
@@ -177,7 +177,7 @@ g.layer rect {
 }
 
 /* For devices larger than 550px */
-@media (min-width: 900px) {
+@media (min-width: 1366px) {
   .container {
     width: 80%;
   }
@@ -353,13 +353,13 @@ body {
   margin: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1366px) {
   #root {
     padding: 2rem;
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1367px) {
   #root {
     padding: 5rem;
   }
