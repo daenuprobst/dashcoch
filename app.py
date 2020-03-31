@@ -165,7 +165,10 @@ app.layout = html.Div(
                     options=[
                         {"label": "Total Reported Cases", "value": "number"},
                         {"label": "Newly Reported Cases", "value": "new"},
-                        {"label": "Prevalence (per 10,000)", "value": "prevalence"},
+                        {
+                            "label": "Cumulative Prevalence (per 10,000)",
+                            "value": "prevalence",
+                        },
                         {
                             "label": "New Hospitalizations",
                             "value": "new_hospitalizations",
@@ -242,10 +245,20 @@ app.layout = html.Div(
                 ),
                 html.Div(
                     className="six columns",
-                    children=[dcc.Graph(id="case-world-graph")],
+                    children=[dcc.Graph(id="fatalities-ch-graph")],
                 ),
             ],
         ),
+        # html.Br(),
+        # html.Div(
+        #     className="row",
+        #     children=[
+        #         html.Div(
+        #             className="twelve columns",
+        #             children=[dcc.Graph(id="caseincrease-ch-graph")],
+        #         ),
+        #     ],
+        # ),
         html.Br(),
         html.Div(
             className="row",
@@ -266,7 +279,7 @@ app.layout = html.Div(
             children=[
                 html.Div(
                     className="six columns",
-                    children=[dcc.Graph(id="fatalities-ch-graph")],
+                    children=[dcc.Graph(id="case-world-graph")],
                 ),
                 html.Div(
                     className="six columns",
@@ -539,6 +552,49 @@ def update_case_ch_graph(selected_scale):
             },
             "hovermode": "closest",
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+        },
+    }
+
+
+@app.callback(
+    Output("caseincrease-ch-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
+)
+def update_caseincrease_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_cases.iloc[:-2]["CH"],
+                "y": data.moving_total["CH"][:-2],
+                "name": "CH",
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
+        ],
+        "layout": {
+            "title": "Total Reported Cases During the Previous Week",
+            "height": 400,
+            "xaxis": {
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": "Total Cases",
+                "type": selected_scale,
+            },
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Weekly Reported Cases",
+            },
+            "hovermode": "closest",
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -584,6 +640,7 @@ def update_fatalities_ch_graph(selected_scale):
             },
             "hovermode": "closest",
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -663,6 +720,7 @@ def update_hospitalizations_ch_graph(selected_scale):
             },
             "hovermode": "closest",
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -707,6 +765,7 @@ def update_releases_ch_graph(selected_scale):
             },
             "hovermode": "closest",
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -734,7 +793,7 @@ def update_case_world_graph(selected_scale):
             if country != "Day"
         ],
         "layout": {
-            "title": "Prevalence per 10,000 Inhabitants",
+            "title": "Cumulative Prevalence per 10,000 Inhabitants",
             "height": 400,
             "xaxis": {
                 "showgrid": True,
@@ -748,6 +807,7 @@ def update_case_world_graph(selected_scale):
                 "title": "Reported Cases / Population * 10,000",
             },
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -784,6 +844,7 @@ def update_fatalities_world_graph(selected_scale):
                 "title": "Fatalities / Reported Cases",
             },
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -821,6 +882,7 @@ def update_case_graph(selected_cantons, selected_scale):
                 "title": "Reported Cases",
             },
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -855,6 +917,7 @@ def update_case_pc_graph(selected_cantons, selected_scale):
                 "title": "Reported Cases / Population * 10,000",
             },
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -910,6 +973,7 @@ def update_case_graph_diff(selected_cantons, selected_scale):
                 "title": "Reported Cases",
             },
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -978,6 +1042,7 @@ def update_prevalence_density_graph(selected_cantons):
                 }
             ],
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -1047,6 +1112,7 @@ def update_cfr_age_graph(selected_cantons):
                 }
             ],
             "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
@@ -1056,8 +1122,8 @@ def update_cfr_age_graph(selected_cantons):
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )

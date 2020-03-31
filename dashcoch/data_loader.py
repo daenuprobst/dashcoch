@@ -106,7 +106,7 @@ class DataLoader:
         # Moving average showing development
         #
 
-        self.__get_moving_total(self.swiss_cases_by_date)
+        self.moving_total = self.__get_moving_total(self.swiss_cases_by_date.diff())
 
         #
         # World related data
@@ -269,7 +269,15 @@ class DataLoader:
         }
 
     def __get_moving_total(self, df, days=7):
-        return df
+        offset = days - 1
+        df_moving_total = df[0:0]
+        for i in range(0, len(df)):
+            start = max(0, i - offset)
+            d = pd.Series(df.iloc[start : i + 1].sum().to_dict())
+            d.name = df.index[i]
+            df_moving_total = df_moving_total.append(d)
+
+        return df_moving_total
 
     def __get_world_population(self):
         return {
