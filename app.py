@@ -22,13 +22,20 @@ external_scripts = [
 
 # external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
-# meta_tags = [{"name": "viewport", "content": "width=device-width, initial-scale=1"}]
+meta_tags = [
+    # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
+    {"property": "og:title", "content": "COVID-19 Information Switzerland"},
+    {"property": "og:type", "content": "website"},
+    {"property": "og:description", "content": "Latest updates of COVID-19 virus development in Switzerland"},
+    {"property": "og:url", "content": "https://www.corona-data.ch"},
+    {"property": "og:image", "content": "https://www.corona-data.ch/assets/embed-social-414x414.jpg"}
+]
 
 app = dash.Dash(
     __name__,
     external_scripts=external_scripts,
     # external_stylesheets=external_stylesheets,
-    # meta_tags=meta_tags,
+    meta_tags=meta_tags,
 )
 
 server = app.server
