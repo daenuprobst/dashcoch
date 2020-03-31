@@ -79,7 +79,7 @@ def get_layout():
                         children=[
                             dcc.Markdown(
                                 """[Contact me on Twitter](https://twitter.com/skepteis). 
-                                The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
+                                The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
                             Page views are counted by privacy-focused [Simple Analytics](https://simpleanalytics.com?ref=corona-data.ch), the data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=corona-data.ch).
                             """
                             )
