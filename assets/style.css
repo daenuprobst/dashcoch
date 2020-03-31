@@ -885,6 +885,14 @@ hr {
   #selected-data {
     height: 55rem;
   }
+
+  .total-container .total-title {
+    font-size: 2.25em;
+  }
+
+  .total-container .total-content {
+    font-size: 3.25em;
+  }
 }
 
 @media (min-width: 1251px) {

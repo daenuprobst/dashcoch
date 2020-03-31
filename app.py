@@ -1166,8 +1166,8 @@ def update_cfr_age_graph(selected_cantons):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )
