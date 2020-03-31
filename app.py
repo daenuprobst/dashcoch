@@ -26,9 +26,15 @@ meta_tags = [
     # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
     {"property": "og:title", "content": "COVID-19 Information Switzerland"},
     {"property": "og:type", "content": "website"},
-    {"property": "og:description", "content": "Latest updates of COVID-19 virus development in Switzerland"},
+    {
+        "property": "og:description",
+        "content": "Latest updates of COVID-19 virus development in Switzerland",
+    },
     {"property": "og:url", "content": "https://www.corona-data.ch"},
-    {"property": "og:image", "content": "https://www.corona-data.ch/assets/embed-social-414x414.jpg"}
+    {
+        "property": "og:image",
+        "content": "https://www.corona-data.ch/assets/embed-social-414x414.jpg",
+    },
 ]
 
 app = dash.Dash(
@@ -567,46 +573,46 @@ def update_case_ch_graph(selected_scale):
     }
 
 
-@app.callback(
-    Output("caseincrease-ch-graph", "figure"),
-    [Input("radio-scale-switzerland", "value")],
-)
-def update_caseincrease_ch_graph(selected_scale):
-    return {
-        "data": [
-            {
-                "x": data.swiss_cases.iloc[:-2]["CH"],
-                "y": data.moving_total["CH"][:-2],
-                "name": "CH",
-                "mode": "lines",
-                "marker": {"color": style.theme["foreground"]},
-                "showlegend": False,
-            },
-        ],
-        "layout": {
-            "title": "Total Reported Cases During the Previous Week",
-            "height": 400,
-            "xaxis": {
-                "showgrid": True,
-                "color": "#ffffff",
-                "title": "Total Cases",
-                "type": selected_scale,
-            },
-            "yaxis": {
-                "type": selected_scale,
-                "showgrid": True,
-                "color": "#ffffff",
-                "rangemode": "tozero",
-                "title": "Weekly Reported Cases",
-            },
-            "hovermode": "closest",
-            "dragmode": False,
-            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
-            "plot_bgcolor": style.theme["background"],
-            "paper_bgcolor": style.theme["background"],
-            "font": {"color": style.theme["foreground"]},
-        },
-    }
+# @app.callback(
+#     Output("caseincrease-ch-graph", "figure"),
+#     [Input("radio-scale-switzerland", "value")],
+# )
+# def update_caseincrease_ch_graph(selected_scale):
+#     return {
+#         "data": [
+#             {
+#                 "x": data.swiss_cases.iloc[:-2]["CH"],
+#                 "y": data.moving_total["CH"][:-2],
+#                 "name": "CH",
+#                 "mode": "lines",
+#                 "marker": {"color": style.theme["foreground"]},
+#                 "showlegend": False,
+#             },
+#         ],
+#         "layout": {
+#             "title": "Total Reported Cases During the Previous Week",
+#             "height": 400,
+#             "xaxis": {
+#                 "showgrid": True,
+#                 "color": "#ffffff",
+#                 "title": "Total Cases",
+#                 "type": selected_scale,
+#             },
+#             "yaxis": {
+#                 "type": selected_scale,
+#                 "showgrid": True,
+#                 "color": "#ffffff",
+#                 "rangemode": "tozero",
+#                 "title": "Weekly Reported Cases",
+#             },
+#             "hovermode": "closest",
+#             "dragmode": False,
+#             "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+#             "plot_bgcolor": style.theme["background"],
+#             "paper_bgcolor": style.theme["background"],
+#             "font": {"color": style.theme["foreground"]},
+#         },
+#     }
 
 
 @app.callback(
