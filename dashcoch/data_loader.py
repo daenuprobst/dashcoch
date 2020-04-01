@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import pandas as pd
 from pytz import timezone
 from scipy import stats
@@ -49,6 +49,11 @@ class DataLoader:
         self.swiss_cases_by_date_diff = self.swiss_cases_by_date_filled.diff().replace(
             0, float("nan")
         )
+        self.swiss_cases_by_date_diff["date_label"] = [
+            date.fromisoformat(d).strftime("%d. %m.")
+            for d in self.swiss_cases_by_date_diff.index.values
+        ]
+
         self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace(
             0, float("nan")
         )
@@ -106,7 +111,9 @@ class DataLoader:
         # Moving average showing development
         #
 
-        self.moving_total = self.__get_moving_total(self.swiss_cases_by_date.diff())
+        self.moving_total = self.__get_moving_total(
+            self.swiss_cases_by_date.diff()
+        ).replace(0, float("nan"))
 
         #
         # World related data
@@ -285,6 +292,18 @@ class DataLoader:
             d = pd.Series(df.iloc[start : i + 1].sum().to_dict())
             d.name = df.index[i]
             df_moving_total = df_moving_total.append(d)
+
+        # Add the label for the date range (previous week)
+        date_labels = []
+        for d in df_moving_total.index.values:
+            today = date.fromisoformat(d)
+            date_labels.append(
+                (today - timedelta(days=7)).strftime("%d. %m.")
+                + " – "
+                + today.strftime("%d. %m.")
+            )
+
+        df_moving_total["date_label"] = date_labels
 
         return df_moving_total
 
