@@ -1130,8 +1130,8 @@ def update_cfr_age_graph(selected_cantons):
                 },
                 "hoverinfo": "text",
                 "hovertext": f"<span style='font-size:2.0em'><b>{canton}</b></span><br>"
-                + f"Population over 65: <b>{data.swiss_case_fatality_rates.iloc[-1][canton]:.0f}</b><br>"
-                + f"Case Fatality Ratio: <b>{data.swiss_demography["O65"][canton] * 100:.3f}</b> Inhabitants / km<sup>2</sup><br>"
+                + f"Population over 65: <b>{data.swiss_demography['O65'][canton] * 100:.0f}%</b><br>"
+                + f"Case Fatality Ratio: <b>{data.swiss_case_fatality_rates.iloc[-1][canton]:.3f}</b><br>"
                 + f"Cases: <b>{data.swiss_cases_by_date_filled.iloc[-1][canton]:.0f}</b>",
             }
             for _, canton in enumerate(data.swiss_cases_normalized_as_dict)
@@ -1183,7 +1183,7 @@ def update_cfr_age_graph(selected_cantons):
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
+        # debug=True,
         # dev_tools_hot_reload=True,
         # dev_tools_hot_reload_interval=50,
         # dev_tools_hot_reload_max_retry=30,
