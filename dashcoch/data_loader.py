@@ -130,6 +130,8 @@ class DataLoader:
             self.swiss_demography["O65"], self.swiss_case_fatality_rates.iloc[-1]
         )
 
+        self.scaled_cases = self.__get_scaled_cases()
+
     def __get_iso(self, df):
         isos = []
         updated_today = []
@@ -267,6 +269,13 @@ class DataLoader:
                 slope * df.iloc[0].max() + intercept,
             ],
         }
+
+    def __get_scaled_cases(self):
+        cases = self.swiss_cases_by_date_filled.iloc[-1][0:-1]
+        min_cases = cases.min()
+        max_cases = cases.max()
+        scaled_cases = (cases - min_cases) / (max_cases - min_cases) * (20) + 10
+        return scaled_cases
 
     def __get_moving_total(self, df, days=7):
         offset = days - 1
