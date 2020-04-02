@@ -15,6 +15,7 @@ window.dash_clientside.clientside = {
     } catch (err) {
       console.log(err)
       // try again
+      console.log("innerhtml: '" + document.getElementById("caseincrease-cantonal-data").innerHTML + "'")
       data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
     }
 
@@ -22,7 +23,6 @@ window.dash_clientside.clientside = {
       swiss_cases_by_date_filled: {},
       moving_total: []
     }
-
 
     // Format the data & let's support IE
     for (var key in data_raw["swiss_cases_by_date_filled"]) {
