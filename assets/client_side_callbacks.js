@@ -9,7 +9,7 @@ window.dash_clientside.clientside = {
       hovered_canton = selected_cantons[hover_data["points"][0]["curveNumber"]]
 
     var d = selected_date_index
-    var data_raw
+    var data_raw = {}
     try {
       data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
     } catch (err) {
