@@ -471,7 +471,7 @@ p {
   margin-bottom: 2rem;
 }
 
-#slider-text,
+.slider-text,
 #plot-settings-text,
 #chart-selector {
   margin-bottom: 2rem !important;

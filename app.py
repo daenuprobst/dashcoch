@@ -227,7 +227,7 @@ def get_layout():
                 className="slider-container",
                 children=[
                     html.P(
-                        id="slider-text",
+                        className="slider-text",
                         children="Drag the slider to change the date:",
                     ),
                     dcc.Slider(
@@ -396,6 +396,23 @@ def get_layout():
                     html.Div(
                         className="twelve columns",
                         children=[dcc.Graph(id="caseincrease-cantonal-graph")],
+                    ),
+                ],
+            ),
+            html.Div(
+                className="slider-container",
+                children=[
+                    html.P(
+                        className="slider-text",
+                        children="Drag the slider to change the date:",
+                    ),
+                    dcc.Slider(
+                        id="slider-date-cantonal",
+                        min=0,
+                        max=len(data.swiss_cases["Date"]) - 1,
+                        step=1,
+                        value=len(data.moving_total) - 1,
+                        updatemode="drag",
                     ),
                 ],
             ),
@@ -626,23 +643,23 @@ def update_caseincrease_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_cases.iloc[6:]["CH"],
-                "y": data.moving_total["CH"][6:],
+                "x": data.swiss_cases.iloc[6:-1]["CH"],
+                "y": data.moving_total["CH"][6:-1],
                 "mode": "lines+markers",
                 "name": "New Cases During<br>the Last Week",
                 "marker": {"color": style.theme["foreground"]},
-                "text": data.moving_total["date_label"][6:],
+                "text": data.moving_total["date_label"][6:-1],
                 "hovertemplate": "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>"
                 + "between <b>%{text}</b><br>"
                 + "<extra></extra>",
             },
             {
-                "x": data.swiss_cases.iloc[6:]["CH"],
-                "y": data.swiss_cases_by_date_diff["CH"][6:],
+                "x": data.swiss_cases.iloc[6:-1]["CH"],
+                "y": data.swiss_cases_by_date_diff["CH"][6:-1],
                 "mode": "lines+markers",
                 "name": "Daily new Cases",
                 "marker": {"color": style.theme["yellow"]},
-                "text": data.swiss_cases_by_date_diff["date_label"][6:],
+                "text": data.swiss_cases_by_date_diff["date_label"][6:-1],
                 "hovertemplate": "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>"
                 + "on <b>%{text}</b><br>"
                 + "<extra></extra>",
@@ -1064,19 +1081,26 @@ def update_case_graph_diff(selected_cantons, selected_scale):
 
 @app.callback(
     Output("caseincrease-cantonal-graph", "figure"),
-    [Input("dropdown-cantons", "value"), Input("radio-scale-cantons", "value")],
+    [
+        Input("dropdown-cantons", "value"),
+        Input("radio-scale-cantons", "value"),
+        Input("slider-date-cantonal", "value"),
+    ],
 )
-def update_caseincrease_cantonal_graph(selected_cantons, selected_scale):
+def update_caseincrease_cantonal_graph(
+    selected_cantons, selected_scale, selected_date_index
+):
+    d = selected_date_index
     return {
         "data": [
             {
-                "x": data.swiss_cases_by_date_filled.iloc[6:-1][canton],
-                "y": data.moving_total[canton][6:-1],
+                "x": data.swiss_cases_by_date_filled.iloc[6:d][canton],
+                "y": data.moving_total[canton][6:d],
                 "mode": "lines",
                 "name": canton,
                 "marker": {"color": style.theme["foreground"],},
                 "line": {"width": 1.0, "color": "rgba(44, 254, 193, 0.5)",},
-                "text": data.moving_total["date_label"][6:-1],
+                "text": data.moving_total["date_label"][6:d],
                 "hovertemplate": "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>"
                 + "between <b>%{text}</b><br>"
                 + "<extra></extra>",
@@ -1087,8 +1111,8 @@ def update_caseincrease_cantonal_graph(selected_cantons, selected_scale):
         ]
         + [
             {
-                "x": [data.swiss_cases_by_date_filled[canton][-2]],
-                "y": [data.moving_total[canton][-2]],
+                "x": [data.swiss_cases_by_date_filled[canton][d - 1]],
+                "y": [data.moving_total[canton][d - 1]],
                 "mode": "markers+text",
                 "name": canton,
                 "text": canton,
