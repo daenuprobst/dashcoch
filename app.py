@@ -10,7 +10,7 @@ import dash
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, ClientsideFunction
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
@@ -71,6 +71,7 @@ def get_layout():
     return html.Div(
         id="main",
         children=[
+            dcc.Location(id="url", refresh=False),
             html.Div(
                 id="header",
                 children=[
@@ -390,6 +391,16 @@ def get_layout():
                 ],
             ),
             html.Br(),
+            html.Div(
+                className="info-container",
+                children=[
+                    html.P(
+                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
+                    )
+                ],
+            ),
+            html.Div(id="date-container-cantonal", className="slider-container"),
+            html.Div(id="caseincrease-cantonal-data", style={"display": "none"}),
             html.Div(
                 className="row",
                 children=[
@@ -1079,84 +1090,31 @@ def update_case_graph_diff(selected_cantons, selected_scale):
     }
 
 
-@app.callback(
+app.clientside_callback(
+    ClientsideFunction(
+        namespace="clientside", function_name="update_caseincrease_cantonal_graph"
+    ),
     Output("caseincrease-cantonal-graph", "figure"),
     [
         Input("dropdown-cantons", "value"),
         Input("radio-scale-cantons", "value"),
         Input("slider-date-cantonal", "value"),
+        Input("caseincrease-cantonal-graph", "hoverData"),
     ],
 )
-def update_caseincrease_cantonal_graph(
-    selected_cantons, selected_scale, selected_date_index
-):
-    d = selected_date_index
-    return {
-        "data": [
-            {
-                "x": data.swiss_cases_by_date_filled.iloc[6:d][canton],
-                "y": data.moving_total[canton][6:d],
-                "mode": "lines",
-                "name": canton,
-                "marker": {"color": style.theme["foreground"],},
-                "line": {"width": 1.0, "color": "rgba(44, 254, 193, 0.5)",},
-                "text": data.moving_total["date_label"][6:d],
-                "hovertemplate": "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>"
-                + "between <b>%{text}</b><br>"
-                + "<extra></extra>",
-                "showlegend": False,
-            }
-            for canton in data.canton_labels
-            if canton in selected_cantons
-        ]
-        + [
-            {
-                "x": [data.swiss_cases_by_date_filled[canton][d - 1]],
-                "y": [data.moving_total[canton][d - 1]],
-                "mode": "markers+text",
-                "name": canton,
-                "text": canton,
-                "marker": {"color": "white",},
-                "hoverinfo": "skip",
-                "showlegend": False,
-                "textposition": "center right",
-            }
-            for canton in data.canton_labels
-            if canton in selected_cantons
-        ],
-        "layout": {
-            "title": "Newly Reported Cases",
-            "height": 750,
-            "xaxis": {
-                "showgrid": True,
-                "color": "#ffffff",
-                "title": "Total Cases",
-                "type": "log",
-            },
-            "yaxis": {
-                "type": "log",
-                "showgrid": True,
-                "color": "#ffffff",
-                "rangemode": "tozero",
-                "title": "Newly Reported Cases",
-            },
-            "legend": {
-                "x": 0.015,
-                "y": 1,
-                "traceorder": "normal",
-                "font": {"family": "sans-serif", "color": "white"},
-                "bgcolor": style.theme["background"],
-                "bordercolor": style.theme["accent"],
-                "borderwidth": 1,
-            },
-            "dragmode": False,
-            "hovermode": "closest",
-            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
-            "plot_bgcolor": style.theme["background"],
-            "paper_bgcolor": style.theme["background"],
-            "font": {"color": style.theme["foreground"]},
-        },
-    }
+
+
+@app.callback(
+    Output("caseincrease-cantonal-data", "children"), [Input("url", "pathname")]
+)
+def store_caseincrease_cantona_data(value):
+    return (
+        '{"swiss_cases_by_date_filled": '
+        + data.swiss_cases_by_date_filled.to_json(date_format="iso", orient="columns")
+        + ', "moving_total":'
+        + data.moving_total.to_json(date_format="iso", orient="columns")
+        + "}"
+    )
 
 
 #

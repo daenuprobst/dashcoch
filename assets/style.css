@@ -121,6 +121,7 @@ g.layer rect {
   margin: 0;
 }
 
+#date-container-cantonal,
 #date-container {
   background-color: #2c384d;
   font-size: 2em;
