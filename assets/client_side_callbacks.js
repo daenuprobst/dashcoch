@@ -9,8 +9,16 @@ window.dash_clientside.clientside = {
       hovered_canton = selected_cantons[hover_data["points"][0]["curveNumber"]]
 
     var d = selected_date_index
-    data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
-    data = {
+    var data_raw
+    try {
+      data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
+    } catch (err) {
+      console.log(err)
+      // try again
+      data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
+    }
+
+    var data = {
       swiss_cases_by_date_filled: {},
       moving_total: []
     }
