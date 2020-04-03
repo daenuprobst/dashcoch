@@ -4,7 +4,6 @@ if (!window.dash_clientside) {
 
 window.dash_clientside.clientside = {
   update_caseincrease_cantonal_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data, div_data) {
-    console.log(div_data)
     hovered_canton = ""
     if (hover_data)
       hovered_canton = selected_cantons[hover_data["points"][0]["curveNumber"]]
