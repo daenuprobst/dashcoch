@@ -1,23 +1,16 @@
 if (!window.dash_clientside) {
   window.dash_clientside = {};
 }
-window.dash_clientside.clientside = {
-  update_caseincrease_cantonal_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data) {
 
+window.dash_clientside.clientside = {
+  update_caseincrease_cantonal_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data, div_data) {
+    console.log(div_data)
     hovered_canton = ""
     if (hover_data)
       hovered_canton = selected_cantons[hover_data["points"][0]["curveNumber"]]
 
     var d = selected_date_index
-    var data_raw = {}
-    try {
-      data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
-    } catch (err) {
-      console.log(err)
-      // try again
-      console.log("innerhtml: '" + document.getElementById("caseincrease-cantonal-data").innerHTML + "'")
-      data_raw = JSON.parse(document.getElementById("caseincrease-cantonal-data").innerHTML)
-    }
+    data_raw = JSON.parse(div_data)
 
     var data = {
       swiss_cases_by_date_filled: {},

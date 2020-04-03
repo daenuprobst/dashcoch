@@ -1100,6 +1100,7 @@ app.clientside_callback(
         Input("radio-scale-cantons", "value"),
         Input("slider-date-cantonal", "value"),
         Input("caseincrease-cantonal-graph", "hoverData"),
+        Input("caseincrease-cantonal-data", "children"),
     ],
 )
 
