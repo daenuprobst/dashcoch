@@ -395,7 +395,12 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
+                        children=" / ".join(
+                            "Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag."
+                            "Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de nouveaux cas dans l'intervalle d'une semaine pour chaque jour.",
+                            "Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno.",
+                            "This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day.",
+                        )
                     )
                 ],
             ),
