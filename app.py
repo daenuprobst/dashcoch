@@ -21,7 +21,7 @@ external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
 ]
 
-#external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+# external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 meta_tags = [
     # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
@@ -41,7 +41,7 @@ meta_tags = [
 app = dash.Dash(
     __name__,
     external_scripts=external_scripts,
-    #external_stylesheets=external_stylesheets,
+    # external_stylesheets=external_stylesheets,
     meta_tags=meta_tags,
 )
 
