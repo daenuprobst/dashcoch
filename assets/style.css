@@ -1027,3 +1027,45 @@ svg {
 ._dash-undo-redo {
   display: none;
 }
+
+/* Localization
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.lang-de *[lang=fr] {
+  display: none;
+}
+.lang-de *[lang=it] {
+  display: none;
+}
+.lang-de *[lang=en] {
+  display: none;
+}
+
+.lang-fr *[lang=de] {
+  display: none;
+}
+.lang-fr *[lang=it] {
+  display: none;
+}
+.lang-fr *[lang=en] {
+  display: none;
+}
+
+.lang-it *[lang=de] {
+  display: none;
+}
+.lang-it *[lang=fr] {
+  display: none;
+}
+.lang-it *[lang=en] {
+  display: none;
+}
+
+.lang-en *[lang=de] {
+  display: none;
+}
+.lang-en *[lang=fr] {
+  display: none;
+}
+.lang-en *[lang=it] {
+  display: none;
+}

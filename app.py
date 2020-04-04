@@ -21,7 +21,7 @@ external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
 ]
 
-# external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+#external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 meta_tags = [
     # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
@@ -41,7 +41,7 @@ meta_tags = [
 app = dash.Dash(
     __name__,
     external_scripts=external_scripts,
-    # external_stylesheets=external_stylesheets,
+    #external_stylesheets=external_stylesheets,
     meta_tags=meta_tags,
 )
 
@@ -251,8 +251,17 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
-                    )
+                        lang="de",
+                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind."),
+                    html.P(
+                        lang="fr",
+                        children="Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour."),
+                    html.P(
+                        lang="it",
+                        children="Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati."),
+                    html.P(
+                        lang="en",
+                        children="Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."),
                 ],
             ),
             html.Div(
@@ -304,8 +313,17 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani sono indicati come una linea gialla, tuttavia variano notevolmente tra i giorni. Per mostrare uno sviluppo più fluido, la linea verde mostra il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day."
-                    )
+                        lang="de",
+                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag."),
+                    html.P(
+                        lang="fr",
+                        children="Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour."),
+                    html.P(
+                        lang="it",
+                        children="Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani sono indicati come una linea gialla, tuttavia variano notevolmente tra i giorni. Per mostrare uno sviluppo più fluido, la linea verde mostra il numero totale di casi durante una settimana per ogni giorno."),
+                    html.P(
+                        lang="en",
+                        children="This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day."),
                 ],
             ),
             html.Div(
@@ -337,8 +355,17 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
-                    )
+                        lang="de",
+                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind."),
+                    html.P(
+                        lang="fr",
+                        children="Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour."),
+                    html.P(
+                        lang="it",
+                        children="Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati."),
+                    html.P(
+                        lang="en",
+                        children="Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."),
                 ],
             ),
             html.Div(
@@ -395,7 +422,17 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
+                        lang="de",
+                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag."),
+                    html.P(
+                        lang="fr",
+                        children="Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour."),
+                    html.P(
+                        lang="it",
+                        children="Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno."),
+                    html.P(
+                        lang="en",
+                        children="This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
                     )
                 ],
             ),
@@ -436,8 +473,17 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children='Die gestrichelte weiße Linie zeigt die Korrelation zwischen den Daten der beiden Achsen. Der Wert "r" beschreibt die Stärke der Korrelation, während ein p-Wert von mehr als 0,05 bedeutet, dass die Korrelation nicht signifikant ist. / La ligne blanche en pointillés montre la corrélation entre les données des deux axes. La valeur "r" décrit la force de la corrélation, tandis qu\'une valeur de p supérieure à 0,05 signifie que la corrélation n\'est pas significative. / La linea bianca tratteggiata mostra la correlazione tra i dati dei due assi. Il valore "r" descrive l\'intensità della correlazione, mentre un valore p superiore a 0,05 indica che la correlazione non è significativa. / The dashed white line shows the correlation between the data of the two axes. The value "r" describes the strength of the correlation, while a p-value of more than 0.05 means that the correlation is not significant.'
-                    )
+                        lang="de",
+                        children="""Die gestrichelte weiße Linie zeigt die Korrelation zwischen den Daten der beiden Achsen. Der Wert "r" beschreibt die Stärke der Korrelation, während ein p-Wert von mehr als 0,05 bedeutet, dass die Korrelation nicht signifikant ist."""),
+                    html.P(
+                        lang="fr",
+                        children="""La ligne blanche en pointillés montre la corrélation entre les données des deux axes. La valeur "r" décrit la force de la corrélation, tandis qu'une valeur de p supérieure à 0,05 signifie que la corrélation n'est pas significative."""),
+                    html.P(
+                        lang="it",
+                        children="""La linea bianca tratteggiata mostra la correlazione tra i dati dei due assi. Il valore "r" descrive l'intensità della correlazione, mentre un valore p superiore a 0,05 indica che la correlazione non è significativa."""),
+                    html.P(
+                        lang="en",
+                        children="""The dashed white line shows the correlation between the data of the two axes. The value "r" describes the strength of the correlation, while a p-value of more than 0.05 means that the correlation is not significant."""),
                 ],
             ),
             html.Div(
@@ -467,6 +513,18 @@ def get_layout():
         ],
     )
 
+
+app.renderer = """
+var languages = ["de", "fr", "it", "en"];
+for(var i=0; i<languages.length; i++) {
+    if (navigator.languages.indexOf(languages[i]) >= 0) {
+        document.body.classList.add("lang-" + languages[i]);
+        break;
+    }
+}
+
+var renderer = new DashRenderer();
+"""
 
 app.layout = get_layout
 
