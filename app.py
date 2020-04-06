@@ -87,6 +87,15 @@ def get_layout():
                         ],
                     ),
                     html.P(
+                        id="sci-info",
+                        children=[
+                            dcc.Markdown(
+                                "More scientific information on the pandemic can be found here: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Recent scientific articles curated by the University Hospital Bern](https://www.update-covid.ch)"
+                            )
+                        ],
+                    ),
+                    html.Br(),
+                    html.P(
                         id="glueckskette",
                         children=[
                             html.A(
@@ -251,7 +260,7 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
+                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses. / Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti. / Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading."
                     )
                 ],
             ),
@@ -291,6 +300,20 @@ def get_layout():
                 children=[
                     html.Div(
                         className="six columns",
+                        children=[dcc.Graph(id="new-case-ch-graph")],
+                    ),
+                    html.Div(
+                        className="six columns",
+                        children=[dcc.Graph(id="new-fatalities-ch-graph")],
+                    ),
+                ],
+            ),
+            html.Br(),
+            html.Div(
+                className="row",
+                children=[
+                    html.Div(
+                        className="six columns",
                         children=[dcc.Graph(id="hospitalizations-ch-graph")],
                     ),
                     html.Div(
@@ -304,7 +327,7 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani sono indicati come una linea gialla, tuttavia variano notevolmente tra i giorni. Per mostrare uno sviluppo più fluido, la linea verde mostra il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day."
+                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani sono indicati come una linea gialla, tuttavia variano notevolmente tra i giorni. Per mostrare uno sviluppo più fluido, la linea verde mostra il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day."
                     )
                 ],
             ),
@@ -337,7 +360,7 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que l'aplatissement des courbes peut être trompeur, car les données d'aujourd'hui ne sont pas encore complètement mises à jour. / Si noti che l'appiattimento delle curve può essere fuorviante, poiché i dati di oggi non sono ancora completamente aggiornati. / Please be aware, that the flattening of the curves can be misleading, as today's data is not yet completely updated."
+                        children="Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind. / Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses. / Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti. / Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading."
                     )
                 ],
             ),
@@ -395,7 +418,7 @@ def get_layout():
                 className="info-container",
                 children=[
                     html.P(
-                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine reibungslosere Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
+                        children="Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag. / Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour. / Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno. / This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day."
                     )
                 ],
             ),
@@ -482,6 +505,9 @@ def update_map_date(selected_date_index):
     return d.strftime("%d. %m. %Y")
 
 
+#
+# The Map
+#
 @app.callback(
     Output("graph-map", "figure"),
     [Input("slider-date", "value"), Input("radio-prevalence", "value")],
@@ -608,20 +634,20 @@ def update_case_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_cases.iloc[:-2]["Date"],
-                "y": data.swiss_cases.iloc[:-2]["CH"],
+                "x": data.swiss_cases.iloc[:-3]["Date"],
+                "y": data.swiss_cases.iloc[:-3]["CH"],
                 "name": "CH",
                 "mode": "lines",
                 "marker": {"color": style.theme["foreground"]},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_cases.iloc[-3:]["Date"],
-                "y": data.swiss_cases.iloc[-3:]["CH"],
+                "x": data.swiss_cases.iloc[-4:]["Date"],
+                "y": data.swiss_cases.iloc[-4:]["CH"],
                 "name": "CH",
                 "mode": "lines",
                 "line": {"dash": "dot"},
-                "marker": {"color": style.theme["foreground"]},
+                "marker": {"color": "rgba(44, 254, 193, 0.25)"},
                 "showlegend": False,
             },
         ],
@@ -642,6 +668,276 @@ def update_case_ch_graph(selected_scale):
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
+        },
+    }
+
+
+#
+# Total fatalities Switzerland
+#
+@app.callback(
+    Output("fatalities-ch-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
+)
+def update_fatalities_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_fatalities[:-3]["Date"],
+                "y": data.swiss_fatalities[:-3]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_fatalities.iloc[-4:]["Date"],
+                "y": data.swiss_fatalities.iloc[-4:]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": "rgba(44, 254, 193, 0.25)"},
+                "showlegend": False,
+            },
+        ],
+        "layout": {
+            "title": "Total Reported Fatalities Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Fatalities",
+            },
+            "hovermode": "closest",
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
+        },
+    }
+
+
+#
+# New cases Switzerland
+#
+@app.callback(
+    Output("new-case-ch-graph", "figure"), [Input("radio-scale-switzerland", "value")],
+)
+def update_new_case_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_cases_by_date_diff.iloc[:-3].index,
+                "y": data.swiss_cases_by_date_diff.iloc[:-3]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_cases_by_date_diff.iloc[-4:].index,
+                "y": data.swiss_cases_by_date_diff.iloc[-4:]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": "rgba(44, 254, 193, 0.25)"},
+                "showlegend": False,
+            },
+        ],
+        "layout": {
+            "title": "Daily Reported Cases Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Reported Cases",
+            },
+            "hovermode": "closest",
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
+        },
+    }
+
+
+#
+# New fatalities Switzerland
+#
+@app.callback(
+    Output("new-fatalities-ch-graph", "figure"),
+    [Input("radio-scale-switzerland", "value")],
+)
+def update_new_fatalities_ch_graph(selected_scale):
+    return {
+        "data": [
+            {
+                "x": data.swiss_fatalities_by_date_diff[:-3].index,
+                "y": data.swiss_fatalities_by_date_diff[:-3]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "showlegend": False,
+            },
+            {
+                "x": data.swiss_fatalities_by_date_diff.iloc[-4:].index,
+                "y": data.swiss_fatalities_by_date_diff.iloc[-4:]["CH"],
+                "name": "CH",
+                "mode": "lines",
+                "line": {"dash": "dot"},
+                "marker": {"color": "rgba(44, 254, 193, 0.25)"},
+                "showlegend": False,
+            },
+        ],
+        "layout": {
+            "title": "Daily Reported Fatalities Switzerland",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
+            "yaxis": {
+                "type": selected_scale,
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Fatalities",
+            },
+            "hovermode": "closest",
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
         },
     }
 
@@ -711,52 +1007,6 @@ def update_caseincrease_ch_graph(selected_scale):
 
 
 @app.callback(
-    Output("fatalities-ch-graph", "figure"),
-    [Input("radio-scale-switzerland", "value")],
-)
-def update_fatalities_ch_graph(selected_scale):
-    return {
-        "data": [
-            {
-                "x": data.swiss_fatalities[:-2]["Date"],
-                "y": data.swiss_fatalities[:-2]["CH"],
-                "name": "CH",
-                "mode": "lines",
-                "marker": {"color": style.theme["foreground"]},
-                "showlegend": False,
-            },
-            {
-                "x": data.swiss_fatalities.iloc[-3:]["Date"],
-                "y": data.swiss_fatalities.iloc[-3:]["CH"],
-                "name": "CH",
-                "mode": "lines",
-                "line": {"dash": "dot"},
-                "marker": {"color": style.theme["foreground"]},
-                "showlegend": False,
-            },
-        ],
-        "layout": {
-            "title": "Total Reported Fatalities Switzerland",
-            "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
-            "yaxis": {
-                "type": selected_scale,
-                "showgrid": True,
-                "color": "#ffffff",
-                "rangemode": "tozero",
-                "title": "Fatalities",
-            },
-            "hovermode": "closest",
-            "dragmode": False,
-            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
-            "plot_bgcolor": style.theme["background"],
-            "paper_bgcolor": style.theme["background"],
-            "font": {"color": style.theme["foreground"]},
-        },
-    }
-
-
-@app.callback(
     Output("hospitalizations-ch-graph", "figure"),
     [Input("radio-scale-switzerland", "value")],
 )
@@ -764,59 +1014,59 @@ def update_hospitalizations_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_hospitalizations[:-2]["Date"],
-                "y": data.swiss_hospitalizations[:-2]["CH"],
+                "x": data.swiss_hospitalizations[:-3]["Date"],
+                "y": data.swiss_hospitalizations[:-3]["CH"],
                 "name": "Regular",
                 "mode": "lines",
                 "marker": {"color": style.theme["yellow"]},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_icu[:-2]["Date"],
-                "y": data.swiss_icu[:-2]["CH"],
+                "x": data.swiss_icu[:-3]["Date"],
+                "y": data.swiss_icu[:-3]["CH"],
                 "name": "Intensive",
                 "mode": "lines",
                 "marker": {"color": style.theme["red"]},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_vent[:-2]["Date"],
-                "y": data.swiss_vent[:-2]["CH"],
+                "x": data.swiss_vent[:-3]["Date"],
+                "y": data.swiss_vent[:-3]["CH"],
                 "name": "Ventilated",
                 "mode": "lines",
                 "marker": {"color": style.theme["blue"]},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_hospitalizations.iloc[-3:]["Date"],
-                "y": data.swiss_hospitalizations.iloc[-3:]["CH"],
+                "x": data.swiss_hospitalizations.iloc[-4:]["Date"],
+                "y": data.swiss_hospitalizations.iloc[-4:]["CH"],
                 "name": "Regular",
                 "mode": "lines",
                 "line": {"dash": "dot"},
-                "marker": {"color": style.theme["yellow"]},
+                "marker": {"color": "rgba(254, 211, 48, 0.2)"},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_icu.iloc[-3:]["Date"],
-                "y": data.swiss_icu.iloc[-3:]["CH"],
+                "x": data.swiss_icu.iloc[-4:]["Date"],
+                "y": data.swiss_icu.iloc[-4:]["CH"],
                 "name": "Intensive",
                 "mode": "lines",
                 "line": {"dash": "dot"},
-                "marker": {"color": style.theme["red"]},
+                "marker": {"color": "rgba(252, 92, 101, 0.2)"},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_vent.iloc[-3:]["Date"],
-                "y": data.swiss_vent.iloc[-3:]["CH"],
+                "x": data.swiss_vent.iloc[-4:]["Date"],
+                "y": data.swiss_vent.iloc[-4:]["CH"],
                 "name": "Ventilated",
                 "mode": "lines",
                 "line": {"dash": "dot"},
-                "marker": {"color": style.theme["blue"]},
+                "marker": {"color": "rgba(69, 170, 242, 0.2)"},
                 "showlegend": False,
             },
         ],
         "layout": {
-            "title": "Total Reported Hospitalizations Switzerland",
+            "title": "Current Hospitalizations (Releases are Subtracted)",
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Date"},
             "yaxis": {
@@ -832,6 +1082,37 @@ def update_hospitalizations_ch_graph(selected_scale):
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
         },
     }
 
@@ -843,20 +1124,20 @@ def update_releases_ch_graph(selected_scale):
     return {
         "data": [
             {
-                "x": data.swiss_releases[:-2]["Date"],
-                "y": data.swiss_releases[:-2]["CH"],
+                "x": data.swiss_releases[:-3]["Date"],
+                "y": data.swiss_releases[:-3]["CH"],
                 "name": "Regular",
                 "mode": "lines",
                 "marker": {"color": style.theme["foreground"]},
                 "showlegend": False,
             },
             {
-                "x": data.swiss_releases.iloc[-3:]["Date"],
-                "y": data.swiss_releases.iloc[-3:]["CH"],
+                "x": data.swiss_releases.iloc[-4:]["Date"],
+                "y": data.swiss_releases.iloc[-4:]["CH"],
                 "name": "Regular",
                 "mode": "lines",
                 "line": {"dash": "dot"},
-                "marker": {"color": style.theme["foreground"]},
+                "marker": {"color": "rgba(44, 254, 193, 0.25)"},
                 "showlegend": False,
             },
         ],
@@ -877,6 +1158,37 @@ def update_releases_ch_graph(selected_scale):
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "rect",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": data.swiss_cases_by_date_diff.index[-4],
+                    "y0": 0,
+                    "x1": data.swiss_cases_by_date_diff.index[-1],
+                    "y1": 1,
+                    "fillcolor": "#1d2533",
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 0},
+                }
+            ],
+            "annotations": [
+                {
+                    "x": data.swiss_cases_by_date_diff.index[-3],
+                    "y": 0.95,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Incomplete Data",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
         },
     }
 
