@@ -144,9 +144,13 @@ class DataLoader:
         updated_today = []
         for _, row in df.iterrows():
             t = row["Time"]
+
             if len(t) == 4:
                 t = "0" + t
-            iso = datetime.fromisoformat(row["Date"])
+            if len(t) == 5:
+                t += ":00"
+
+            iso = datetime.fromisoformat(row["Date"] + "T" + t)
             isos.append(iso)
             updated_today.append(iso.date() == datetime.today().date())
 
