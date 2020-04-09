@@ -146,7 +146,7 @@ class DataLoader:
             t = row["Time"]
             if len(t) == 4:
                 t = "0" + t
-            iso = datetime.fromisoformat(row["Date"] + "T" + t + ":00")
+            iso = datetime.fromisoformat(row["Date"])
             isos.append(iso)
             updated_today.append(iso.date() == datetime.today().date())
 
