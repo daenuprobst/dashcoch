@@ -37,6 +37,11 @@ table tr:hover {
   background-color: #252e3f !important;
 }
 
+#sorry {
+  font-weight: 500;
+  color: red;
+}
+
 #plot-settings-container,
 .slider-container,
 .info-container,
