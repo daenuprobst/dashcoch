@@ -94,10 +94,10 @@ def get_layout():
                             )
                         ],
                     ),
-                    html.P(
-                        id="sorry",
-                        children="Heute war die Website aufgrund technischer Schwierigkeiten etwa 1 Stunde lang offline. Ich entschuldige mich für die Unannehmlichkeiten. / Aujourd'hui, le site Web a été hors ligne pendant environ 1 heure en raison de problèmes techniques. Je suis désolé pour la gêne occasionnée. / Oggi, il sito Web è rimasto offline per circa 1 ora a causa di difficoltà tecniche. Mi scuso per l'inconveniente. / Today, the website was offline for about 1 hour due to technical difficulties. I am sorry for the inconvenience.",
-                    ),
+                    # html.P(
+                    #     id="sorry",
+                    #     children="Heute war die Website aufgrund technischer Schwierigkeiten etwa 1 Stunde lang offline. Ich entschuldige mich für die Unannehmlichkeiten. / Aujourd'hui, le site Web a été hors ligne pendant environ 1 heure en raison de problèmes techniques. Je suis désolé pour la gêne occasionnée. / Oggi, il sito Web è rimasto offline per circa 1 ora a causa di difficoltà tecniche. Mi scuso per l'inconveniente. / Today, the website was offline for about 1 hour due to technical difficulties. I am sorry for the inconvenience.",
+                    # ),
                     html.Br(),
                     html.P(
                         id="glueckskette",
