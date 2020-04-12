@@ -359,6 +359,53 @@ def get_layout():
                 ],
             ),
             html.Br(),
+            html.H4(
+                children="BAG/OFSP/UFSP/FOPH Data for Switzerland",
+                className="secondary",
+                style={"color": style.theme["accent_secondary"]},
+            ),
+            html.Div(
+                className="info-container",
+                children=[
+                    html.P(
+                        children="Die hier gezeigten Daten stammen aus einer anderen Datenquelle und können geringfügig abweichen. Unterschiede ergeben sich aus unterschiedlichen Veröffentlichungstagen. / Les données présentées ici proviennent d'une source de données différente et peuvent être légèrement différentes. Les différences découlent des différents jours de publication. / I dati mostrati qui provengono da un'origine dati diversa e potrebbero essere leggermente diversi. Le differenze derivano da diversi giorni di pubblicazione. / The data shown here is from a different data source and might be slightly different. Differences arise from different publishing days."
+                    )
+                ],
+            ),
+            html.Div(
+                className="slider-container-secondary",
+                children=[
+                    html.P(className="slider-text", children="Show Data for:",),
+                    dcc.Dropdown(
+                        id="select-cantons-ch",
+                        options=[
+                            {"label": canton, "value": canton}
+                            for canton in ["CH"] + data.canton_labels
+                        ],
+                        value="CH",
+                        clearable=False,
+                    ),
+                ],
+            ),
+            html.Div(
+                className="row",
+                children=[
+                    html.Div(
+                        className="twelve columns",
+                        children=[dcc.Graph(id="cases-bag-graph")],
+                    ),
+                ],
+            ),
+            html.Div(
+                className="row",
+                children=[
+                    html.Div(
+                        className="twelve columns",
+                        children=[dcc.Graph(id="fatalities-bag-graph")],
+                    ),
+                ],
+            ),
+            html.Br(),
             html.H4(children="Data per Canton", style={"color": style.theme["accent"]}),
             html.Div(
                 className="info-container",
@@ -1277,6 +1324,121 @@ def update_fatalities_world_graph(selected_scale):
 
 
 #
+# BAG Data
+#
+@app.callback(
+    Output("cases-bag-graph", "figure"), [Input("select-cantons-ch", "value")],
+)
+def update_cases_bag_graph(canton):
+    return {
+        "data": [
+            {
+                "x": data.bag_data_male_hist[
+                    data.bag_data_male_hist["canton"] == canton
+                ]["age"],
+                "y": data.bag_data_male_hist[
+                    data.bag_data_male_hist["canton"] == canton
+                ]["cases"],
+                "name": "Male",
+                # "mode": "lines",
+                "type": "bar",
+                "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
+                "marker": {"color": "rgba(255, 5, 71, 0.5)"},
+            },
+            {
+                "x": data.bag_data_female_hist[
+                    data.bag_data_female_hist["canton"] == canton
+                ]["age"],
+                "y": data.bag_data_female_hist[
+                    data.bag_data_female_hist["canton"] == canton
+                ]["cases"],
+                "name": "Female",
+                # "mode": "lines",
+                "type": "bar",
+                "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
+                "marker": {"color": "rgba(56, 206, 255, 0.5)"},
+            },
+        ],
+        "layout": {
+            "title": "Number of Cases by Sex and Age",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
+            "yaxis": {
+                "type": "linear",
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Cases",
+            },
+            "barmode": "overlay",
+            # "barmode": "stack",
+            "bargap": 0,
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background_secondary"],
+            "paper_bgcolor": style.theme["background_secondary"],
+            "font": {"color": style.theme["foreground_secondary"]},
+        },
+    }
+
+
+@app.callback(
+    Output("fatalities-bag-graph", "figure"), [Input("select-cantons-ch", "value")],
+)
+def update_fatalities_bag_graph(canton):
+    return {
+        "data": [
+            {
+                "x": data.bag_data_male_hist[
+                    data.bag_data_male_hist["canton"] == canton
+                ]["age"],
+                "y": data.bag_data_male_hist[
+                    data.bag_data_male_hist["canton"] == canton
+                ]["fatalities"],
+                "name": "Male",
+                # "mode": "lines",
+                "type": "bar",
+                "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
+                "marker": {"color": "rgba(255, 5, 71, 0.5)"},
+            },
+            {
+                "x": data.bag_data_female_hist[
+                    data.bag_data_female_hist["canton"] == canton
+                ]["age"],
+                "y": data.bag_data_female_hist[
+                    data.bag_data_female_hist["canton"] == canton
+                ]["fatalities"],
+                "name": "Female",
+                # "mode": "lines",
+                "type": "bar",
+                "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
+                "marker": {"color": "rgba(56, 206, 255, 0.5)"},
+            },
+        ],
+        "layout": {
+            "title": "Number of Fatalities by Sex and Age",
+            "height": 400,
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
+            "yaxis": {
+                "type": "linear",
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": "Cases",
+            },
+            "barmode": "overlay",
+            # "barmode": "stack",
+            "bargap": 0,
+            "dragmode": False,
+            "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+            "plot_bgcolor": style.theme["background_secondary"],
+            "paper_bgcolor": style.theme["background_secondary"],
+            "font": {"color": style.theme["foreground_secondary"]},
+        },
+    }
+
+
+#
 # Cantonal Data
 #
 @app.callback(
@@ -1590,13 +1752,13 @@ def update_cfr_age_graph(selected_cantons):
 
 
 # Kick off the updated thread
-executor = ThreadPoolExecutor(max_workers=1)
-executor.submit(update_data)
+# executor = ThreadPoolExecutor(max_workers=1)
+# executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        debug=True,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )

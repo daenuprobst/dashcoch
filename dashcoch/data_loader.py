@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from datetime import date, datetime, timedelta
+import numpy as np
 import pandas as pd
 from pytz import timezone
 from scipy import stats
@@ -14,7 +15,7 @@ class DataLoader:
 
         self.last_updated = self.__get_iso(self.last_updated)
 
-        # Load the actual data
+        # Load the data from the cantons
         self.swiss_cases = pd.read_csv(parser.get("urls", "swiss_cases"))
         self.swiss_fatalities = pd.read_csv(parser.get("urls", "swiss_fatalities"))
         self.swiss_hospitalizations = pd.read_csv(
@@ -24,15 +25,33 @@ class DataLoader:
         self.swiss_vent = pd.read_csv(parser.get("urls", "swiss_vent"))
         self.swiss_releases = pd.read_csv(parser.get("urls", "swiss_releases"))
 
+        # Get Swiss demographical data
         self.swiss_demography = pd.read_csv(
             parser.get("urls", "swiss_demography"), index_col=0
         )
+
+        # Get global data
         self.world_cases = self.__simplify_world_data(
             pd.read_csv(parser.get("urls", "world_cases"))
         )
         self.world_fataltities = self.__simplify_world_data(
             pd.read_csv(parser.get("urls", "world_fatalities"))
         )
+
+        # Get BAG data
+        self.bag_data = pd.read_csv(parser.get("urls", "bag_cases"))
+        self.bag_data_male_hist = (
+            self.bag_data[self.bag_data["sex"] == "Male"]
+            .groupby(["canton", "age"])
+            .sum()
+            .reset_index()
+        ).replace(0, np.nan)
+        self.bag_data_female_hist = (
+            self.bag_data[self.bag_data["sex"] == "Female"]
+            .groupby(["canton", "age"])
+            .sum()
+            .reset_index()
+        ).replace(0, np.nan)
 
         self.world_population = self.__get_world_population()
 

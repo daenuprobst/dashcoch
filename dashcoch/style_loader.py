@@ -79,8 +79,11 @@ class StyleLoader:
 
         self.theme = {
             "background": "#252e3f",
+            "background_secondary": "#402C36",
             "foreground": "#2cfec1",
+            "foreground_secondary": "#F2EB80",
             "accent": "#7fafdf",
+            "accent_secondary": "#de95ce",
             "red": "#fc5c65",
             "yellow": "#fed330",
             "blue": "#45aaf2",

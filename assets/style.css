@@ -44,6 +44,7 @@ table tr:hover {
 
 #plot-settings-container,
 .slider-container,
+.slider-container-secondary,
 .info-container,
 .dash-graph,
 .total-container {
@@ -439,6 +440,20 @@ h4 {
   border-bottom: 2px solid #222;
 }
 
+h4.secondary {
+  font-family: "IBM Plex Sans Condensed", "HelveticaNeue", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 4rem;
+  line-height: 1.35;
+  letter-spacing: -0.08rem;
+  margin-bottom: 0;
+  margin-top: 1.2rem;
+  padding: 10px;
+  background-color: #4d3341;
+  border-right: 2px solid #222;
+  border-bottom: 2px solid #222;
+}
+
 h5 {
   font-size: 2.2rem;
   line-height: 1.5;
@@ -798,6 +813,13 @@ hr {
 .slider-container,
 #plot-settings-container {
   background-color: #252e3f;
+  padding: 10px;
+  /* height: 12rem; */
+}
+
+.slider-container-secondary,
+#plot-settings-container-secondary {
+  background-color: #402c36;
   padding: 10px;
   /* height: 12rem; */
 }
