@@ -388,6 +388,23 @@ def get_layout():
                 ],
             ),
             html.Div(
+                className="slider-container-secondary",
+                children=[
+                    dcc.RadioItems(
+                        id="radio-absolute-norm",
+                        options=[
+                            {"label": "Absolute Numbers", "value": "absolute"},
+                            {"label": "Scaled by Age Distribution", "value": "scaled"},
+                        ],
+                        value="absolute",
+                        labelStyle={
+                            "display": "inline-block",
+                            "color": style.theme["foreground_secondary"],
+                        },
+                    ),
+                ],
+            ),
+            html.Div(
                 className="row",
                 children=[
                     html.Div(
@@ -1327,9 +1344,23 @@ def update_fatalities_world_graph(selected_scale):
 # BAG Data
 #
 @app.callback(
-    Output("cases-bag-graph", "figure"), [Input("select-cantons-ch", "value")],
+    Output("cases-bag-graph", "figure"),
+    [Input("select-cantons-ch", "value"), Input("radio-absolute-norm", "value")],
 )
-def update_cases_bag_graph(canton):
+def update_cases_bag_graph(canton, norm):
+    field = "cases"
+    factor = 1
+    title = "Number of Reported Cases by Sex and Age"
+    ytitle = "Reported Cases"
+
+    if norm == "scaled":
+        field = "cases_pp"
+        factor = 100
+        title = (
+            "Percentage of Infected Population by Sex and Age based on Reported Cases"
+        )
+        ytitle = "Infected Population [%]"
+
     return {
         "data": [
             {
@@ -1338,7 +1369,8 @@ def update_cases_bag_graph(canton):
                 ]["age"],
                 "y": data.bag_data_male_hist[
                     data.bag_data_male_hist["canton"] == canton
-                ]["cases"],
+                ][field]
+                * factor,
                 "name": "Male",
                 # "mode": "lines",
                 "type": "bar",
@@ -1351,7 +1383,8 @@ def update_cases_bag_graph(canton):
                 ]["age"],
                 "y": data.bag_data_female_hist[
                     data.bag_data_female_hist["canton"] == canton
-                ]["cases"],
+                ][field]
+                * factor,
                 "name": "Female",
                 # "mode": "lines",
                 "type": "bar",
@@ -1360,7 +1393,7 @@ def update_cases_bag_graph(canton):
             },
         ],
         "layout": {
-            "title": "Number of Cases by Sex and Age",
+            "title": title,
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
             "yaxis": {
@@ -1368,7 +1401,7 @@ def update_cases_bag_graph(canton):
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
-                "title": "Cases",
+                "title": ytitle,
             },
             "barmode": "overlay",
             # "barmode": "stack",
@@ -1383,9 +1416,21 @@ def update_cases_bag_graph(canton):
 
 
 @app.callback(
-    Output("fatalities-bag-graph", "figure"), [Input("select-cantons-ch", "value")],
+    Output("fatalities-bag-graph", "figure"),
+    [Input("select-cantons-ch", "value"), Input("radio-absolute-norm", "value")],
 )
-def update_fatalities_bag_graph(canton):
+def update_fatalities_bag_graph(canton, norm):
+    field = "fatalities"
+    factor = 1
+    title = "Number of Fatalities by Sex and Age"
+    ytitle = "Fatalities"
+
+    if norm == "scaled":
+        field = "fatalities_pp"
+        factor = 100
+        title = "Percentage of COVID-19 Fatalities among Population by Sex and Age"
+        ytitle = "Fatalities among Population [%]"
+
     return {
         "data": [
             {
@@ -1394,7 +1439,8 @@ def update_fatalities_bag_graph(canton):
                 ]["age"],
                 "y": data.bag_data_male_hist[
                     data.bag_data_male_hist["canton"] == canton
-                ]["fatalities"],
+                ][field]
+                * factor,
                 "name": "Male",
                 # "mode": "lines",
                 "type": "bar",
@@ -1407,7 +1453,8 @@ def update_fatalities_bag_graph(canton):
                 ]["age"],
                 "y": data.bag_data_female_hist[
                     data.bag_data_female_hist["canton"] == canton
-                ]["fatalities"],
+                ][field]
+                * factor,
                 "name": "Female",
                 # "mode": "lines",
                 "type": "bar",
@@ -1416,7 +1463,7 @@ def update_fatalities_bag_graph(canton):
             },
         ],
         "layout": {
-            "title": "Number of Fatalities by Sex and Age",
+            "title": title,
             "height": 400,
             "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
             "yaxis": {
@@ -1424,7 +1471,7 @@ def update_fatalities_bag_graph(canton):
                 "showgrid": True,
                 "color": "#ffffff",
                 "rangemode": "tozero",
-                "title": "Cases",
+                "title": ytitle,
             },
             "barmode": "overlay",
             # "barmode": "stack",
@@ -1752,13 +1799,13 @@ def update_cfr_age_graph(selected_cantons):
 
 
 # Kick off the updated thread
-# executor = ThreadPoolExecutor(max_workers=1)
-# executor.submit(update_data)
+executor = ThreadPoolExecutor(max_workers=1)
+executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # debug=True,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )

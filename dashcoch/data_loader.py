@@ -42,15 +42,9 @@ class DataLoader:
         self.bag_data = pd.read_csv(parser.get("urls", "bag_cases"))
         self.bag_data_male_hist = (
             self.bag_data[self.bag_data["sex"] == "Male"]
-            .groupby(["canton", "age"])
-            .sum()
-            .reset_index()
         ).replace(0, np.nan)
         self.bag_data_female_hist = (
             self.bag_data[self.bag_data["sex"] == "Female"]
-            .groupby(["canton", "age"])
-            .sum()
-            .reset_index()
         ).replace(0, np.nan)
 
         self.world_population = self.__get_world_population()
