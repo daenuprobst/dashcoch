@@ -1395,7 +1395,7 @@ def update_cases_bag_graph(canton, norm):
         "layout": {
             "title": title,
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age 1 - 99+"},
             "yaxis": {
                 "type": "linear",
                 "showgrid": True,
@@ -1465,7 +1465,7 @@ def update_fatalities_bag_graph(canton, norm):
         "layout": {
             "title": title,
             "height": 400,
-            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age"},
+            "xaxis": {"showgrid": True, "color": "#ffffff", "title": "Age 1 - 99+"},
             "yaxis": {
                 "type": "linear",
                 "showgrid": True,
