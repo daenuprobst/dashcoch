@@ -897,6 +897,18 @@ def update_new_case_ch_graph(selected_scale):
             "font": {"color": style.theme["foreground"]},
             "shapes": [
                 {
+                    "type": "line",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": "2020-03-16",
+                    "y0": 0,
+                    "x1": "2020-03-16",
+                    "y1": 1,
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+                },
+                {
                     "type": "rect",
                     "xref": "x",
                     "yref": "paper",
@@ -908,9 +920,23 @@ def update_new_case_ch_graph(selected_scale):
                     "opacity": 1.0,
                     "layer": "below",
                     "line": {"width": 0},
-                }
+                },
             ],
             "annotations": [
+                {
+                    "x": "2020-03-16",
+                    "y": 0.92,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Soft Lockdown",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                },
                 {
                     "x": data.swiss_cases_by_date_diff.index[-3],
                     "y": 0.95,
@@ -924,7 +950,7 @@ def update_new_case_ch_graph(selected_scale):
                     "arrowsize": 1,
                     "arrowwidth": 1,
                     "arrowcolor": style.theme["accent"],
-                }
+                },
             ],
         },
     }
@@ -977,6 +1003,18 @@ def update_new_fatalities_ch_graph(selected_scale):
             "font": {"color": style.theme["foreground"]},
             "shapes": [
                 {
+                    "type": "line",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": "2020-03-16",
+                    "y0": 0,
+                    "x1": "2020-03-16",
+                    "y1": 1,
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+                },
+                {
                     "type": "rect",
                     "xref": "x",
                     "yref": "paper",
@@ -988,9 +1026,23 @@ def update_new_fatalities_ch_graph(selected_scale):
                     "opacity": 1.0,
                     "layer": "below",
                     "line": {"width": 0},
-                }
+                },
             ],
             "annotations": [
+                {
+                    "x": "2020-03-16",
+                    "y": 0.92,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Soft Lockdown",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                },
                 {
                     "x": data.swiss_cases_by_date_diff.index[-3],
                     "y": 0.95,
@@ -1004,7 +1056,7 @@ def update_new_fatalities_ch_graph(selected_scale):
                     "arrowsize": 1,
                     "arrowwidth": 1,
                     "arrowcolor": style.theme["accent"],
-                }
+                },
             ],
         },
     }

@@ -40,12 +40,13 @@ class DataLoader:
 
         # Get BAG data
         self.bag_data = pd.read_csv(parser.get("urls", "bag_cases"))
-        self.bag_data_male_hist = (
-            self.bag_data[self.bag_data["sex"] == "Male"]
-        ).replace(0, np.nan)
-        self.bag_data_female_hist = (
-            self.bag_data[self.bag_data["sex"] == "Female"]
-        ).replace(0, np.nan)
+
+        self.bag_data_male_hist = self.bag_data[self.bag_data["sex"] == "Male"].replace(
+            0, np.nan
+        )
+        self.bag_data_female_hist = self.bag_data[
+            self.bag_data["sex"] == "Female"
+        ].replace(0, np.nan)
 
         self.world_population = self.__get_world_population()
 
@@ -246,7 +247,9 @@ class DataLoader:
                     "Germany",
                     "Italy",
                     "Korea, South",
+                    "Norway",
                     "Spain",
+                    "Sweden",
                     "United Kingdom",
                     "US",
                 ]
@@ -334,6 +337,8 @@ class DataLoader:
             "United Kingdom": 67886011,
             "Switzerland": 8654622,
             "Korea, South": 51269185,
+            "Sweden": 10327600,
+            "Norway": 5367580,
         }
 
     def __get_cantonal_centres(self):
