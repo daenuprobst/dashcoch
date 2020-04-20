@@ -1,5 +1,5 @@
-from configparser import ConfigParser
 from datetime import date, datetime, timedelta
+import confuse
 import numpy as np
 import pandas as pd
 from pytz import timezone
@@ -7,54 +7,30 @@ from scipy import stats
 
 
 class DataLoader:
-    def __init__(self, parser: ConfigParser):
-        # Load info on the latest updates
-        self.last_updated = pd.read_csv(
-            parser.get("urls", "last_updated"), index_col=[0]
-        ).sort_values(by=["Date", "Time"], ascending=False)
+    def __init__(self, cfg: confuse.Configuration):
+        self.cfg = cfg
 
-        self.last_updated = self.__get_iso(self.last_updated)
+        #
+        # Load info on the latest updates
+        #
+        if cfg["show"]["updates"]:
+            self.last_updated = pd.read_csv(
+                cfg["urls"]["last_updated"].get(), index_col=[0]
+            ).sort_values(by=["Date", "Time"], ascending=False)
+
+            self.last_updated = self.__get_iso(self.last_updated)
 
         # Load the data from the cantons
-        self.swiss_cases = pd.read_csv(parser.get("urls", "swiss_cases"))
-        self.swiss_fatalities = pd.read_csv(parser.get("urls", "swiss_fatalities"))
-        self.swiss_hospitalizations = pd.read_csv(
-            parser.get("urls", "swiss_hospitalizations")
-        )
-        self.swiss_icu = pd.read_csv(parser.get("urls", "swiss_icu"))
-        self.swiss_vent = pd.read_csv(parser.get("urls", "swiss_vent"))
-        self.swiss_releases = pd.read_csv(parser.get("urls", "swiss_releases"))
+        self.swiss_cases = pd.read_csv(cfg["urls"]["cases"].get())
+        self.swiss_fatalities = pd.read_csv(cfg["urls"]["fatalities"].get())
 
         # Get Swiss demographical data
         self.swiss_demography = pd.read_csv(
-            parser.get("urls", "swiss_demography"), index_col=0
+            cfg["urls"]["demography"].get(), index_col=0
         )
-
-        # Get global data
-        self.world_cases = self.__simplify_world_data(
-            pd.read_csv(parser.get("urls", "world_cases"))
-        )
-        self.world_fataltities = self.__simplify_world_data(
-            pd.read_csv(parser.get("urls", "world_fatalities"))
-        )
-
-        # Get BAG data
-        self.bag_data = pd.read_csv(parser.get("urls", "bag_cases"))
-
-        self.bag_data_male_hist = self.bag_data[self.bag_data["sex"] == "Male"].replace(
-            0, np.nan
-        )
-        self.bag_data_female_hist = self.bag_data[
-            self.bag_data["sex"] == "Female"
-        ].replace(0, np.nan)
-
-        self.world_population = self.__get_world_population()
 
         self.swiss_cases_by_date = self.swiss_cases.set_index("Date")
         self.swiss_fatalities_by_date = self.swiss_fatalities.set_index("Date")
-        self.swiss_hospitalizations_by_date = self.swiss_hospitalizations.set_index(
-            "Date"
-        )
 
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
@@ -72,19 +48,11 @@ class DataLoader:
             0, float("nan")
         )
 
-        self.swiss_hospitalizations_by_date_diff = self.swiss_hospitalizations_by_date.diff().replace(
-            0, float("nan")
-        )
-
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
         )
 
         self.swiss_fatalities_by_date_filled = self.swiss_fatalities_by_date.fillna(
-            method="ffill", axis=0
-        )
-
-        self.swiss_hospitalizations_by_date_filled = self.swiss_hospitalizations_by_date.fillna(
             method="ffill", axis=0
         )
 
@@ -124,20 +92,9 @@ class DataLoader:
         #
         # Moving average showing development
         #
-
         self.moving_total = self.__get_moving_total(
             self.swiss_cases_by_date.diff()
         ).replace(0, float("nan"))
-
-        #
-        # World related data
-        #
-
-        self.world_case_fatality_rate = (
-            self.world_fataltities.iloc[-1] / self.world_cases.iloc[-1]
-        )
-
-        self.swiss_world_cases_normalized = self.__get_swiss_world_cases_normalized()
 
         #
         # Some regression analysis on the data
@@ -152,6 +109,63 @@ class DataLoader:
         )
 
         self.scaled_cases = self.__get_scaled_cases()
+
+        #
+        # Hospitalization Data
+        #
+        if cfg["show"]["hospitalizations"]:
+            self.swiss_hospitalizations = pd.read_csv(
+                cfg["urls"]["hospitalizations"].get()
+            )
+            self.swiss_icu = pd.read_csv(cfg["urls"]["icu"].get())
+            self.swiss_vent = pd.read_csv(cfg["urls"]["vent"].get())
+            self.swiss_releases = pd.read_csv(cfg["urls"]["releases"].get())
+            self.swiss_hospitalizations_by_date = self.swiss_hospitalizations.set_index(
+                "Date"
+            )
+
+            self.swiss_hospitalizations_by_date_diff = self.swiss_hospitalizations_by_date.diff().replace(
+                0, float("nan")
+            )
+
+            self.swiss_hospitalizations_by_date_filled = self.swiss_hospitalizations_by_date.fillna(
+                method="ffill", axis=0
+            )
+
+        #
+        # Get age distribution data
+        #
+        if cfg["show"]["age_distribution"]:
+            self.age_data = pd.read_csv(cfg["urls"]["bag_cases"].get())
+
+            self.age_data_male_hist = self.age_data[
+                self.age_data["sex"] == "Male"
+            ].replace(0, np.nan)
+            self.age_data_female_hist = self.age_data[
+                self.age_data["sex"] == "Female"
+            ].replace(0, np.nan)
+
+        #
+        # World related data
+        #
+        if cfg["show"]["international"]:
+            self.world_cases = self.__simplify_world_data(
+                pd.read_csv(cfg["urls"]["world_cases"].get())
+            )
+
+            self.world_fataltities = self.__simplify_world_data(
+                pd.read_csv(cfg["urls"]["world_fatalities"].get())
+            )
+
+            self.world_population = self.cfg["countries"].get()
+
+            self.world_case_fatality_rate = (
+                self.world_fataltities.iloc[-1] / self.world_cases.iloc[-1]
+            )
+
+            self.swiss_world_cases_normalized = (
+                self.__get_swiss_world_cases_normalized()
+            )
 
     def __get_iso(self, df):
         isos = []
@@ -242,17 +256,7 @@ class DataLoader:
         df = df.T
         df.drop(
             df.columns.difference(
-                [
-                    "France",
-                    "Germany",
-                    "Italy",
-                    "Korea, South",
-                    "Norway",
-                    "Spain",
-                    "Sweden",
-                    "United Kingdom",
-                    "US",
-                ]
+                [c for c in [*self.cfg["countries"].get()] if c != "Switzerland"]
             ),
             1,
             inplace=True,
@@ -326,20 +330,6 @@ class DataLoader:
         df_moving_total["date_label"] = date_labels
 
         return df_moving_total
-
-    def __get_world_population(self):
-        return {
-            "France": 65273511,
-            "Germany": 83783942,
-            "Italy": 60461826,
-            "Spain": 46754778,
-            "US": 331002651,
-            "United Kingdom": 67886011,
-            "Switzerland": 8654622,
-            "Korea, South": 51269185,
-            "Sweden": 10327600,
-            "Norway": 5367580,
-        }
 
     def __get_cantonal_centres(self):
         return {

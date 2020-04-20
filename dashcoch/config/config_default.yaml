@@ -1,0 +1,71 @@
+title: COVID-19 Information for Switzerland
+
+info: "[Contact me on Twitter](https://twitter.com/skepteis).
+  The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
+  Page views are counted by privacy-focused [Simple Analytics](https://simpleanalytics.com?ref=corona-data.ch), the data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=corona-data.ch)."
+
+more_info: "More scientific information on the pandemic can be found here: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Recent scientific articles curated by the University Hospital Bern](https://www.update-covid.ch)"
+
+urls:
+  cases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland_openzh.csv
+  fatalities: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland_openzh.csv
+  hospitalizations: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_hospitalized_switzerland_openzh.csv
+  icu: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_icu_switzerland_openzh.csv
+  vent: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_vent_switzerland_openzh.csv
+  releases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_released_switzerland_openzh.csv
+  demography: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv
+  world_cases: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+  world_fatalities: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
+  world_recoveries: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
+  last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/last_updated.csv
+  bag_cases: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/age_distribution_latest.csv
+
+countries:
+  France: 65273511
+  Germany: 83783942
+  Italy: 60461826
+  Spain: 46754778
+  US: 331002651
+  United Kingdom: 67886011
+  Switzerland: 8654622
+  Korea, South: 51269185
+  Sweden: 10327600
+  Norway: 5367580
+
+show:
+  header: On
+  totals: On
+  updates: On
+  map: On
+  main: On
+  hospitalizations: On
+  log_log_development: On
+  international: On
+  age_distribution: On
+  regional: On
+  log_log_regional_development: On
+  demographic_correlation: On
+  raw: On
+
+settings:
+  update_interval: 600
+
+i18n:
+  total_reported_cases:
+    - Total Reported Cases
+    - Total Bestätigte Fälle
+  reported_cases_today:
+    - Reported Cases Today
+    - Bestätigte Fälle Heute
+  total_fatalities:
+    - Total Fatalities
+    - Total Verstorbene
+  cantons_updated_today:
+    - Cantons Updated Today
+    - Heute Aktualisierte Kantone
+  latest_updates:
+    - "Latest Updates:"
+    - "Zuletzt Aktualisiert:"
+  drag_the_slider_to_change_the_date:
+    - "Drag the slider to change the date:"
+    - "Ziehen sie den Slider um das Datum zu ändern:"
