@@ -1,5 +1,4 @@
 import time
-import i18n
 from dashcoch import DataLoader, StyleLoader
 import math
 from datetime import date, datetime, timedelta
