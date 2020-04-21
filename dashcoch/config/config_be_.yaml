@@ -1,39 +1,39 @@
 urls:
-  cases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland_openzh.csv
-  fatalities: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland_openzh.csv
-  hospitalizations: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_hospitalized_switzerland_openzh.csv
-  icu: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_icu_switzerland_openzh.csv
-  vent: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_vent_switzerland_openzh.csv
+  cases: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/cases.csv
+  fatalities: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/fatalities.csv
+  hospitalizations: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/hospitalizations.csv
+  icu: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/icu.csv
+  vent: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/vent.csv
   releases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_released_switzerland_openzh.csv
-  demography: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv
+  demography: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/demography.csv
   world_cases: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
   world_fatalities: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
   world_recoveries: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
-  last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/last_updated.csv
-  age_distribution: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/age_distribution_latest.csv
+  last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/last_updated.csv
+  age_distribution: https://raw.githubusercontent.com/daenuprobst/covid19-data-be/master/age_distribution.csv
 
 show:
   header: On
-  info: On
-  more_info: On
+  info: Off
+  more_info: Off
   totals: On
   updates: On
   map: On
   main: On
   hospitalizations: On
-  hospital_releases: On
+  hospital_releases: Off
   log_log_development: On
-  international: On
+  international: Off
   age_distribution: On
   regional: On
   log_log_regional_development: On
-  demographic_correlation: On
-  raw: On
+  demographic_correlation: Off
+  raw: Off
 
 banner:
-  href: https://www.glueckskette.ch/
-  src: https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg
-  width: "200px"
+  href: 
+  src: 
+  width: 
 
 settings:
   update_interval: 600
@@ -42,20 +42,20 @@ settings:
     - de
     - fr
   default_language: 0
-  total_column_name: CH
-  age_distribution_region_column_name: "canton"
+  total_column_name: Total
+  age_distribution_region_column_name: region
   choropleth:
-    geojson_file: /assets/switzerland.geojson
-    feature: id
+    geojson_file: /assets/verwaltungskreise_be.geojson
+    feature: properties.V_KREIS
     center: 
-      lat: 46.80111
-      lon: 8.22667
+      lat: 46.8181
+      lon: 7.65965
     lataxis:
-      - 45.7845
-      - 47.8406
+      - 46.305
+      - 47.3312
     lonaxis:
-      - 5.5223
-      - 10.5421
+      - 6.8398
+      - 8.4795
 
 theme:
   background: "#252e3f"
@@ -81,120 +81,56 @@ countries:
   Norway: 5367580
 
 regions:
-  - region: AG
-    lat: 47.40966
-    lon: 8.15688
-    color: "#87ceeb"
-  - region: AR
-    lat: 47.416352
-    lon: 9.36791
-    color: "#57606f"
-  - region: AI
-    lat: 47.317264
-    lon: 9.416754
-    color: "#57606f"
-  - region: BL
-    lat: 47.45176
-    lon: 7.702414
-    color: "#e9403c"
-  - region: BS
-    lat: 47.564869
-    lon: 7.615259
-    color: "#F8EFBA"
-  - region: BE
-    lat: 46.823608
-    lon: 7.636667
-    color: "#EE5A24"
-  - region: FR
-    lat: 46.718391
-    lon: 7.074008
-    color: "#ffffff"
-  - region: GE
-    lat: 46.220528
-    lon: 6.132935
-    color: "#ffd134"
-  - region: GL
-    lat: 46.931042
-    lon: 9.065751
-    color: "#B53471"
-  - region: GR
-    lat: 46.656248
-    lon: 9.628198
-    color: "#eccc68"
-  - region: JU
-    lat: 47.350744
-    lon: 7.156107
-    color: "#6D214F"
-  - region: LU
-    lat: 47.067763
-    lon: 8.1102
-    color: "#258bcc"
-  - region: NE
-    lat: 46.995534
-    lon: 6.780126
-    color: "#17a74e"
-  - region: NW
-    lat: 46.926755
-    lon: 8.405302
-    color: "#e7423e"
-  - region: OW
-    lat: 46.804527
-    lon: 8.144317
-    color: "#D980FA"
-  - region: SH
-    lat: 47.71357
-    lon: 8.59167
-    color: "#ffd829"
-  - region: SZ
-    lat: 47.061787
-    lon: 8.756585
-    color: "#ff0000"
-  - region: SO
-    lat: 47.304135
-    lon: 7.639388
-    color: "#e8423f"
-  - region: SG
-    lat: 47.1832
-    lon: 9.274744
-    color: "#17a74e"
-  - region: TI
-    lat: 46.295617
-    lon: 8.808924
-    color: "#0271ac"
-  - region: TG
-    lat: 47.568715
-    lon: 9.091957
-    color: "#12CBC4"
-  - region: UR
-    lat: 46.771849
-    lon: 8.628586
-    color: "#ffd72e"
-  - region: VD
-    lat: 46.570091
-    lon: 6.557809
-    color: "#007f01"
-  - region: VS
-    lat: 46.209567
-    lon: 7.604659
-    color: "#e8423f"
-  - region: ZG
-    lat: 47.157296
-    lon: 8.537294
-    color: "#278bcc"
-  - region: ZH
-    lat: 47.41275
-    lon: 8.65508
-    color: "#0abde3"
+  - region: Seeland
+    lat: 47.03225
+    lon: 7.19875
+    color: "#3498db"
+  - region: Bern-Mittelland
+    lat: 46.90316
+    lon: 7.46785
+    color: "#f1c40f"
+  - region: Oberaargau
+    lat: 47.19066
+    lon: 7.77030
+    color: "#9b59b6"
+  - region: Biel/Bienne
+    lat: 47.14581
+    lon: 7.27925
+    color: "#e74c3c"
+  - region: Emmental
+    lat: 47.01241
+    lon: 7.74845
+    color: "#27ae60"
+  - region: Jura bernois
+    lat: 47.22516
+    lon: 7.14470
+    color: "#2ecc71"
+  - region: Frutigen-Niedersimmental
+    lat: 46.56621
+    lon: 7.62655
+    color: "#f5cd79"
+  - region: Interlaken-Oberhasli
+    lat: 46.66166
+    lon: 8.09804
+    color: "#f78fb3"
+  - region: Obersimmental-Saanen
+    lat: 46.48916
+    lon: 7.36435
+    color: "#ecf0f1"
+  - region: Thun
+    lat: 46.76516
+    lon: 7.65185
+    color: "#60a3bc"
 
 i18n:
   title:
-    - COVID-19 Information for Switzerland
-    - COVID-19 Informationen Schweiz
-    - Informations COVID-19 Suisse
+    - COVID-19 Information for the Canton of Bern
+    - COVID-19 Informationen Kanton Bern
+    - Informations COVID-19 Canton de Berne
   description:
-    - Latest updates of COVID-19 development in Switzerland
-    - Neuste Entwicklungen der COVID-19 Pandemie in der Schweiz
-    - Dernières mises à jour du développement de COVID-19 en Suisse
+    - Latest updates of COVID-19 development in Berne
+    - Neuste Entwicklungen der COVID-19 Pandemie in Bern
+    - Dernières mises à jour du développement de COVID-19 en Berne
   info:
     - "[Contact me on Twitter](https://twitter.com/skepteis).
       The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
@@ -218,9 +154,9 @@ i18n:
     - Total Verstorbene
     - Totalement Décédé
   regions_updated_today:
-    - Cantons Updated Today
-    - Heute Aktualisierte Kantone
-    - Mise à Jour des Cantons Aujourd'hui
+    - Regions Updated Today
+    - Heute Aktualisierte Verwaltungskreise
+    - Mise à Jour des Arrondissements Administratifs Aujourd'hui
   latest_updates:
     - "Latest Updates:"
     - "Zuletzt Aktualisiert:"
@@ -252,9 +188,9 @@ i18n:
     - Total Todesfälle
     - Nombre Total de Décès
   main_data_title:
-    - Data for Switzerland
-    - Daten Schweiz
-    - Données de la Suisse
+    - Data for Bern
+    - Daten Bern
+    - Données de Berne
   linear_scale:
     - Linear Scale
     - Lineare Skalierung
@@ -264,9 +200,9 @@ i18n:
     - Logarithmische Skalierung
     - Mise à l'Échelle Logarithmique
   age_distribution_title:
-    - BAG/OFSP/UFSP/FOPH Data for Switzerland
-    - BAG/OFSP/UFSP/FOPH Daten Schweiz
-    - BAG/OFSP/UFSP/FOPH Données de la Suisse
+    - Age and Sex Distribution
+    - Alters- und Geschlechtsverteilung
+    - Répartition par âge et par sexe
   show_data_for:
     - "Show Data for:"
     - "Daten Anzeigen für:"
@@ -280,9 +216,9 @@ i18n:
     - Skaliert nach Alter
     - Échelles selon l'Âge
   regional_data_title:
-    - Data per Canton
-    - Daten nach Kantonen
-    - Données par Cantons
+    - Data per Administrative Region
+    - Daten nach Verwaltungskreisen
+    - Données par Arrondissements Administratifs
   demographic_correlation_title:
     - Demographic Correlation
     - Demographische Korrelation
@@ -298,9 +234,9 @@ i18n:
     - Fehlende Daten
     - Données Brutes
   plot_total_reported_cases_country_title:
-    - Total Reported Cases Switzerland
-    - Total Bestätigte Fälle Schweiz
-    - Total des Cas Confirmés en Suisse
+    - Total Reported Cases Bern
+    - Total Bestätigte Fälle Bern
+    - Total des Cas Confirmés en Bern
   plot_total_reported_cases_country_x:
     - Date
     - Datum
@@ -310,9 +246,9 @@ i18n:
     - Bestätigte Fälle
     - Cas Confirmés
   plot_total_fatalities_country_title:
-    - Total Fatalities Switzerland
-    - Total Todesfälle Schweiz
-    - Total des Décès en Suisse
+    - Total Fatalities Bern
+    - Total Todesfälle Bern
+    - Total des Décès en Berne
   plot_total_fatalities_country_x:
     - Date
     - Datum
@@ -322,9 +258,9 @@ i18n:
     - Todesfälle
     - Décès
   plot_daily_reported_cases_country_title:
-    - Daily Reported Cases Switzerland
-    - Täglich Bestätigte Fälle Schweiz
-    - Des Cas Confirmés Quotidiennement en Suisse
+    - Daily Reported Cases Bern
+    - Täglich Bestätigte Fälle Bern
+    - Des Cas Confirmés Quotidiennement en Berne
   plot_daily_reported_cases_country_x:
     - Date
     - Datum
@@ -334,9 +270,9 @@ i18n:
     - Bestätigte Fälle
     - Cas Confirmés
   plot_daily_fatalities_country_title:
-    - Daily Fatalities Switzerland
-    - Täglich Todesfälle Schweiz
-    - Décès Quotidiens en Suisse
+    - Daily Fatalities Bern
+    - Täglich Todesfälle Bern
+    - Décès Quotidiens en Berne
   plot_daily_fatalities_country_x:
     - Date
     - Datum
@@ -346,9 +282,9 @@ i18n:
     - Todesfälle
     - Décès
   plot_hospitalizations_country_title:
-    - Current Hospitalizations (Releases are Subtracted)
-    - Aktuelle Hospitalisierungen (Entlassungen Abgezogen)
-    - Hospitalisations en cours (Mises à Pied Déduites)
+    - Cumulative Hospitalizations (Releases are not Subtracted)
+    - Kumulative Hospitalisierungen (Entlassungen nicht Abgezogen)
+    - Hospitalisations Cumulées (Mises à Pied non Déduites)
   plot_hospitalizations_country_x:
     - Date
     - Datum
@@ -370,7 +306,7 @@ i18n:
     - Beatmet
     - Respirations
   plot_releases_country_title:
-    - Total Reported Hospital Releases Switzerland
+    - Total Reported Hospital Releases
     - Total Bestätigte Spitalentlassungen
     - Total des Congés Hospitaliers Confirmés
   plot_releases_country_x:
@@ -481,9 +417,9 @@ i18n:
     - "Verstorbene Bevölkerung [%]"
     - "Population Décédée [%]"
   plot_cases_regional_title:
-    - Reported Cases per Canton
-    - Bestätigte Fälle nach Kanton
-    - Cas confirmés par Canton
+    - Reported Cases per Administrative Region
+    - Bestätigte Fälle nach Verwaltungskreis
+    - Cas confirmés par Arrondissements Administratifs
   plot_cases_regional_x:
     - Date
     - Datum
@@ -493,9 +429,9 @@ i18n:
     - Bestätigte Fälle
     - Cas Confirmés
   plot_cases_pc_regional_title:
-    - Reported Cases per Canton (per 10,000 Inhabitants)
-    - Bestätigte Fälle nach Kanton (pro 10'000 Einwohner)
-    - Cas Confirmés par Canton (pour 10'000 Habitants)
+    - Reported Cases per Administrative Region
+    - Bestätigte Fälle nach Verwaltungskreis
+    - Cas Confirmés par Arrondissements Administratifs
   plot_cases_pc_regional_x:
     - Date
     - Datum
@@ -505,9 +441,9 @@ i18n:
     - Bestätigte Fälle / Einwohnerzahl * 10'000
     - Cas Confirmés / Population * 10'000
   plot_cases_new_regional_title:
-    - Newly Reported Cases per Canton
-    - Neu Bestätigte Fälle pro Kanton
-    - Cas Nouvellement Confirmés par Canton
+    - Newly Reported Cases per Administrative Region
+    - Neu Bestätigte Fälle pro Verwaltungskreis
+    - Cas Nouvellement Confirmés par Arrondissements Administratifs
   plot_cases_new_regional_x:
     - Date
     - Datum
@@ -581,30 +517,24 @@ i18n:
     - Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading.
     - Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind.
     - Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
-    - Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti.
   info_log_log_main:
     - This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day.
     - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.
     - Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour.
-    - Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani sono indicati come una linea gialla, tuttavia variano notevolmente tra i giorni. Per mostrare uno sviluppo più fluido, la linea verde mostra il numero totale di casi durante una settimana per ogni giorno.
   info_age_distribution:
-    - The data shown here is from a different data source and might be slightly different. Differences arise from different publishing days.
-    - Die hier gezeigten Daten stammen aus einer anderen Datenquelle und können geringfügig abweichen. Unterschiede ergeben sich aus unterschiedlichen Veröffentlichungstagen.
-    - Les données présentées ici proviennent d'une source de données différente et peuvent être légèrement différentes. Les différences découlent des différents jours de publication.
-    - I dati mostrati qui provengono da un'origine dati diversa e potrebbero essere leggermente diversi. Le differenze derivano da diversi giorni di pubblicazione.
+    - A few cases with unknown sex and/or age are not shown in this visualization.
+    - Einige Fälle mit unbekanntem Geschlecht und / oder Alter sind in dieser Visualisierung nicht dargestellt.
+    - Quelques cas dont le sexe et / ou l'âge sont inconnus ne sont pas représentés dans cette visualisation.
   info_regional:
     - Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading.
     - Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind.
     - Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
-    - Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti.
   info_log_log_regional:
     - This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day.
     - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.
     - Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour.
-    - Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno.
   info_corr:
     - The dashed white line shows the correlation between the data of the two axes. The value "r" describes the strength of the correlation, while a p-value of more than 0.05 means that the correlation is not significant.
     - Die gestrichelte weiße Linie zeigt die Korrelation zwischen den Daten der beiden Achsen. Der Wert "r" beschreibt die Stärke der Korrelation, während ein p-Wert von mehr als 0,05 bedeutet, dass die Korrelation nicht signifikant ist.
     - La ligne blanche en pointillés montre la corrélation entre les données des deux axes. La valeur "r" décrit la force de la corrélation, tandis qu\'une valeur de p supérieure à 0,05 signifie que la corrélation n\'est pas significative.
-    - La linea bianca tratteggiata mostra la correlazione tra i dati dei due assi. Il valore "r" descrive l\'intensità della correlazione, mentre un valore p superiore a 0,05 indica che la correlazione non è significativa.
     

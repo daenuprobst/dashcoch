@@ -19,7 +19,7 @@ external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
 ]
 
-lang = 1
+lang = 0
 
 # external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
@@ -67,9 +67,11 @@ get_data()
 
 def get_lang():
     supported_languages = cfg["settings"]["languages"].get()
-    return supported_languages.index(
-        flask.request.accept_languages.best_match(supported_languages)
-    )
+    candidate = flask.request.accept_languages.best_match(supported_languages)
+    if candidate in supported_languages:
+        return supported_languages.index(candidate)
+    else:
+        return cfg["settings"]["default_language"].get()
 
 
 def get_layout():
@@ -197,7 +199,8 @@ def get_layout():
                                             children=str(
                                                 data.last_updated["Updated_Today"].sum()
                                             )
-                                            + " / 26",
+                                            + " / "
+                                            + str(len(data.last_updated)),
                                         ),
                                     ],
                                 ),
@@ -310,10 +313,12 @@ def get_layout():
                             min=0,
                             max=len(data.swiss_cases["Date"]) - 1,
                             marks={
-                                i: date.fromisoformat(d).strftime("%d.")
+                                i: date.fromisoformat(d).strftime("%d. %m.")
                                 for i, d in enumerate(data.swiss_cases["Date"])
+                                if date.fromisoformat(d).weekday() == 0
                             },
                             value=len(data.swiss_cases["Date"]) - 1,
+                            updatemode="drag",
                         ),
                     ],
                 ),
@@ -388,7 +393,7 @@ def get_layout():
         )
 
     # Hospitalization Data
-    if cfg["show"]["hospitalizations"]:
+    if cfg["show"]["hospitalizations"] and cfg["show"]["hospital_releases"]:
         content.extend(
             [
                 html.Div(
@@ -401,6 +406,22 @@ def get_layout():
                         html.Div(
                             className="six columns",
                             children=[dcc.Graph(id="releases-ch-graph")],
+                        ),
+                    ],
+                ),
+                html.Br(),
+            ]
+        )
+
+    if cfg["show"]["hospitalizations"] and not cfg["show"]["hospital_releases"]:
+        content.extend(
+            [
+                html.Div(
+                    className="row",
+                    children=[
+                        html.Div(
+                            className="twelve columns",
+                            children=[dcc.Graph(id="hospitalizations-ch-graph")],
                         ),
                     ],
                 ),
@@ -480,9 +501,12 @@ def get_layout():
                             id="select-regions-ch",
                             options=[
                                 {"label": region, "value": region}
-                                for region in ["CH"] + data.region_labels
+                                for region in [
+                                    cfg["settings"]["total_column_name"].get()
+                                ]
+                                + data.region_labels
                             ],
-                            value="CH",
+                            value=cfg["settings"]["total_column_name"].get(),
                             clearable=False,
                         ),
                     ],
@@ -819,9 +843,13 @@ try:
                     "type": "choropleth",
                     "showscale": False,
                     "locations": data.region_labels,
-                    "z": [map_data[region][d] for region in map_data if region != "CH"],
+                    "z": [
+                        map_data[region][d]
+                        for region in map_data
+                        if region != cfg["settings"]["total_column_name"].get()
+                    ],
                     "colorscale": style.turbo,
-                    "geojson": "/assets/switzerland.geojson",
+                    "geojson": cfg["settings"]["choropleth"]["geojson_file"].get(),
                     "featureidkey": cfg["settings"]["choropleth"]["feature"].get(),
                     "marker": {"line": {"width": 0.0, "color": "#08302A"}},
                     # "colorbar": {
@@ -867,16 +895,20 @@ try:
             "data": [
                 {
                     "x": data.swiss_cases.iloc[:-3]["Date"],
-                    "y": data.swiss_cases.iloc[:-3]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_cases.iloc[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
                     "showlegend": False,
                 },
                 {
                     "x": data.swiss_cases.iloc[-4:]["Date"],
-                    "y": data.swiss_cases.iloc[-4:]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_cases.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
                     "marker": {"color": "rgba(44, 254, 193, 0.25)"},
@@ -962,16 +994,20 @@ try:
             "data": [
                 {
                     "x": data.swiss_fatalities[:-3]["Date"],
-                    "y": data.swiss_fatalities[:-3]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_fatalities[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
                     "showlegend": False,
                 },
                 {
                     "x": data.swiss_fatalities.iloc[-4:]["Date"],
-                    "y": data.swiss_fatalities.iloc[-4:]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_fatalities.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
                     "marker": {"color": "rgba(44, 254, 193, 0.25)"},
@@ -1051,16 +1087,20 @@ try:
             "data": [
                 {
                     "x": data.swiss_cases_by_date_diff.iloc[:-3].index,
-                    "y": data.swiss_cases_by_date_diff.iloc[:-3]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_cases_by_date_diff.iloc[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
                     "showlegend": False,
                 },
                 {
                     "x": data.swiss_cases_by_date_diff.iloc[-4:].index,
-                    "y": data.swiss_cases_by_date_diff.iloc[-4:]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_cases_by_date_diff.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
                     "marker": {"color": "rgba(44, 254, 193, 0.25)"},
@@ -1172,16 +1212,20 @@ try:
             "data": [
                 {
                     "x": data.swiss_fatalities_by_date_diff[:-3].index,
-                    "y": data.swiss_fatalities_by_date_diff[:-3]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_fatalities_by_date_diff[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
                     "showlegend": False,
                 },
                 {
                     "x": data.swiss_fatalities_by_date_diff.iloc[-4:].index,
-                    "y": data.swiss_fatalities_by_date_diff.iloc[-4:]["CH"],
-                    "name": "CH",
+                    "y": data.swiss_fatalities_by_date_diff.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
                     "marker": {"color": "rgba(44, 254, 193, 0.25)"},
@@ -1287,7 +1331,9 @@ try:
             "data": [
                 {
                     "x": data.swiss_hospitalizations[:-3]["Date"],
-                    "y": data.swiss_hospitalizations[:-3]["CH"],
+                    "y": data.swiss_hospitalizations[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_regular"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["yellow"]},
@@ -1295,7 +1341,9 @@ try:
                 },
                 {
                     "x": data.swiss_icu[:-3]["Date"],
-                    "y": data.swiss_icu[:-3]["CH"],
+                    "y": data.swiss_icu[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_intensive"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["red"]},
@@ -1303,7 +1351,9 @@ try:
                 },
                 {
                     "x": data.swiss_vent[:-3]["Date"],
-                    "y": data.swiss_vent[:-3]["CH"],
+                    "y": data.swiss_vent[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_ventilated"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["blue"]},
@@ -1311,7 +1361,9 @@ try:
                 },
                 {
                     "x": data.swiss_hospitalizations.iloc[-4:]["Date"],
-                    "y": data.swiss_hospitalizations.iloc[-4:]["CH"],
+                    "y": data.swiss_hospitalizations.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_regular"][lang].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
@@ -1320,7 +1372,9 @@ try:
                 },
                 {
                     "x": data.swiss_icu.iloc[-4:]["Date"],
-                    "y": data.swiss_icu.iloc[-4:]["CH"],
+                    "y": data.swiss_icu.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_intensive"][lang].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
@@ -1329,7 +1383,9 @@ try:
                 },
                 {
                     "x": data.swiss_vent.iloc[-4:]["Date"],
-                    "y": data.swiss_vent.iloc[-4:]["CH"],
+                    "y": data.swiss_vent.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": cfg["i18n"]["plot_hospitalizations_ventilated"][lang].get(),
                     "mode": "lines",
                     "line": {"dash": "dot"},
@@ -1407,7 +1463,9 @@ try:
             "data": [
                 {
                     "x": data.swiss_releases[:-3]["Date"],
-                    "y": data.swiss_releases[:-3]["CH"],
+                    "y": data.swiss_releases[:-3][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": "Regular",
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
@@ -1415,7 +1473,9 @@ try:
                 },
                 {
                     "x": data.swiss_releases.iloc[-4:]["Date"],
-                    "y": data.swiss_releases.iloc[-4:]["CH"],
+                    "y": data.swiss_releases.iloc[-4:][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
                     "name": "Regular",
                     "mode": "lines",
                     "line": {"dash": "dot"},
@@ -1495,8 +1555,12 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_cases.iloc[6:-1]["CH"],
-                    "y": data.moving_total["CH"][6:-1],
+                    "x": data.swiss_cases.iloc[6:-1][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "y": data.moving_total[cfg["settings"]["total_column_name"].get()][
+                        6:-1
+                    ],
                     "mode": "lines+markers",
                     "name": cfg["i18n"]["plot_loglog_country_weekly"][lang].get(),
                     "marker": {"color": style.theme["foreground"]},
@@ -1506,8 +1570,12 @@ try:
                     ][lang].get(),
                 },
                 {
-                    "x": data.swiss_cases.iloc[6:-1]["CH"],
-                    "y": data.swiss_cases_by_date_diff["CH"][6:-1],
+                    "x": data.swiss_cases.iloc[6:-1][
+                        cfg["settings"]["total_column_name"].get()
+                    ],
+                    "y": data.swiss_cases_by_date_diff[
+                        cfg["settings"]["total_column_name"].get()
+                    ][6:-1],
                     "mode": "lines+markers",
                     "name": cfg["i18n"]["plot_loglog_country_daily"][lang].get(),
                     "marker": {"color": style.theme["yellow"]},
@@ -1616,7 +1684,7 @@ try:
                     + data.world_case_fatality_rate.index.values.tolist(),
                     "y": [data.swiss_case_fatality_rate]
                     + [val for val in data.world_case_fatality_rate],
-                    "name": "CH",
+                    "name": cfg["settings"]["total_column_name"].get(),
                     "marker": {"color": style.theme["foreground"]},
                     "type": "bar",
                 }
@@ -2040,7 +2108,7 @@ try:
             ]
             + [
                 {
-                    "x": [data.swiss_demography["Density"][region]],
+                    "x": [data.regional_demography["Density"][region]],
                     "y": [data.swiss_cases_by_date_filled_per_capita.iloc[-1][region]],
                     "name": region,
                     "mode": "markers",
@@ -2052,7 +2120,7 @@ try:
                     "hoverinfo": "text",
                     "hovertext": f"<span style='font-size:2.0em'><b>{region}</b></span><br>"
                     + f"{cfg['i18n']['prevalence'][lang].get()}: <b>{data.swiss_cases_by_date_filled_per_capita.iloc[-1][region]:.3f}</b><br>"
-                    + f"{cfg['i18n']['population_density'][lang].get()}: <b>{data.swiss_demography['Density'][region]:.0f}</b> Inhabitants / km<sup>2</sup><br>"
+                    + f"{cfg['i18n']['population_density'][lang].get()}: <b>{data.regional_demography['Density'][region]:.0f}</b> Inhabitants / km<sup>2</sup><br>"
                     + f"{cfg['i18n']['cases'][lang].get()}: <b>{data.swiss_cases_by_date_filled.iloc[-1][region]:.0f}</b>",
                 }
                 for _, region in enumerate(data.swiss_cases_as_dict)
@@ -2123,7 +2191,7 @@ try:
             ]
             + [
                 {
-                    "x": [data.swiss_demography["O65"][region] * 100],
+                    "x": [data.regional_demography["O65"][region] * 100],
                     "y": [data.swiss_case_fatality_rates.iloc[-1][region]],
                     "name": region,
                     "mode": "markers",
@@ -2133,7 +2201,7 @@ try:
                     },
                     "hoverinfo": "text",
                     "hovertext": f"<span style='font-size:2.0em'><b>{region}</b></span><br>"
-                    + f"{cfg['i18n']['population_over_65'][lang].get()}: <b>{data.swiss_demography['O65'][region] * 100:.0f}%</b><br>"
+                    + f"{cfg['i18n']['population_over_65'][lang].get()}: <b>{data.regional_demography['O65'][region] * 100:.0f}%</b><br>"
                     + f"{cfg['i18n']['case_fatality_ratio'][lang].get()}: <b>{data.swiss_case_fatality_rates.iloc[-1][region]:.3f}</b><br>"
                     + f"{cfg['i18n']['cases'][lang].get()}: <b>{data.swiss_cases_by_date_filled.iloc[-1][region]:.0f}</b>",
                 }

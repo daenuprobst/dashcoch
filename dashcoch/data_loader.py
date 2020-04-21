@@ -25,7 +25,7 @@ class DataLoader:
         self.swiss_fatalities = pd.read_csv(cfg["urls"]["fatalities"].get())
 
         # Get Swiss demographical data
-        self.swiss_demography = pd.read_csv(
+        self.regional_demography = pd.read_csv(
             cfg["urls"]["demography"].get(), index_col=0
         )
 
@@ -85,7 +85,8 @@ class DataLoader:
         self.region_labels = [
             region
             for region in self.swiss_cases_as_dict
-            if region != "CH" and region != "Date"
+            if region != self.cfg["settings"]["total_column_name"].get()
+            and region != "Date"
         ]
         self.regional_centres = self.__get_regional_centres()
 
@@ -99,14 +100,15 @@ class DataLoader:
         #
         # Some regression analysis on the data
         #
-        self.prevalence_density_regression = self.__get_regression(
-            self.swiss_demography["Density"],
-            self.swiss_cases_by_date_filled_per_capita.iloc[-1],
-        )
+        if cfg["show"]["demographic_correlation"]:
+            self.prevalence_density_regression = self.__get_regression(
+                self.regional_demography["Density"],
+                self.swiss_cases_by_date_filled_per_capita.iloc[-1],
+            )
 
-        self.cfr_age_regression = self.__get_regression(
-            self.swiss_demography["O65"], self.swiss_case_fatality_rates.iloc[-1]
-        )
+            self.cfr_age_regression = self.__get_regression(
+                self.regional_demography["O65"], self.swiss_case_fatality_rates.iloc[-1]
+            )
 
         self.scaled_cases = self.__get_scaled_cases()
 
@@ -119,7 +121,6 @@ class DataLoader:
             )
             self.swiss_icu = pd.read_csv(cfg["urls"]["icu"].get())
             self.swiss_vent = pd.read_csv(cfg["urls"]["vent"].get())
-            self.swiss_releases = pd.read_csv(cfg["urls"]["releases"].get())
             self.swiss_hospitalizations_by_date = self.swiss_hospitalizations.set_index(
                 "Date"
             )
@@ -132,12 +133,17 @@ class DataLoader:
                 method="ffill", axis=0
             )
 
+        if cfg["show"]["hospital_releases"]:
+            self.swiss_releases = pd.read_csv(cfg["urls"]["releases"].get())
+
         #
         # Get age distribution data
         #
         if cfg["show"]["age_distribution"]:
-            self.age_data = pd.read_csv(cfg["urls"]["bag_cases"].get())
-            self.age_data["region"] = self.age_data["canton"]
+            self.age_data = pd.read_csv(cfg["urls"]["age_distribution"].get())
+            self.age_data["region"] = self.age_data[
+                self.cfg["settings"]["age_distribution_region_column_name"].get()
+            ]
 
             self.age_data_male_hist = self.age_data[
                 self.age_data["sex"] == "Male"
@@ -202,10 +208,9 @@ class DataLoader:
 
     def __get_swiss_cases_by_date_filled_per_capita(self):
         tmp = self.swiss_cases_by_date_filled.copy()
-
         for column in tmp:
             tmp[column] = (
-                tmp[column] / self.swiss_demography["Population"][column] * 10000
+                tmp[column] / self.regional_demography["Population"][column] * 10000
             )
         return tmp
 
@@ -219,18 +224,24 @@ class DataLoader:
         l = len(self.swiss_cases_by_date_filled)
         return (
             self.swiss_cases_by_date_filled.diff().iloc[l - 1].sum()
-            - self.swiss_cases_by_date_filled.diff().iloc[l - 1]["CH"]
+            - self.swiss_cases_by_date_filled.diff().iloc[l - 1][
+                self.cfg["settings"]["total_column_name"].get()
+            ]
         )
 
     def __get_total_swiss_cases(self):
         l = len(self.swiss_cases_by_date_filled)
         return (
             self.swiss_cases_by_date_filled.iloc[l - 1].sum()
-            - self.swiss_cases_by_date_filled.iloc[l - 1]["CH"]
+            - self.swiss_cases_by_date_filled.iloc[l - 1][
+                self.cfg["settings"]["total_column_name"].get()
+            ]
         )
 
     def __get_total_swiss_fatalities(self):
-        return self.swiss_fatalities_by_date_filled.iloc[-1]["CH"]
+        return self.swiss_fatalities_by_date_filled.iloc[-1][
+            self.cfg["settings"]["total_column_name"].get()
+        ]
 
     def __get_swiss_cases_as_normalized_dict(self):
         tmp = [
@@ -239,7 +250,7 @@ class DataLoader:
                 [
                     round(i, 2)
                     for i in self.swiss_cases_as_dict[region]
-                    / self.swiss_demography["Population"][region]
+                    / self.regional_demography["Population"][region]
                     * 10000
                 ],
             )
@@ -268,7 +279,11 @@ class DataLoader:
     def __get_swiss_world_cases_normalized(self, min_prevalence: int = 0.4):
         tmp = self.world_cases.copy()
         # Don't take today from switzerland, as values are usually very incomplete
-        tmp["Switzerland"] = pd.Series(self.swiss_cases_as_dict["CH"][:-1])
+        tmp["Switzerland"] = pd.Series(
+            self.swiss_cases_as_dict[self.cfg["settings"]["total_column_name"].get()][
+                :-1
+            ]
+        )
 
         for column in tmp:
             tmp[column] = tmp[column] / self.world_population[column] * 10000
