@@ -3,12 +3,13 @@ if (!window.dash_clientside) {
 }
 
 window.dash_clientside.clientside = {
-  update_caseincrease_cantonal_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data, div_data) {
+  update_caseincrease_regional_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data, div_data) {
     hovered_canton = ""
     if (hover_data)
       hovered_canton = selected_cantons[hover_data["points"][0]["curveNumber"]]
 
     var d = selected_date_index
+
     data_raw = JSON.parse(div_data)
 
     var data = {
@@ -64,11 +65,7 @@ window.dash_clientside.clientside = {
           color: hovered_canton == canton ? "#2cfec1" : "rgba(255, 255, 255, 0.5)",
         },
         text: data.moving_total["date_label"].slice(6, d),
-        hovertemplate: "<br><span style='font-size:2.0em'><b>" +
-          canton +
-          ": %{y:.0f}</b></span> new cases<br>" +
-          "between <b>%{text}</b><br>" +
-          "<extra></extra>",
+        hovertemplate: data_raw["i18n"]["plot_log_log_region_weekly_hovertemplate"],
         showlegend: false,
       })
     })
@@ -90,17 +87,17 @@ window.dash_clientside.clientside = {
     })
 
     // Updated the header
-    document.getElementById("date-container-cantonal").innerHTML = data.moving_total["date_label"][d - 1]
+    document.getElementById("date-container-regional").innerHTML = data.moving_total["date_label"][d - 1]
 
     return {
       data: traces,
       layout: {
-        title: "Newly Reported Cases",
+        title: data_raw["i18n"]["plot_loglog_region_title"],
         height: 750,
         xaxis: {
           showgrid: true,
           color: "#ffffff",
-          title: "Total Cases",
+          title: data_raw["i18n"]["plot_loglog_region_x"],
           type: "log",
           range: [0, Math.log10(x_max) * 1.05]
         },
@@ -109,7 +106,7 @@ window.dash_clientside.clientside = {
           showgrid: true,
           color: "#ffffff",
           rangemode: "tozero",
-          title: "Newly Reported Cases",
+          title: data_raw["i18n"]["plot_loglog_region_y"],
           range: [0, Math.log10(y_max) * 1.05]
         },
         legend: {

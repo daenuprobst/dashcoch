@@ -20,7 +20,7 @@ class DataLoader:
 
             self.last_updated = self.__get_iso(self.last_updated)
 
-        # Load the data from the cantons
+        # Load the data from the regions
         self.swiss_cases = pd.read_csv(cfg["urls"]["cases"].get())
         self.swiss_fatalities = pd.read_csv(cfg["urls"]["fatalities"].get())
 
@@ -65,7 +65,7 @@ class DataLoader:
         )
 
         self.latest_date = self.__get_latest_date()
-        self.updated_cantons = self.__get_updated_cantons()
+        self.updated_regions = self.__get_updated_regions()
         self.new_swiss_cases = self.__get_new_cases()
         self.total_swiss_cases = self.__get_total_swiss_cases()
         self.total_swiss_fatalities = self.__get_total_swiss_fatalities()
@@ -82,12 +82,12 @@ class DataLoader:
         )
 
         self.swiss_fatalities_as_dict = self.swiss_fatalities.to_dict("list")
-        self.canton_labels = [
-            canton
-            for canton in self.swiss_cases_as_dict
-            if canton != "CH" and canton != "Date"
+        self.region_labels = [
+            region
+            for region in self.swiss_cases_as_dict
+            if region != "CH" and region != "Date"
         ]
-        self.cantonal_centres = self.__get_cantonal_centres()
+        self.regional_centres = self.__get_regional_centres()
 
         #
         # Moving average showing development
@@ -137,6 +137,7 @@ class DataLoader:
         #
         if cfg["show"]["age_distribution"]:
             self.age_data = pd.read_csv(cfg["urls"]["bag_cases"].get())
+            self.age_data["region"] = self.age_data["canton"]
 
             self.age_data_male_hist = self.age_data[
                 self.age_data["sex"] == "Male"
@@ -190,11 +191,11 @@ class DataLoader:
     def __get_latest_date(self):
         return self.swiss_cases.iloc[len(self.swiss_cases) - 1]["Date"]
 
-    def __get_updated_cantons(self):
+    def __get_updated_regions(self):
         l = len(self.swiss_cases_by_date)
         return [
-            canton
-            for canton in self.swiss_cases_by_date.iloc[l - 1][
+            region
+            for region in self.swiss_cases_by_date.iloc[l - 1][
                 self.swiss_cases_by_date.iloc[l - 1].notnull()
             ].index
         ]
@@ -234,16 +235,16 @@ class DataLoader:
     def __get_swiss_cases_as_normalized_dict(self):
         tmp = [
             (
-                str(canton),
+                str(region),
                 [
                     round(i, 2)
-                    for i in self.swiss_cases_as_dict[canton]
-                    / self.swiss_demography["Population"][canton]
+                    for i in self.swiss_cases_as_dict[region]
+                    / self.swiss_demography["Population"][region]
                     * 10000
                 ],
             )
-            for canton in self.swiss_cases_as_dict
-            if canton != "Date"
+            for region in self.swiss_cases_as_dict
+            if region != "Date"
         ]
         tmp.append(("Date", self.swiss_cases_as_dict["Date"]))
         return dict(tmp)
@@ -331,32 +332,6 @@ class DataLoader:
 
         return df_moving_total
 
-    def __get_cantonal_centres(self):
-        return {
-            "AG": {"lat": 47.40966, "lon": 8.15688},
-            "AR": {"lat": 47.366352 + 0.05, "lon": 9.36791},
-            "AI": {"lat": 47.317264, "lon": 9.416754},
-            "BL": {"lat": 47.45176, "lon": 7.702414},
-            "BS": {"lat": 47.564869, "lon": 7.615259},
-            "BE": {"lat": 46.823608, "lon": 7.636667},
-            "FR": {"lat": 46.718391, "lon": 7.074008},
-            "GE": {"lat": 46.220528, "lon": 6.132935},
-            "GL": {"lat": 46.981042 - 0.05, "lon": 9.065751},
-            "GR": {"lat": 46.656248, "lon": 9.628198},
-            "JU": {"lat": 47.350744, "lon": 7.156107},
-            "LU": {"lat": 47.067763, "lon": 8.1102},
-            "NE": {"lat": 46.995534, "lon": 6.780126},
-            "NW": {"lat": 46.926755, "lon": 8.405302},
-            "OW": {"lat": 46.854527 - 0.05, "lon": 8.244317 - 0.1},
-            "SH": {"lat": 47.71357, "lon": 8.59167},
-            "SZ": {"lat": 47.061787, "lon": 8.756585},
-            "SO": {"lat": 47.304135, "lon": 7.639388},
-            "SG": {"lat": 47.2332 - 0.05, "lon": 9.274744},
-            "TI": {"lat": 46.295617, "lon": 8.808924},
-            "TG": {"lat": 47.568715, "lon": 9.091957},
-            "UR": {"lat": 46.771849, "lon": 8.628586},
-            "VD": {"lat": 46.570091, "lon": 6.657809 - 0.1},
-            "VS": {"lat": 46.209567, "lon": 7.604659},
-            "ZG": {"lat": 47.157296, "lon": 8.537294},
-            "ZH": {"lat": 47.41275, "lon": 8.65508},
-        }
+    def __get_regional_centres(self):
+        regions = self.cfg["regions"].get()
+        return {d["region"]: {"lat": d["lat"], "lon": d["lon"]} for d in regions}
