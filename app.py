@@ -822,6 +822,7 @@ try:
                     "z": [map_data[region][d] for region in map_data if region != "CH"],
                     "colorscale": style.turbo,
                     "geojson": "/assets/switzerland.geojson",
+                    "featureidkey": cfg["settings"]["choropleth"]["feature"].get(),
                     "marker": {"line": {"width": 0.0, "color": "#08302A"}},
                     # "colorbar": {
                     #     "thickness": 10,
@@ -833,9 +834,13 @@ try:
             "layout": {
                 "geo": {
                     "visible": False,
-                    "center": {"lat": 46.80111, "lon": 8.22667},
-                    "lataxis": {"range": [45.7845, 47.8406]},
-                    "lonaxis": {"range": [5.5223, 10.5421]},
+                    "center": cfg["settings"]["choropleth"]["center"].get(),
+                    "lataxis": {
+                        "range": cfg["settings"]["choropleth"]["lataxis"].get()
+                    },
+                    "lonaxis": {
+                        "range": cfg["settings"]["choropleth"]["lonaxis"].get()
+                    },
                     "projection": {"type": "transverse mercator"},
                 },
                 "margin": {"l": 0, "r": 0, "t": 0, "b": 0},

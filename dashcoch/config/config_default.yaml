@@ -41,6 +41,17 @@ settings:
     - de
     - fr
   default_language: 0
+  choropleth:
+    feature: "id"
+    center: 
+      lat: 46.80111
+      lon: 8.22667
+    lataxis:
+      - 45.7845
+      - 47.8406
+    lonaxis:
+      - 5.5223
+      - 10.5421
 
 theme:
   background: "#252e3f"
