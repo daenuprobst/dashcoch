@@ -67,6 +67,12 @@ get_data()
 
 def get_lang():
     supported_languages = cfg["settings"]["languages"].get()
+
+    if "Referer" in flask.request.headers:
+        url_lang = flask.request.headers["Referer"].split("/")[-1]
+        if url_lang in supported_languages:
+            return supported_languages.index(url_lang)
+
     candidate = flask.request.accept_languages.best_match(supported_languages)
     if candidate in supported_languages:
         return supported_languages.index(candidate)
@@ -88,6 +94,17 @@ def get_layout():
                 html.Div(
                     id="header",
                     children=[
+                        html.P(
+                            id="language-picker",
+                            children=[
+                                dcc.Link(
+                                    children=html.Span(children=l),
+                                    refresh=True,
+                                    href="/" + l,
+                                )
+                                for l in cfg["settings"]["languages"].get()
+                            ],
+                        ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
                         html.P(
                             children=(
@@ -2257,12 +2274,12 @@ except:
 
 
 # Kick off the updated thread
-executor = ThreadPoolExecutor(max_workers=1)
-executor.submit(update_data)
+# executor = ThreadPoolExecutor(max_workers=1)
+# executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
+        debug=True,
         # dev_tools_hot_reload=True,
         # dev_tools_hot_reload_interval=50,
         # dev_tools_hot_reload_max_retry=30,

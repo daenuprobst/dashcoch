@@ -202,9 +202,13 @@ i18n:
     - "[Kontaktiere mich auf Twitter] (https://twitter.com/skepteis).
       Die Datenquellen finden Sie [hier](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), eine Zusammenfassung der verschiedenen von openZH bereitgestellten Dateien [hier](https://github.com/daenuprobst/covid19-case-switzerland) und alternativ als [Excel-Datei](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
       Seitenaufrufe werden durch die datenschutzorientierten [Simple Analytics] (https://simpleanalytics.com?ref=corona-data.ch) gezählt. Die Daten können [hier](https://simpleanalytics.com/corona-data) angezeigt werden."
+    - "[Contactez-moi sur Twitter](https://twitter.com/skepteis).
+      Vous pouvez trouver les sources de données [ici](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), un résumé des différents fichiers fournis par openZH [ici](https://github.com/daenuprobst/covid19-case-switzerland) et alternativement sous forme de [fichier Excel](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
+      Les pages vues sont comptabilisées par le [Simple Analytics orienté vers la confidentialité](https://simpleanalytics.com?ref=corona-data.ch). Les données peuvent être consultées [ici](https://simpleanalytics.com/corona-data)."
   more_info:
     - "More scientific information on the pandemic can be found here: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Recent scientific articles curated by the University Hospital Bern](https://www.update-covid.ch)"
     - "Weitere wissenschaftliche Informationen zur Pandemie finden Sie hier: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Aktuelle wissenschaftliche Artikel des Universitätsklinikums Bern](https://www.update-covid.ch)"
+    - "De plus amples informations scientifiques sur la pandémie sont disponibles ici: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentrum/wig/projekte/covid-19-social-monitor/) , [Articles scientifiques actuels de la Clinique universitaire de Berne](https://www.update-covid.ch)"
   total_reported_cases:
     - Total Reported Cases
     - Total Bestätigte Fälle
@@ -224,13 +228,15 @@ i18n:
   latest_updates:
     - "Latest Updates:"
     - "Zuletzt Aktualisiert:"
+    - "Dernière Mise à Jour:"
   drag_the_slider_to_change_the_date:
     - "Drag the slider to change the date:"
     - "Ziehen sie den Slider um das Datum zu ändern:"
-    - "Dernière Mise à Jour:"
+    - "Faites Glisser le Curseur pour Modifier la Date:"
   new_cases:
     - Newly Reported Cases
     - Neue Bestätigte Fälle
+    - Nouveaux Cas Confirmés
   cumulative_prevalence:
     - Cumulative Prevalence (per 10,000)
     - Kumulative Prävalenz (pro 10'000)
@@ -290,9 +296,11 @@ i18n:
   raw_data_title:
     - Raw Data
     - Rohdaten
+    - Données Brutes
   raw_data_content:
     - "The raw data can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file here](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true)"
     - "Die Rohdaten finden sie [hier](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file here](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true)"
+    - "Vous pouvez trouver les données brutes [ici](https://github.com/daenuprobst/covid19-cases-switzerland), ou alternativement sous forme de [fichier Excel ici](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true)"
   incomplete_data:
     - Incomplete Data
     - Fehlende Daten
@@ -420,6 +428,7 @@ i18n:
   plot_world_cases_y:
     - Reported Cases / Population * 10,000
     - Bestätigte Fälle / Einwohnerzahl * 10'000
+    - Cas confirmés / population * 10 000
   plot_world_cfr_title:
     - Case Fatality Ratios (Fatalities / Reported Cases)
     - Case Fatality Ratios (Verstorbene / Bestätigte Fälle)
