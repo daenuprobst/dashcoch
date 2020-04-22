@@ -478,7 +478,7 @@ i18n:
   plot_age_dist_fatalities_abs_title:
     - Number of Fatalities by Sex and Age
     - Anzahl Verstorbene nach Geschlecht und Alter
-    - - Nombre de Personnes Décédées par Sexe et Âge
+    - Nombre de Personnes Décédées par Sexe et Âge
   plot_age_dist_fatalities_x:
     - Age 1 - 99+
     - Alter 1 - 99+
