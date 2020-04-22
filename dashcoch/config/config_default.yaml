@@ -36,6 +36,7 @@ logo:
   src: /assets/be.png
 
 banner:
+  display: block
   href: https://www.glueckskette.ch/
   src: https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg
   width: "200px"

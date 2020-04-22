@@ -131,6 +131,7 @@ def get_layout():
                         html.Br(),
                         html.P(
                             id="glueckskette",
+                            style={"display": cfg["banner"]["display"].get()},
                             children=[
                                 html.A(
                                     [
