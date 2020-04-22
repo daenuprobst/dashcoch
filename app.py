@@ -82,8 +82,12 @@ def get_lang():
 
 def get_layout():
     global lang
-    if flask.has_request_context():
-        lang = get_lang()
+
+    try:
+        if flask.has_request_context():
+            lang = get_lang()
+    except:
+        lang = cfg["settings"]["default_language"].get()
 
     content = [dcc.Location(id="url", refresh=False)]
 
