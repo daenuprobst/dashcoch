@@ -105,6 +105,13 @@ def get_layout():
                                 for l in cfg["settings"]["languages"].get()
                             ],
                         ),
+                        html.Img(
+                            src=cfg["logo"]["src"].get(),
+                            style={
+                                "width": cfg["logo"]["width"].get(),
+                                "display": cfg["logo"]["display"].get(),
+                            },
+                        ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
                         html.P(
                             children=(

@@ -30,6 +30,11 @@ show:
   demographic_correlation: On
   raw: On
 
+logo:
+  display: none
+  width: 50px
+  src: /assets/be.png
+
 banner:
   href: https://www.glueckskette.ch/
   src: https://www.glueckskette.ch/wp-content/uploads/ch/logo-emergency-de.svg

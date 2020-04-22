@@ -44,6 +44,8 @@ table tr:hover {
 
 #language-picker {
   text-align: right;
+  margin: 0;
+  padding: 0;
 }
 
 #language-picker span {

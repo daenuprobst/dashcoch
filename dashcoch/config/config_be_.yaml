@@ -35,6 +35,11 @@ banner:
   src: 
   width: 
 
+logo:
+  display: block
+  width: 50px
+  src: /assets/be.png
+
 settings:
   update_interval: 600
   languages:
