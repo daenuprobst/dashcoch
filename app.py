@@ -66,29 +66,29 @@ get_data()
 
 
 def get_lang():
-    supported_languages = cfg["settings"]["languages"].get()
-
-    if "Referer" in flask.request.headers:
-        url_lang = flask.request.headers["Referer"].split("/")[-1]
-        if url_lang in supported_languages:
-            return supported_languages.index(url_lang)
-
-    candidate = flask.request.accept_languages.best_match(supported_languages)
-    if candidate in supported_languages:
-        return supported_languages.index(candidate)
-    else:
-        return cfg["settings"]["default_language"].get()
-
-
-def get_layout():
-    global lang
-
     try:
-        if flask.has_request_context():
-            lang = get_lang()
+        if not flask.has_request_context():
+            return cfg["settings"]["default_language"].get()
+
+        supported_languages = cfg["settings"]["languages"].get()
+
+        if "Referer" in flask.request.headers:
+            url_lang = flask.request.headers["Referer"].split("/")[-1]
+            if url_lang in supported_languages:
+                return supported_languages.index(url_lang)
+
+        candidate = flask.request.accept_languages.best_match(supported_languages)
+        if candidate in supported_languages:
+            return supported_languages.index(candidate)
+        else:
+            return cfg["settings"]["default_language"].get()
+
     except:
         lang = cfg["settings"]["default_language"].get()
 
+
+def get_layout():
+    lang = get_lang()
     content = [dcc.Location(id="url", refresh=False)]
 
     # Header
@@ -788,6 +788,7 @@ try:
         [Input("slider-date", "value"), Input("radio-prevalence", "value")],
     )
     def update_graph_map(selected_date_index, mode):
+        lang = get_lang()
         d = data.swiss_cases["Date"].iloc[selected_date_index]
 
         map_data = data.swiss_cases_by_date_filled
@@ -920,6 +921,7 @@ try:
         Output("case-ch-graph", "figure"), [Input("radio-scale-switzerland", "value")],
     )
     def update_case_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1019,6 +1021,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_fatalities_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1112,6 +1115,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_new_case_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1237,6 +1241,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_new_fatalities_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1356,6 +1361,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_hospitalizations_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1488,6 +1494,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_releases_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1581,6 +1588,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_caseincrease_ch_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1661,6 +1669,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_case_world_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1706,6 +1715,7 @@ try:
         [Input("radio-scale-switzerland", "value")],
     )
     def update_fatalities_world_graph(selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1755,6 +1765,7 @@ try:
         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
     )
     def update_cases_bag_graph(region, norm):
+        lang = get_lang()
         field = "cases"
         factor = 1
         title = cfg["i18n"]["plot_age_dist_abs_title"][lang].get()
@@ -1834,6 +1845,7 @@ try:
         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
     )
     def update_fatalities_bag_graph(region, norm):
+        lang = get_lang()
         field = "fatalities"
         factor = 1
         title = cfg["i18n"]["plot_age_dist_fatalities_abs_title"][lang].get()
@@ -1916,6 +1928,7 @@ try:
         [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
     )
     def update_case_graph(selected_regions, selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -1960,6 +1973,7 @@ try:
         [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
     )
     def update_case_pc_graph(selected_regions, selected_scale):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -2004,6 +2018,7 @@ try:
         [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
     )
     def update_case_graph_diff(selected_regions, selected_scale):
+        lang = get_lang()
         data_non_nan = {}
         data_non_nan["Date"] = data.swiss_cases_as_dict["Date"]
 
@@ -2088,6 +2103,7 @@ try:
         Output("caseincrease-regional-data", "children"), [Input("url", "pathname")]
     )
     def store_caseincrease_regional_data(value):
+        lang = get_lang()
         return (
             '{"swiss_cases_by_date_filled": '
             + data.swiss_cases_by_date_filled.to_json(
@@ -2124,6 +2140,7 @@ try:
         [Input("dropdown-regions", "value")],
     )
     def update_prevalence_density_graph(selected_regions):
+        lang = get_lang()
         return {
             "data": [
                 {
@@ -2207,6 +2224,7 @@ try:
         Output("cfr-age-graph", "figure"), [Input("dropdown-regions", "value")],
     )
     def update_cfr_age_graph(selected_regions):
+        lang = get_lang()
         return {
             "data": [
                 {
