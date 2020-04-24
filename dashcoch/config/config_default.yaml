@@ -368,9 +368,9 @@ i18n:
     - Datum
     - Date
   plot_hospitalizations_country_y:
-    - Fatalities
-    - Todesfälle
-    - Décès
+    - Hospitalizatoins
+    - Hospitalisierungen
+    - Hospitalisations
   plot_hospitalizations_regular:
     - Regular
     - Regulär

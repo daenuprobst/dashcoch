@@ -2304,12 +2304,12 @@ except:
 
 
 # Kick off the updated thread
-executor = ThreadPoolExecutor(max_workers=1)
-executor.submit(update_data)
+# executor = ThreadPoolExecutor(max_workers=1)
+# executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
+        debug=True,
         # dev_tools_hot_reload=True,
         # dev_tools_hot_reload_interval=50,
         # dev_tools_hot_reload_max_retry=30,
