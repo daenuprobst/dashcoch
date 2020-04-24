@@ -52,7 +52,10 @@ style = StyleLoader(cfg)
 
 def get_data():
     global data
-    data = DataLoader(cfg)
+    try:
+        data = DataLoader(cfg)
+    except:
+        pass
 
 
 def update_data(period=int(cfg["settings"]["update_interval"].get())):

@@ -362,7 +362,7 @@ i18n:
   plot_hospitalizations_country_title:
     - Current Hospitalizations (Releases are Subtracted)
     - Aktuelle Hospitalisierungen (Entlassungen Abgezogen)
-    - Hospitalisations en cours (Mises à Pied Déduites)
+    - Hospitalisations en cours (Sortis Déduites)
   plot_hospitalizations_country_x:
     - Date
     - Datum
@@ -386,7 +386,7 @@ i18n:
   plot_releases_country_title:
     - Total Reported Hospital Releases Switzerland
     - Total Bestätigte Spitalentlassungen
-    - Total des Congés Hospitaliers Confirmés
+    - Total des Sortis de l'Hôpital
   plot_releases_country_x:
     - Date
     - Datum
@@ -394,7 +394,7 @@ i18n:
   plot_releases_country_y:
     - Releases
     - Entlassungen
-    - Licenciements
+    - Sortis
   plot_loglog_country_title:
     - Newly Reported Cases
     - Neu Bestätige Fälle
