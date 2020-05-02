@@ -19,6 +19,7 @@ show:
   totals: On
   updates: On
   map: On
+  region_links: On
   main: On
   hospitalizations: On
   hospital_releases: On
@@ -111,6 +112,7 @@ regions:
     lat: 46.823608
     lon: 7.636667
     color: "#EE5A24"
+    detail: "https://be.corona-data.ch"
   - region: FR
     lat: 46.718391
     lon: 7.074008
@@ -263,6 +265,10 @@ i18n:
     - Total Fatalities
     - Total Todesfälle
     - Nombre Total de Décès
+  regional_data:
+    - "Regional data are available for the following cantons:"
+    - "Regionale Daten sind für die folgenden Kantone verfügbar:"
+    - "Des données régionales sont disponibles pour les cantons suivants:"
   main_data_title:
     - Data for Switzerland
     - Daten Schweiz

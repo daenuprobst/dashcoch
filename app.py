@@ -354,6 +354,29 @@ def get_layout():
                         ),
                     ],
                 ),
+            ]
+        )
+
+    # Links to regional websites
+    if cfg["show"]["region_links"]:
+        content.extend(
+            [
+                html.Div(
+                    className="slider-container",
+                    children=[
+                        html.P(
+                            className="slider-text",
+                            children=cfg["i18n"]["regional_data"][lang].get(),
+                        ),
+                        html.P(
+                            children=[
+                                html.A(children=region["region"], href=region["detail"])
+                                for region in cfg["regions"].get()
+                                if "detail" in region
+                            ]
+                        ),
+                    ],
+                ),
                 html.Br(),
             ]
         )
@@ -1922,7 +1945,7 @@ except:
     pass
 
 #
-# regional Data
+# Regional Data
 #
 try:
 
