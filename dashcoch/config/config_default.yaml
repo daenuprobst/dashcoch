@@ -65,10 +65,10 @@ settings:
       - 10.5421
 
 theme:
-  background: "#252e3f"
-  background_secondary: "#402C36"
-  foreground: "#2cfec1"
-  foreground_secondary: "#F2EB80"
+  background: "#1F2123"
+  background_secondary: "#241D1C"
+  foreground: "#22E7FF"
+  foreground_secondary: "#D7F04D"
   accent: "#7fafdf"
   accent_secondary: "#de95ce"
   red: "#fc5c65"

@@ -58,11 +58,11 @@ window.dash_clientside.clientside = {
         mode: "lines",
         name: canton,
         marker: {
-          color: "#2cfec1"
+          color: "#22E7FF"
         },
         line: {
           width: hovered_canton == canton ? 2.0 : 1.0,
-          color: hovered_canton == canton ? "#2cfec1" : "rgba(255, 255, 255, 0.5)",
+          color: hovered_canton == canton ? "#22E7FF" : "rgba(255, 255, 255, 0.5)",
         },
         text: data.moving_total["date_label"].slice(6, d),
         hovertemplate: data_raw["i18n"]["plot_log_log_region_weekly_hovertemplate"],
@@ -117,7 +117,7 @@ window.dash_clientside.clientside = {
             family: "sans-serif",
             color: "white"
           },
-          bgcolor: "#252e3f",
+          bgcolor: "#1F2123",
           bordercolor: "#7fafdf",
           borderwidth: 1,
         },
@@ -129,10 +129,10 @@ window.dash_clientside.clientside = {
           t: 60,
           b: 70
         },
-        plot_bgcolor: "#252e3f",
-        paper_bgcolor: "#252e3f",
+        plot_bgcolor: "#1F2123",
+        paper_bgcolor: "#1F2123",
         font: {
-          color: "#2cfec1"
+          color: "#22E7FF"
         },
       }
     }

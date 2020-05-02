@@ -21,20 +21,19 @@ body {
 
 div#main {
   padding: 20px;
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPwAAADmBAMAAAADyPWpAAAAHlBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC3KG9qAAAACnRSTlMEAgEFAAMGBwgJHK6+iAAAAjRJREFUeAHt3DFv00AYxvE3RDGMNZDOwdDd1anQlarsLuX2SEiGEQmJwhcofGymPq+HR3IV4Qzo/5+Qse8XezqdfY3bolr1sXtoF+rzo8/ch+rUja55URQ8PDw8PDw8/H/Ob+tDQ1Wh1qF6d3ClQbczl9sfGtfqfVVF9f5GDf/8Wr3SwZNQn/TfV51akoeHh4eHh4eHh+/Uzs4qq0rpxJ0ZVW1y+hrqZd5nZPaXTqSq8u7PWhWqKeqiqk69Ef8BHh4eHh4eHh7+OPyQ11veLZU2o/ou892ovrkxn+SvD3XQmu7lnZpIye/dIznX6NtOLcnDw8PDw8PDw8MPMxPIon7L/JX8va754qaa9v17tGoy0T61gyb/Iw+6R/K2qJW9UXh4eHh4eHh4+GPzky84R5Wzyp9FTaRQY+ZfoJvWYdc6W1WcNHPmhf18wF2+g4eHh4eHh4eHPw7f61+bTsUBb9Wjqht3ZkJP71Rkm2vVqbOqLG8Ozj6nS3h4eHh4eHh4+OPw1ZVzxW2rqrot6txta7fzz17Hnv1RYT4gtVud5qfPjl+7D11fjwoeHh4eHh4eHn5B3u/W6Q9Yq2wePdVsJrz/gFQ1C6z+Ts6Eh4eHh4eHh4dfkPe7daoaFnjV3oQt+Zx9X7Xqn63+blsFDw8PDw8PDw9/FN7/saShqlCr5CfjV2X3z/czu5JO3Qb44gbtkh8OeHjRKXh4eHh4eHh4+CX5NL+O6t7tdd+765Nfh9pU5fh1qL/F+oNE7tL7IwAAAABJRU5ErkJggg==");
-  background-color: #1f2630;
+  background-color: #17181a;
 }
 
 table,
 table td,
 table th {
   background-color: transparent !important;
-  color: #2cfec1;
+  color: #22e7ff;
   border: 1px solid #344158 !important;
 }
 
 table tr:hover {
-  background-color: #252e3f !important;
+  background-color: #1f2123 !important;
 }
 
 #sorry {
@@ -58,8 +57,8 @@ table tr:hover {
 .info-container,
 .dash-graph,
 .total-container {
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  /* border-right: 2px solid #17181a;
+  border-bottom: 2px solid #17181a; */
 }
 
 #update-container span {
@@ -92,7 +91,7 @@ table tr:hover {
 
 /* Map style */
 g.layer rect {
-  fill: #252e3f !important;
+  fill: #1f2123 !important;
 }
 
 #important {
@@ -105,31 +104,31 @@ g.layer rect {
   display: inline-block;
   margin-right: 20px;
   margin-bottom: 20px;
-  background-color: #252e3f;
+  background-color: #1f2123;
 }
 
 .total-container .total-title {
   padding: 10px;
   font-size: 1.25em;
   font-weight: 500;
-  background-color: #2c384d;
+  background-color: #0f4c75;
 }
 
 .total-container .total-content {
   padding: 10px;
-  color: #2cfec1;
+  color: #22e7ff;
   font-size: 2.5em;
   text-align: center;
 }
 
 .dash-table-container {
   padding: 10px;
-  background-color: #252e3f;
+  background-color: #1f2123;
 }
 
 .info-container {
   padding: 10px;
-  background-color: #d35400;
+  background-color: #1f2123;
 }
 
 .info-container p {
@@ -139,11 +138,12 @@ g.layer rect {
 
 #date-container-regional,
 #date-container {
-  background-color: #2c384d;
+  background-color: #1f2123;
   font-size: 2em;
   text-align: center;
   font-weight: 500;
   border-bottom: 0px !important;
+  color: #ffffff;
 }
 
 /* Table of contents
@@ -205,7 +205,8 @@ g.layer rect {
   }
 
   .total-container {
-    width: calc(50% - 2px);
+    /* width: calc(50% - 2px); */
+    width: 50%;
     margin-right: 0;
   }
 }
@@ -367,7 +368,7 @@ html is set to 62.5% so that all the REM measurements throughout Skeleton
 are based on 10px sizing. So basically 1.5rem = 15px :) */
 html {
   font-size: 50%;
-  background-color: #1f2630;
+  background-color: #17181a;
   max-width: 100% !important;
   width: 100% !important;
   margin: 0;
@@ -445,9 +446,9 @@ h4 {
   margin-bottom: 0;
   margin-top: 1.2rem;
   padding: 10px;
-  background-color: #2c384d;
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  background-color: #0f4c75;
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
 }
 
 h4.secondary {
@@ -459,9 +460,9 @@ h4.secondary {
   margin-bottom: 0;
   margin-top: 1.2rem;
   padding: 10px;
-  background-color: #4d3341;
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  background-color: #54123b;
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
 }
 
 h5 {
@@ -491,7 +492,7 @@ p {
 
 #description {
   font-size: 1.5rem;
-  border-left: #2cfec1 solid 1rem;
+  border-left: #22e7ff solid 1rem;
   padding-left: 1rem;
   max-width: 100rem;
   margin: 2rem 0 3rem 0;
@@ -823,25 +824,25 @@ hr {
 
 .slider-container,
 #plot-settings-container {
-  background-color: #252e3f;
+  background-color: #1f2123;
   padding: 10px;
   /* height: 12rem; */
 }
 
 .slider-container-secondary,
 #plot-settings-container-secondary {
-  background-color: #402c36;
+  background-color: #241d1c;
   padding: 10px;
   /* height: 12rem; */
 }
 
 .rc-slider-dot-active,
 .rc-slider-handle {
-  border-color: #2cfec1 !important;
+  border-color: #22e7ff !important;
 }
 
 .rc-slider-track {
-  background-color: #2cfec1 !important;
+  background-color: #22e7ff !important;
 }
 
 .rc-slider-rail {
@@ -852,7 +853,7 @@ hr {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 #heatmap-container {
   margin: 2.5rem 0 0 0;
-  background-color: #252e3f;
+  background-color: #1f2123;
 }
 
 #heatmap-title {
@@ -906,7 +907,7 @@ hr {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
 #graph-container {
-  background-color: #252e3f;
+  background-color: #1f2123;
   padding: 5rem;
   margin: 0;
 }
@@ -985,6 +986,8 @@ hr {
 
 .Select-control {
   color: #7fafdf !important;
+  background-color: #101112 !important;
+  border: 1px solid #2e343b !important;
 }
 
 .Select {
@@ -992,12 +995,8 @@ hr {
 }
 
 .Select-menu-outer {
-  background-color: #252e3f !important;
+  background-color: #1f2123 !important;
   border: 1px solid #7fafdf !important;
-}
-
-.Select div {
-  background-color: #252e3f !important;
 }
 
 .Select-menu-outer div:hover {
@@ -1011,8 +1010,13 @@ hr {
 
 .Select--single > .Select-control .Select-value,
 .Select-placeholder {
-  border: 1px solid #7fafdf !important;
+  /* border: 1px solid #2e343b !important; */
   border-radius: 4px !important;
+}
+
+.Select-menu-outer {
+  background-color: #1f2123 !important;
+  border: 1px solid #2e343b !important;
 }
 
 /* Placement
@@ -1049,8 +1053,8 @@ hr {
   /* margin-top: -20px;
   margin-left: -20px;
   margin-right: -20px; */
-  border-right: 2px solid #222;
-  border-bottom: 2px solid #222;
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
 }
 
 #header h4 {

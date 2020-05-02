@@ -279,6 +279,7 @@ def get_layout():
                     children=[
                         dcc.RadioItems(
                             id="radio-prevalence",
+                            className="radio-container",
                             options=[
                                 {
                                     "label": cfg["i18n"]["total_reported_cases"][
@@ -398,6 +399,7 @@ def get_layout():
                     children=[
                         dcc.RadioItems(
                             id="radio-scale-switzerland",
+                            className="radio-container",
                             options=[
                                 {
                                     "label": cfg["i18n"]["linear_scale"][lang].get(),
@@ -416,6 +418,7 @@ def get_layout():
                         ),
                     ],
                 ),
+                html.Br(),
                 html.Div(
                     className="row",
                     children=[
@@ -571,6 +574,7 @@ def get_layout():
                     children=[
                         dcc.RadioItems(
                             id="radio-absolute-norm",
+                            className="radio-container",
                             options=[
                                 {
                                     "label": cfg["i18n"]["absolute_numbers"][
@@ -593,6 +597,7 @@ def get_layout():
                         ),
                     ],
                 ),
+                html.Br(),
                 html.Div(
                     className="row",
                     children=[
@@ -634,6 +639,7 @@ def get_layout():
                     children=[
                         dcc.RadioItems(
                             id="radio-scale-regions",
+                            className="radio-container",
                             options=[
                                 {
                                     "label": cfg["i18n"]["linear_scale"][lang].get(),
@@ -662,6 +668,7 @@ def get_layout():
                         ),
                     ],
                 ),
+                html.Br(),
                 html.Div(
                     className="row",
                     children=[
@@ -747,6 +754,7 @@ def get_layout():
                     className="info-container",
                     children=[html.P(children=cfg["i18n"]["info_corr"][lang].get())],
                 ),
+                html.Br(),
                 html.Div(
                     className="row",
                     children=[
@@ -929,8 +937,8 @@ try:
                 },
                 "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
                 "height": 600,
-                "plot_bgcolor": "#252e3f",
-                "paper_bgcolor": "#252e3f",
+                "plot_bgcolor": cfg["theme"]["background"].get(),
+                "paper_bgcolor": cfg["theme"]["background"].get(),
             },
         }
 
@@ -1008,7 +1016,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
@@ -1102,7 +1110,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
@@ -1214,7 +1222,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
@@ -1334,7 +1342,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
@@ -1484,7 +1492,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
@@ -1575,7 +1583,7 @@ try:
                         "y0": 0,
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
-                        "fillcolor": "#1d2533",
+                        "fillcolor": "#121314",
                         "opacity": 1.0,
                         "layer": "below",
                         "line": {"width": 0},
