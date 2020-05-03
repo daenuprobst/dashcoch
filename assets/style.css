@@ -88,9 +88,6 @@ a:hover {
 }
 
 .total-container {
-  display: inline-block;
-  margin-right: 20px;
-  margin-bottom: 20px;
   background-color: #1f2123;
 }
 
@@ -99,6 +96,9 @@ a:hover {
   font-size: 1.25em;
   font-weight: 500;
   background-color: #00293b;
+  margin-bottom: 0px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .total-container .total-content {
@@ -193,3 +193,34 @@ text.xtitle {
   fill: #e34530 !important;
 }
 /* Plots */
+
+@media only screen and (max-width: 768px) {
+  body {
+    padding-top: 25px;
+    font-size: 0.9em;
+  }
+
+  .total-container .total-title {
+    padding: 5px;
+    font-size: 1em;
+  }
+
+  .total-container .total-content {
+    padding: 5px;
+    font-size: 1em;
+  }
+
+  .update-container .update-title {
+    padding: 5px;
+    font-size: 1em;
+  }
+
+  .update-container .update-content {
+    padding: 5px;
+    font-size: 0.75em;
+  }
+
+  #graph-map text {
+    font-size: 0.5em !important;
+  }
+}

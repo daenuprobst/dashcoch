@@ -142,79 +142,88 @@ def get_layout():
                 dbc.Row(
                     [
                         dbc.Col(
-                            className="twelve columns",
-                            children=[
-                                html.Div(
-                                    className="total-container",
-                                    children=[
-                                        html.P(
-                                            className="total-title",
-                                            children=cfg["i18n"][
-                                                "total_reported_cases"
-                                            ][lang].get(),
-                                        ),
-                                        html.Div(
-                                            className="total-content",
-                                            children=str(int(data.total_swiss_cases)),
-                                        ),
-                                    ],
-                                ),
-                                html.Div(
-                                    className="total-container",
-                                    children=[
-                                        html.P(
-                                            className="total-title",
-                                            children=cfg["i18n"][
-                                                "reported_cases_today"
-                                            ][lang].get(),
-                                        ),
-                                        html.Div(
-                                            className="total-content",
-                                            children="+"
-                                            + str(int(data.new_swiss_cases)),
-                                        ),
-                                    ],
-                                ),
-                                html.Div(
-                                    className="total-container",
-                                    children=[
-                                        html.P(
-                                            className="total-title",
-                                            children=cfg["i18n"]["total_fatalities"][
-                                                lang
-                                            ].get(),
-                                        ),
-                                        html.Div(
-                                            className="total-content",
-                                            children=str(
-                                                int(data.total_swiss_fatalities)
-                                            ),
-                                        ),
-                                    ],
-                                ),
-                                html.Div(
-                                    className="total-container",
-                                    children=[
-                                        html.P(
-                                            className="total-title",
-                                            children=cfg["i18n"][
-                                                "regions_updated_today"
-                                            ][lang].get(),
-                                        ),
-                                        html.Div(
-                                            className="total-content",
-                                            children=str(
-                                                data.last_updated["Updated_Today"].sum()
-                                            )
-                                            + " / "
-                                            + str(len(data.last_updated)),
-                                        ),
-                                    ],
-                                ),
-                            ],
+                            html.Div(
+                                className="total-container",
+                                children=[
+                                    html.P(
+                                        className="total-title",
+                                        children=cfg["i18n"]["total_reported_cases"][
+                                            lang
+                                        ].get(),
+                                    ),
+                                    html.Div(
+                                        className="total-content",
+                                        children=str(int(data.total_swiss_cases)),
+                                    ),
+                                ],
+                            ),
+                            lg=3,
+                            md=6,
+                        ),
+                        dbc.Col(
+                            html.Div(
+                                className="total-container",
+                                children=[
+                                    html.P(
+                                        className="total-title",
+                                        children=cfg["i18n"]["reported_cases_today"][
+                                            lang
+                                        ].get(),
+                                    ),
+                                    html.Div(
+                                        className="total-content",
+                                        children="+" + str(int(data.new_swiss_cases)),
+                                    ),
+                                ],
+                            ),
+                            lg=3,
+                            md=6,
+                        ),
+                        dbc.Col(
+                            html.Div(
+                                className="total-container",
+                                children=[
+                                    html.P(
+                                        className="total-title",
+                                        children=cfg["i18n"]["total_fatalities"][
+                                            lang
+                                        ].get(),
+                                    ),
+                                    html.Div(
+                                        className="total-content",
+                                        children=str(int(data.total_swiss_fatalities)),
+                                    ),
+                                ],
+                            ),
+                            lg=3,
+                            md=6,
+                        ),
+                        dbc.Col(
+                            html.Div(
+                                className="total-container",
+                                children=[
+                                    html.P(
+                                        className="total-title",
+                                        children=cfg["i18n"]["regions_updated_today"][
+                                            lang
+                                        ].get(),
+                                    ),
+                                    html.Div(
+                                        className="total-content",
+                                        children=str(
+                                            data.last_updated["Updated_Today"].sum()
+                                        )
+                                        + " / "
+                                        + str(len(data.last_updated)),
+                                    ),
+                                ],
+                            ),
+                            lg=3,
+                            md=6,
                         ),
                     ]
                 ),
+                html.Br(),
             ]
         )
 

@@ -282,9 +282,9 @@ i18n:
     - Logarithmische Skalierung
     - Mise à l'Échelle Logarithmique
   age_distribution_title:
-    - BAG/OFSP/UFSP/FOPH Data for Switzerland
-    - BAG/OFSP/UFSP/FOPH Daten Schweiz
-    - BAG/OFSP/UFSP/FOPH Données de la Suisse
+    - FOPH Data for Switzerland
+    - BAG Daten Schweiz
+    - OFSP Données de la Suisse
   show_data_for:
     - "Show Data for:"
     - "Daten Anzeigen für:"
