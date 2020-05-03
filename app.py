@@ -8,7 +8,7 @@ import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from dash.dependencies import Input, Output, ClientsideFunction
+from dash.dependencies import Input, Output, State, ClientsideFunction
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from dashcoch.config import config as cfg
 
@@ -115,21 +115,38 @@ def get_layout():
                             },
                         ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
-                        html.P(
-                            children=(
-                                [dcc.Markdown(cfg["i18n"]["info"][lang].get())]
-                                if cfg["show"]["info"].get()
-                                else []
-                            )
+                        dbc.Button(
+                            "Info",
+                            id="info-button",
+                            size="sm",
+                            className="mb-3",
+                            color="primary",
                         ),
-                        html.P(
-                            id="sci-info",
-                            children=(
-                                [dcc.Markdown(cfg["i18n"]["more_info"][lang].get())]
-                                if cfg["show"]["more_info"].get()
-                                else []
-                            ),
+                        dbc.Collapse(
+                            id="info-container",
+                            children=[
+                                html.P(
+                                    children=(
+                                        [dcc.Markdown(cfg["i18n"]["info"][lang].get())]
+                                        if cfg["show"]["info"].get()
+                                        else []
+                                    )
+                                ),
+                                html.P(
+                                    id="sci-info",
+                                    children=(
+                                        [
+                                            dcc.Markdown(
+                                                cfg["i18n"]["more_info"][lang].get()
+                                            )
+                                        ]
+                                        if cfg["show"]["more_info"].get()
+                                        else []
+                                    ),
+                                ),
+                            ],
                         ),
+                        html.Br(),
                     ],
                 ),
             ]
@@ -159,6 +176,7 @@ def get_layout():
                             ),
                             lg=3,
                             md=6,
+                            xs=6,
                         ),
                         dbc.Col(
                             html.Div(
@@ -178,6 +196,7 @@ def get_layout():
                             ),
                             lg=3,
                             md=6,
+                            xs=6,
                         ),
                         dbc.Col(
                             html.Div(
@@ -197,6 +216,7 @@ def get_layout():
                             ),
                             lg=3,
                             md=6,
+                            xs=6,
                         ),
                         dbc.Col(
                             html.Div(
@@ -220,6 +240,7 @@ def get_layout():
                             ),
                             lg=3,
                             md=6,
+                            xs=6,
                         ),
                     ]
                 ),
@@ -417,15 +438,15 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-ch-graph")],),
-                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")],),
+                        dbc.Col([dcc.Graph(id="case-ch-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")], md=12),
                     ],
                 ),
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="new-case-ch-graph")]),
-                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")]),
+                        dbc.Col([dcc.Graph(id="new-case-ch-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")], md=12),
                     ],
                 ),
                 html.Br(),
@@ -438,8 +459,8 @@ def get_layout():
             [
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")]),
-                        dbc.Col([dcc.Graph(id="releases-ch-graph")]),
+                        dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="releases-ch-graph")], md=12),
                     ]
                 ),
                 html.Br(),
@@ -475,8 +496,8 @@ def get_layout():
             [
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-world-graph")]),
-                        dbc.Col([dcc.Graph(id="fatalities-world-graph")]),
+                        dbc.Col([dcc.Graph(id="case-world-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="fatalities-world-graph")], md=12),
                     ],
                 ),
                 html.Br(),
@@ -554,8 +575,8 @@ def get_layout():
                     ],
                 ),
                 html.Br(),
-                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")])]),
-                dbc.Row([dbc.Col([dcc.Graph(id="fatalities-bag-graph")])]),
+                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")], md=12)]),
+                dbc.Row([dbc.Col([dcc.Graph(id="fatalities-bag-graph")], md=12)]),
                 html.Br(),
             ]
         )
@@ -615,8 +636,8 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-graph")]),
-                        dbc.Col([dcc.Graph(id="case-pc-graph")]),
+                        dbc.Col([dcc.Graph(id="case-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="case-pc-graph")], md=12),
                     ]
                 ),
                 html.Br(),
@@ -681,8 +702,8 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="prevalence-density-graph")]),
-                        dbc.Col([dcc.Graph(id="cfr-age-graph")]),
+                        dbc.Col([dcc.Graph(id="prevalence-density-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="cfr-age-graph")], md=12),
                     ]
                 ),
                 html.Br(),
@@ -717,8 +738,23 @@ app.layout = get_layout
 try:
 
     @app.callback(
-        dash.dependencies.Output("date-container", "children"),
-        [dash.dependencies.Input("slider-date", "value")],
+        Output("info-container", "is_open"),
+        [Input("info-button", "n_clicks")],
+        [State("info-container", "is_open")],
+    )
+    def toggle_info(n, is_open):
+        if n:
+            return not is_open
+        return is_open
+
+
+except:
+    pass
+
+try:
+
+    @app.callback(
+        Output("date-container", "children"), [Input("slider-date", "value")],
     )
     def update_map_date(selected_date_index):
 

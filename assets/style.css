@@ -89,6 +89,7 @@ a:hover {
 
 .total-container {
   background-color: #1f2123;
+  margin-bottom: 10px !important;
 }
 
 .total-container .total-title {
@@ -141,6 +142,11 @@ a:hover {
 .rc-slider-mark-text.rc-slider-mark-text-active {
   color: #30d6d6 !important;
 }
+
+#info-button {
+  background-color: #17181a !important;
+  border-color: #30d6d6 !important;
+}
 /* Override the bootstrap colours */
 
 /* Override the dcc select styles */
@@ -158,11 +164,16 @@ div.Select div.Select-menu-outer {
 }
 /* Override the dcc select styles */
 
-/* Map background */
+/* Map */
 g.layer rect {
   fill: #17181a !important;
 }
-/* Map background */
+
+#graph-map {
+  height: 70vw !important;
+  max-height: 600px !important;
+}
+/* Map */
 
 /* Plots */
 .xgrid.crisp,
@@ -202,7 +213,7 @@ text.xtitle {
 
   .total-container .total-title {
     padding: 5px;
-    font-size: 1em;
+    font-size: 0.8em;
   }
 
   .total-container .total-content {
@@ -218,6 +229,10 @@ text.xtitle {
   .update-container .update-content {
     padding: 5px;
     font-size: 0.75em;
+  }
+
+  .rc-slider-mark-text.rc-slider-mark-text-active {
+    font-size: 0.56em !important;
   }
 
   #graph-map text {
