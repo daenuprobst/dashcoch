@@ -1,0 +1,891 @@
+@import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,500&display=swap");
+@import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed:300,400,500&display=swap");
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "IBM Plex Sans", "HelveticaNeue", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+}
+
+div#main {
+  padding: 20px;
+  background-color: #17181a;
+}
+
+table,
+table td,
+table th {
+  background-color: transparent !important;
+  color: #22e7ff;
+  border: 1px solid #344158 !important;
+}
+
+table tr:hover {
+  background-color: #1f2123 !important;
+}
+
+#sorry {
+  font-weight: 500;
+  color: red;
+}
+
+#language-picker {
+  text-align: right;
+  margin: 0;
+  padding: 0;
+}
+
+#language-picker span {
+  margin-left: 2px;
+}
+
+#update-container span {
+  display: inline-block;
+  font-family: "IBM Plex Sans Condensed", "HelveticaNeue", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  color: #ffffff;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin: 2px;
+  background-color: #28494d;
+}
+
+#update-container span.False {
+  background-color: #402b36;
+  color: #ddd;
+}
+
+#update-container div {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.rc-slider-mark-text {
+  font-family: "IBM Plex Sans", "HelveticaNeue", "Helvetica Neue", Helvetica,
+    Arial, sans-serif !important;
+  font-weight: 300 !important;
+}
+
+/* Map style */
+g.layer rect {
+  fill: #1f2123 !important;
+}
+
+#important {
+  color: #c72e10;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.total-container {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: #1f2123;
+}
+
+.total-container .total-title {
+  padding: 10px;
+  font-size: 1.25em;
+  font-weight: 500;
+  background-color: #0f4c75;
+}
+
+.total-container .total-content {
+  padding: 10px;
+  color: #22e7ff;
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.dash-table-container {
+  padding: 10px;
+  background-color: #1f2123;
+}
+
+.info-container {
+  padding: 10px;
+  background-color: #1f2123;
+}
+
+.info-container p {
+  color: #fff;
+  margin: 0;
+}
+
+#date-container-regional,
+#date-container {
+  background-color: #1f2123;
+  font-size: 2em;
+  text-align: center;
+  font-weight: 500;
+  border-bottom: 0px !important;
+  color: #ffffff;
+}
+
+/* Table of contents
+––––––––––––––––––––––––––––––––––––––––––––––––––
+- Plotly.js
+- Grid
+- Base Styles
+- Typography
+- Links
+- Buttons
+- Forms
+- Lists
+- Code
+- Tables
+- Spacing
+- Utilities
+- Clearing
+- Media Queries
+*/
+
+/* PLotly.js
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* plotly.js's modebar's z-index is 1001 by default
+ * https://github.com/plotly/plotly.js/blob/7e4d8ab164258f6bd48be56589dacd9bdd7fded2/src/css/_modebar.scss#L5
+ * In case a dropdown is above the graph, the dropdown's options
+ * will be rendered below the modebar
+ * Increase the select option's z-index
+ */
+
+/* This was actually not quite right -
+   dropdowns were overlapping each other (edited October 26)
+.Select {
+    z-index: 1002;
+}*/
+
+/* Grid
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.column,
+.columns {
+  width: 100%;
+  float: left;
+  box-sizing: border-box;
+}
+
+/* For devices larger than 400px */
+@media (min-width: 400px) and (max-width: 1365px) {
+  .container {
+    width: 85% !important;
+    padding: 0 !important;
+  }
+
+  .total-container {
+    /* width: calc(50% - 2px); */
+    width: 50%;
+    margin-right: 0;
+  }
+}
+
+/* For devices larger than 550px */
+@media (min-width: 1366px) {
+  .container {
+    width: 80%;
+  }
+
+  .column,
+  .columns {
+    margin-left: 1%;
+  }
+
+  .column:first-child,
+  .columns:first-child {
+    margin-left: 0;
+  }
+
+  .one.column,
+  .one.columns {
+    width: 4.66666666667%;
+  }
+
+  .two.columns {
+    width: 13.3333333333%;
+  }
+
+  .three.columns {
+    width: 22%;
+  }
+
+  .four.columns {
+    width: 30.6666666667%;
+  }
+
+  .five.columns {
+    width: 39.3333333333%;
+  }
+
+  .six.columns {
+    width: 49.5%;
+  }
+
+  .seven.columns {
+    width: 56.6666666667%;
+  }
+
+  .eight.columns {
+    width: 65.3333333333%;
+  }
+
+  .nine.columns {
+    width: 74%;
+  }
+
+  .ten.columns {
+    width: 82.6666666667%;
+  }
+
+  .eleven.columns {
+    width: 91.3333333333%;
+  }
+
+  .twelve.columns {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .one-third.column {
+    width: 30.6666666667%;
+  }
+
+  .two-thirds.column {
+    width: 65.3333333333%;
+  }
+
+  .one-half.column {
+    width: 48%;
+  }
+
+  /* Offsets */
+  .offset-by-one.column,
+  .offset-by-one.columns {
+    margin-left: 8.66666666667%;
+  }
+
+  .offset-by-two.column,
+  .offset-by-two.columns {
+    margin-left: 17.3333333333%;
+  }
+
+  .offset-by-three.column,
+  .offset-by-three.columns {
+    margin-left: 26%;
+  }
+
+  .offset-by-four.column,
+  .offset-by-four.columns {
+    margin-left: 34.6666666667%;
+  }
+
+  .offset-by-five.column,
+  .offset-by-five.columns {
+    margin-left: 43.3333333333%;
+  }
+
+  .offset-by-six.column,
+  .offset-by-six.columns {
+    margin-left: 52%;
+  }
+
+  .offset-by-seven.column,
+  .offset-by-seven.columns {
+    margin-left: 60.6666666667%;
+  }
+
+  .offset-by-eight.column,
+  .offset-by-eight.columns {
+    margin-left: 69.3333333333%;
+  }
+
+  .offset-by-nine.column,
+  .offset-by-nine.columns {
+    margin-left: 78%;
+  }
+
+  .offset-by-ten.column,
+  .offset-by-ten.columns {
+    margin-left: 86.6666666667%;
+  }
+
+  .offset-by-eleven.column,
+  .offset-by-eleven.columns {
+    margin-left: 95.3333333333%;
+  }
+
+  .offset-by-one-third.column,
+  .offset-by-one-third.columns {
+    margin-left: 34.6666666667%;
+  }
+
+  .offset-by-two-thirds.column,
+  .offset-by-two-thirds.columns {
+    margin-left: 69.3333333333%;
+  }
+
+  .offset-by-one-half.column,
+  .offset-by-one-half.columns {
+    margin-left: 52%;
+  }
+}
+
+/* Base Styles
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+/* NOTE
+html is set to 62.5% so that all the REM measurements throughout Skeleton
+are based on 10px sizing. So basically 1.5rem = 15px :) */
+html {
+  font-size: 50%;
+  background-color: #17181a;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0;
+}
+
+body {
+  font-size: 1.5rem; /* currently ems cause chrome bug misinterpreting rems on body element */
+  line-height: 1.6;
+  font-weight: 400;
+  font-family: "IBM Plex Sans", "HelveticaNeue", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  color: #7fafdf;
+  margin: 0;
+}
+
+#root {
+  margin: 0;
+}
+
+@media (max-width: 1366px) {
+  #root {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1367px) {
+  #root {
+    padding: 5rem;
+  }
+}
+
+/* Typography
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 4.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.1rem;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 3.6rem;
+  line-height: 1.25;
+  letter-spacing: -0.1rem;
+  margin-bottom: 1.8rem;
+  margin-top: 1.8rem;
+}
+
+h3 {
+  color: #fff;
+  font-size: 4rem;
+  line-height: 1.35;
+  letter-spacing: -0.08rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1.2rem;
+}
+
+h4 {
+  font-family: "IBM Plex Sans Condensed", "HelveticaNeue", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 4rem;
+  line-height: 1.35;
+  letter-spacing: -0.08rem;
+  margin-bottom: 0;
+  margin-top: 1.2rem;
+  padding: 10px;
+  background-color: #0f4c75;
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
+}
+
+h4.secondary {
+  font-family: "IBM Plex Sans Condensed", "HelveticaNeue", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 4rem;
+  line-height: 1.35;
+  letter-spacing: -0.08rem;
+  margin-bottom: 0;
+  margin-top: 1.2rem;
+  padding: 10px;
+  background-color: #54123b;
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
+}
+
+h5 {
+  font-size: 2.2rem;
+  line-height: 1.5;
+  letter-spacing: -0.05rem;
+  margin-bottom: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+h6 {
+  font-size: 2rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+p {
+  margin-top: 0;
+}
+
+#heatmap-title {
+  font-family: "Playfair Display", sans-serif;
+  font-size: 2rem;
+}
+
+#description {
+  font-size: 1.5rem;
+  border-left: #22e7ff solid 1rem;
+  padding-left: 1rem;
+  max-width: 100rem;
+  margin: 2rem 0 3rem 0;
+}
+
+#logo {
+  height: 5rem;
+  margin-bottom: 2rem;
+}
+
+.slider-text,
+#plot-settings-text,
+#chart-selector {
+  margin-bottom: 2rem !important;
+  font-size: 2rem;
+}
+
+@media only screen and (max-width: 550px) {
+  .rc-slider-mark-text {
+    font-size: 50%;
+  }
+
+  #description {
+    font-size: 1rem;
+  }
+}
+
+/* Blockquotes
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+blockquote {
+  border-left: 4px lightgrey solid;
+  padding-left: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  margin-left: 0;
+}
+
+/* Links
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+a {
+  color: #1eaedb;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #0fa0ce;
+}
+
+/* Lists
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ul {
+  list-style: circle inside;
+}
+
+ol {
+  list-style: decimal inside;
+}
+
+ol,
+ul {
+  padding-left: 0;
+  margin-top: 0;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin: 1.5rem 0 1.5rem 3rem;
+  font-size: 90%;
+}
+
+li {
+  margin-bottom: 1rem;
+}
+
+/* Tables
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+th:first-child,
+td:first-child {
+  padding-left: 0;
+}
+
+th:last-child,
+td:last-child {
+  padding-right: 0;
+}
+
+/* Spacing
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+pre,
+dl,
+figure,
+table,
+form {
+  margin-bottom: 0;
+}
+
+p,
+ul,
+ol {
+  margin-bottom: 0.75rem;
+}
+
+/* Utilities
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.u-full-width {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.u-max-full-width {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.u-pull-right {
+  float: right;
+}
+
+.u-pull-left {
+  float: left;
+}
+
+/* Misc
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+hr {
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
+  border-width: 0;
+  border-top: 1px solid #e1e1e1;
+}
+
+/* Clearing
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+/* Self Clearing Goodness */
+.container:after,
+.row:after,
+.u-cf {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Slider
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+.slider-container,
+#plot-settings-container {
+  background-color: #1f2123;
+  padding: 10px;
+  /* height: 12rem; */
+}
+
+.slider-container-secondary,
+#plot-settings-container-secondary {
+  background-color: #241d1c;
+  padding: 10px;
+  /* height: 12rem; */
+}
+
+.rc-slider-dot-active,
+.rc-slider-handle {
+  border-color: #22e7ff !important;
+}
+
+.rc-slider-track {
+  background-color: #22e7ff !important;
+}
+
+.rc-slider-rail {
+  background-color: #1d2731 !important;
+}
+
+/* Heatmap
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+#heatmap-container {
+  margin: 2.5rem 0 0 0;
+  background-color: #1f2123;
+}
+
+#heatmap-title {
+  margin: 0;
+  padding: 1rem;
+}
+
+#county-choropleth {
+  margin: 0;
+  flex-grow: 1;
+}
+
+@media (min-width: 1251px) {
+  #heatmap-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 550px) {
+  #county-choropleth .annotation-text {
+    font-size: 1.2rem !important;
+  }
+}
+
+/* Left column
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+@media only screen and (max-width: 1250px) {
+  /*For mobile and smaller screens*/
+  #left-column {
+    margin-right: 1.5%;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1251px) {
+  /*For desktop*/
+  #left-column {
+    margin-right: 1.5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+    flex: 6 60%;
+  }
+}
+
+/* Graph
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+
+#graph-container {
+  background-color: #1f2123;
+  padding: 5rem;
+  margin: 0;
+}
+
+@media (max-width: 1250px) {
+  /*For mobile and smaller screens*/
+  #header h4 {
+    text-align: center;
+  }
+
+  #graph-container {
+    margin-top: 5rem;
+  }
+
+  #selected-data {
+    height: 55rem;
+  }
+
+  .total-container .total-title {
+    font-size: 2.25em;
+  }
+
+  .total-container .total-content {
+    font-size: 3.25em;
+  }
+}
+
+@media (min-width: 1251px) {
+  /*For desktop*/
+  #logo {
+    float: right;
+    padding-right: 2rem;
+  }
+
+  #header p {
+    font-size: 1.5rem;
+  }
+
+  #graph-container {
+    flex: 4 40%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  #selected-data {
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 550px) {
+  #graph-container {
+    padding: 2.5rem;
+  }
+
+  #selected-data .xtick text {
+    font-size: 1.1rem !important;
+  }
+
+  #selected-data .gtitle {
+    font-size: 1.7rem !important;
+  }
+}
+
+#chart-dropdown {
+  margin-bottom: 6.6rem;
+}
+
+/* Dropdown
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.Select-value {
+  cursor: pointer;
+}
+
+.Select-control {
+  color: #7fafdf !important;
+  background-color: #101112 !important;
+  border: 1px solid #2e343b !important;
+}
+
+.Select {
+  color: #7fafdf !important;
+}
+
+.Select-menu-outer {
+  background-color: #1f2123 !important;
+  border: 1px solid #7fafdf !important;
+}
+
+.Select-menu-outer div:hover {
+  background-color: rgba(255, 255, 255, 0.01) !important;
+  cursor: pointer;
+}
+
+.Select-value-label {
+  color: #7fafdf !important;
+}
+
+.Select--single > .Select-control .Select-value,
+.Select-placeholder {
+  /* border: 1px solid #2e343b !important; */
+  border-radius: 4px !important;
+}
+
+.Select-menu-outer {
+  background-color: #1f2123 !important;
+  border: 1px solid #2e343b !important;
+}
+
+/* Placement
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+@media only screen and (max-width: 1250px) {
+  /*For mobile and smaller screens*/
+  #app-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-bottom: 5rem;
+  }
+}
+
+@media (min-width: 1251px) {
+  /*For desktop*/
+  #app-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    height: 100rem;
+    margin-bottom: 5rem;
+  }
+}
+
+#header {
+  padding: 20px;
+  padding-top: 10px;
+  background-color: #1a2e4a;
+  margin-bottom: 20px;
+  /* margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px; */
+  /* border-right: 2px solid #222;
+  border-bottom: 2px solid #222; */
+}
+
+#header h4 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+div,
+svg {
+  user-select: none !important;
+}
+
+._dash-undo-redo {
+  display: none;
+}

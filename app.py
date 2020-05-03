@@ -2,16 +2,13 @@ import time
 from dashcoch import DataLoader, StyleLoader
 import math
 from datetime import date, datetime, timedelta
-from pytz import timezone
-import confuse
 import geojson
 import flask
 import dash
-import dash_table
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, ClientsideFunction
-import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from dashcoch.config import config as cfg
 
@@ -20,8 +17,6 @@ external_scripts = [
 ]
 
 lang = 0
-
-# external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 meta_tags = [
     # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
@@ -41,7 +36,7 @@ meta_tags = [
 app = dash.Dash(
     __name__,
     external_scripts=external_scripts,
-    # external_stylesheets=external_stylesheets,
+    external_stylesheets=[dbc.themes.DARKLY],
     meta_tags=meta_tags,
 )
 server = app.server
@@ -163,10 +158,9 @@ def get_layout():
     if cfg["show"]["totals"]:
         content.extend(
             [
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
+                dbc.Row(
+                    [
+                        dbc.Col(
                             className="twelve columns",
                             children=[
                                 html.Div(
@@ -238,9 +232,7 @@ def get_layout():
                                 ),
                             ],
                         ),
-                        html.Div(className="six columns"),
-                        html.Div(className="six columns"),
-                    ],
+                    ]
                 ),
             ]
         )
@@ -274,59 +266,62 @@ def get_layout():
     if cfg["show"]["map"]:
         content.extend(
             [
-                html.Div(
-                    className="slider-container",
-                    children=[
-                        dcc.RadioItems(
-                            id="radio-prevalence",
-                            className="radio-container",
-                            options=[
-                                {
-                                    "label": cfg["i18n"]["total_reported_cases"][
-                                        lang
-                                    ].get(),
-                                    "value": "number",
-                                },
-                                {
-                                    "label": cfg["i18n"]["new_cases"][lang].get(),
-                                    "value": "new",
-                                },
-                                {
-                                    "label": cfg["i18n"]["cumulative_prevalence"][
-                                        lang
-                                    ].get(),
-                                    "value": "prevalence",
-                                },
-                                {
-                                    "label": cfg["i18n"]["new_hospitalizations"][
-                                        lang
-                                    ].get(),
-                                    "value": "new_hospitalizations",
-                                },
-                                {
-                                    "label": cfg["i18n"]["total_hospitalizations"][
-                                        lang
-                                    ].get(),
-                                    "value": "hospitalizations",
-                                },
-                                {
-                                    "label": cfg["i18n"]["new_fatalities"][lang].get(),
-                                    "value": "new_fatalities",
-                                },
-                                {
-                                    "label": cfg["i18n"]["total_fatalities"][
-                                        lang
-                                    ].get(),
-                                    "value": "fatalities",
-                                },
-                            ],
-                            value="number",
-                            labelStyle={
-                                "display": "inline-block",
-                                "color": style.theme["foreground"],
-                            },
+                dbc.Row(
+                    dbc.Col(
+                        dbc.FormGroup(
+                            [
+                                dbc.RadioItems(
+                                    id="radio-prevalence",
+                                    options=[
+                                        {
+                                            "label": cfg["i18n"][
+                                                "total_reported_cases"
+                                            ][lang].get(),
+                                            "value": "number",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["new_cases"][
+                                                lang
+                                            ].get(),
+                                            "value": "new",
+                                        },
+                                        {
+                                            "label": cfg["i18n"][
+                                                "cumulative_prevalence"
+                                            ][lang].get(),
+                                            "value": "prevalence",
+                                        },
+                                        {
+                                            "label": cfg["i18n"][
+                                                "new_hospitalizations"
+                                            ][lang].get(),
+                                            "value": "new_hospitalizations",
+                                        },
+                                        {
+                                            "label": cfg["i18n"][
+                                                "total_hospitalizations"
+                                            ][lang].get(),
+                                            "value": "hospitalizations",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["new_fatalities"][
+                                                lang
+                                            ].get(),
+                                            "value": "new_fatalities",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["total_fatalities"][
+                                                lang
+                                            ].get(),
+                                            "value": "fatalities",
+                                        },
+                                    ],
+                                    value="number",
+                                    inline=True,
+                                ),
+                            ]
                         ),
-                    ],
+                    )
                 ),
                 html.Div(id="date-container", className="slider-container"),
                 html.Div(
@@ -397,53 +392,43 @@ def get_layout():
                 html.Div(
                     className="slider-container",
                     children=[
-                        dcc.RadioItems(
-                            id="radio-scale-switzerland",
-                            className="radio-container",
-                            options=[
-                                {
-                                    "label": cfg["i18n"]["linear_scale"][lang].get(),
-                                    "value": "linear",
-                                },
-                                {
-                                    "label": cfg["i18n"]["log_scale"][lang].get(),
-                                    "value": "log",
-                                },
-                            ],
-                            value="linear",
-                            labelStyle={
-                                "display": "inline-block",
-                                "color": style.theme["foreground"],
-                            },
-                        ),
+                        dbc.FormGroup(
+                            [
+                                dbc.RadioItems(
+                                    id="radio-scale-switzerland",
+                                    options=[
+                                        {
+                                            "label": cfg["i18n"]["linear_scale"][
+                                                lang
+                                            ].get(),
+                                            "value": "linear",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["log_scale"][
+                                                lang
+                                            ].get(),
+                                            "value": "log",
+                                        },
+                                    ],
+                                    value="linear",
+                                    inline=True,
+                                ),
+                            ]
+                        )
                     ],
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="case-ch-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="fatalities-ch-graph")],
-                        ),
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="case-ch-graph")],),
+                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")],),
                     ],
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="new-case-ch-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="new-fatalities-ch-graph")],
-                        ),
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="new-case-ch-graph")]),
+                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")]),
                     ],
                 ),
                 html.Br(),
@@ -454,18 +439,11 @@ def get_layout():
     if cfg["show"]["hospitalizations"] and cfg["show"]["hospital_releases"]:
         content.extend(
             [
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="hospitalizations-ch-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="releases-ch-graph")],
-                        ),
-                    ],
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")]),
+                        dbc.Col([dcc.Graph(id="releases-ch-graph")]),
+                    ]
                 ),
                 html.Br(),
             ]
@@ -474,15 +452,7 @@ def get_layout():
     if cfg["show"]["hospitalizations"] and not cfg["show"]["hospital_releases"]:
         content.extend(
             [
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="hospitalizations-ch-graph")],
-                        ),
-                    ],
-                ),
+                dbc.Row([dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")])]),
                 html.Br(),
             ]
         )
@@ -497,15 +467,7 @@ def get_layout():
                         html.P(children=cfg["i18n"]["info_log_log_main"][lang].get())
                     ],
                 ),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="caseincrease-ch-graph")],
-                        ),
-                    ],
-                ),
+                dbc.Row([dbc.Col([dcc.Graph(id="caseincrease-ch-graph")])]),
                 html.Br(),
             ]
         )
@@ -514,17 +476,10 @@ def get_layout():
     if cfg["show"]["international"]:
         content.extend(
             [
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="case-world-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="fatalities-world-graph")],
-                        ),
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="case-world-graph")]),
+                        dbc.Col([dcc.Graph(id="fatalities-world-graph")]),
                     ],
                 ),
                 html.Br(),
@@ -555,67 +510,55 @@ def get_layout():
                             className="slider-text",
                             children=cfg["i18n"]["show_data_for"][lang].get(),
                         ),
-                        dcc.Dropdown(
-                            id="select-regions-ch",
-                            options=[
-                                {"label": region, "value": region}
-                                for region in [
-                                    cfg["settings"]["total_column_name"].get()
-                                ]
-                                + data.region_labels
-                            ],
-                            value=cfg["settings"]["total_column_name"].get(),
-                            clearable=False,
+                        dbc.FormGroup(
+                            [
+                                dcc.Dropdown(
+                                    id="select-regions-ch",
+                                    options=[
+                                        {"label": region, "value": region}
+                                        for region in [
+                                            cfg["settings"]["total_column_name"].get()
+                                        ]
+                                        + data.region_labels
+                                    ],
+                                    value=cfg["settings"]["total_column_name"].get(),
+                                    clearable=False,
+                                ),
+                            ]
                         ),
                     ],
                 ),
                 html.Div(
                     className="slider-container-secondary",
                     children=[
-                        dcc.RadioItems(
-                            id="radio-absolute-norm",
-                            className="radio-container",
-                            options=[
-                                {
-                                    "label": cfg["i18n"]["absolute_numbers"][
-                                        lang
-                                    ].get(),
-                                    "value": "absolute",
-                                },
-                                {
-                                    "label": cfg["i18n"]["scaled_by_age_dist"][
-                                        lang
-                                    ].get(),
-                                    "value": "scaled",
-                                },
-                            ],
-                            value="absolute",
-                            labelStyle={
-                                "display": "inline-block",
-                                "color": style.theme["foreground_secondary"],
-                            },
-                        ),
+                        dbc.FormGroup(
+                            [
+                                dbc.RadioItems(
+                                    id="radio-absolute-norm",
+                                    options=[
+                                        {
+                                            "label": cfg["i18n"]["absolute_numbers"][
+                                                lang
+                                            ].get(),
+                                            "value": "absolute",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["scaled_by_age_dist"][
+                                                lang
+                                            ].get(),
+                                            "value": "scaled",
+                                        },
+                                    ],
+                                    value="absolute",
+                                    inline=True,
+                                ),
+                            ]
+                        )
                     ],
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="cases-bag-graph")],
-                        ),
-                    ],
-                ),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="fatalities-bag-graph")],
-                        ),
-                    ],
-                ),
+                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")])]),
+                dbc.Row([dbc.Col([dcc.Graph(id="fatalities-bag-graph")])]),
                 html.Br(),
             ]
         )
@@ -637,24 +580,28 @@ def get_layout():
                 html.Div(
                     id="plot-settings-container",
                     children=[
-                        dcc.RadioItems(
-                            id="radio-scale-regions",
-                            className="radio-container",
-                            options=[
-                                {
-                                    "label": cfg["i18n"]["linear_scale"][lang].get(),
-                                    "value": "linear",
-                                },
-                                {
-                                    "label": cfg["i18n"]["log_scale"][lang].get(),
-                                    "value": "log",
-                                },
-                            ],
-                            value="linear",
-                            labelStyle={
-                                "display": "inline-block",
-                                "color": style.theme["foreground"],
-                            },
+                        dbc.FormGroup(
+                            [
+                                dbc.RadioItems(
+                                    id="radio-scale-regions",
+                                    options=[
+                                        {
+                                            "label": cfg["i18n"]["linear_scale"][
+                                                lang
+                                            ].get(),
+                                            "value": "linear",
+                                        },
+                                        {
+                                            "label": cfg["i18n"]["log_scale"][
+                                                lang
+                                            ].get(),
+                                            "value": "log",
+                                        },
+                                    ],
+                                    value="linear",
+                                    inline=True,
+                                ),
+                            ]
                         ),
                         html.Br(),
                         dcc.Dropdown(
@@ -669,29 +616,14 @@ def get_layout():
                     ],
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="case-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="case-pc-graph"),],
-                        ),
-                    ],
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="case-graph")]),
+                        dbc.Col([dcc.Graph(id="case-pc-graph")]),
+                    ]
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="case-graph-diff")],
-                        ),
-                    ],
-                ),
+                dbc.Row([dbc.Col([dcc.Graph(id="case-graph-diff")])]),
                 html.Br(),
             ]
         )
@@ -710,15 +642,7 @@ def get_layout():
                 ),
                 html.Div(id="date-container-regional", className="slider-container"),
                 html.Div(id="caseincrease-regional-data", style={"display": "none"}),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="twelve columns",
-                            children=[dcc.Graph(id="caseincrease-regional-graph")],
-                        ),
-                    ],
-                ),
+                dbc.Row([dbc.Col([dcc.Graph(id="caseincrease-regional-graph")])]),
                 html.Div(
                     className="slider-container",
                     children=[
@@ -755,18 +679,11 @@ def get_layout():
                     children=[html.P(children=cfg["i18n"]["info_corr"][lang].get())],
                 ),
                 html.Br(),
-                html.Div(
-                    className="row",
-                    children=[
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="prevalence-density-graph")],
-                        ),
-                        html.Div(
-                            className="six columns",
-                            children=[dcc.Graph(id="cfr-age-graph")],
-                        ),
-                    ],
+                dbc.Row(
+                    [
+                        dbc.Col([dcc.Graph(id="prevalence-density-graph")]),
+                        dbc.Col([dcc.Graph(id="cfr-age-graph")]),
+                    ]
                 ),
                 html.Br(),
             ]
@@ -789,7 +706,7 @@ def get_layout():
             ]
         )
 
-    return html.Div(id="main", children=content)
+    return dbc.Container(id="main", children=content, fluid=True)
 
 
 app.layout = get_layout
@@ -2338,12 +2255,12 @@ except:
 
 
 # Kick off the updated thread
-executor = ThreadPoolExecutor(max_workers=1)
-executor.submit(update_data)
+# executor = ThreadPoolExecutor(max_workers=1)
+# executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
+        debug=True,
         # dev_tools_hot_reload=True,
         # dev_tools_hot_reload_interval=50,
         # dev_tools_hot_reload_max_retry=30,
