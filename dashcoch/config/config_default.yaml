@@ -65,8 +65,8 @@ settings:
       - 10.5421
 
 theme:
-  background: "#1F2123"
-  background_secondary: "#241D1C"
+  background: "#17181a"
+  background_secondary: "#17181a"
   foreground: "#30D6D6"
   foreground_secondary: "#96BD0D"
   accent: "#7fafdf"
@@ -204,13 +204,13 @@ i18n:
     - Neuste Entwicklungen der COVID-19 Pandemie in der Schweiz
     - Dernières mises à jour du développement de COVID-19 en Suisse
   info:
-    - "[Contact me on Twitter](https://twitter.com/skepteis).
+    - "[Contact me on Twitter](https://twitter.com/skepteis). This website ist open and free of charge, but please consider [donating to the Glückskette](https://www.glueckskette.ch/).
       The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
       Page views are counted by privacy-focused [Simple Analytics](https://simpleanalytics.com?ref=corona-data.ch), the data can be viewed [here](https://simpleanalytics.com/corona-data.ch?ref=corona-data.ch)."
-    - "[Kontaktiere mich auf Twitter] (https://twitter.com/skepteis).
+    - "[Kontaktiere mich auf Twitter] (https://twitter.com/skepteis). Dieser Service ist frei verfügbar, aber bitte erwägen sie [eine Spende an die Glückskette](https://www.glueckskette.ch/).
       Die Datenquellen finden Sie [hier](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), eine Zusammenfassung der verschiedenen von openZH bereitgestellten Dateien [hier](https://github.com/daenuprobst/covid19-case-switzerland) und alternativ als [Excel-Datei](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
       Seitenaufrufe werden durch die datenschutzorientierten [Simple Analytics] (https://simpleanalytics.com?ref=corona-data.ch) gezählt. Die Daten können [hier](https://simpleanalytics.com/corona-data) angezeigt werden."
-    - "[Contactez-moi sur Twitter](https://twitter.com/skepteis).
+    - "[Contactez-moi sur Twitter](https://twitter.com/skepteis). Ce site est ouvert et gratuit, mais vous pouvez faire [un don à la Chaîne du Bonheur](https://www.bonheur.ch/)
       Vous pouvez trouver les sources de données [ici](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), un résumé des différents fichiers fournis par openZH [ici](https://github.com/daenuprobst/covid19-case-switzerland) et alternativement sous forme de [fichier Excel](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
       Les pages vues sont comptabilisées par le [Simple Analytics orienté vers la confidentialité](https://simpleanalytics.com?ref=corona-data.ch). Les données peuvent être consultées [ici](https://simpleanalytics.com/corona-data)."
   more_info:
@@ -234,9 +234,9 @@ i18n:
     - Heute Aktualisierte Kantone
     - Mise à Jour des Cantons Aujourd'hui
   latest_updates:
-    - "Latest Updates:"
-    - "Zuletzt Aktualisiert:"
-    - "Dernière Mise à Jour:"
+    - "Latest Updates"
+    - "Zuletzt Aktualisiert"
+    - "Dernière Mise à Jour"
   drag_the_slider_to_change_the_date:
     - "Drag the slider to change the date:"
     - "Ziehen sie den Slider um das Datum zu ändern:"
@@ -250,9 +250,9 @@ i18n:
     - Kumulative Prävalenz (pro 10'000)
     - Prévalence Cumulée (pour 10'000)
   new_hospitalizations:
-    - New Hospitalizations
-    - Neue Hospitalisierungen
-    - Nouvelles Hospitalisations
+    - Change in Hospitalizations
+    - Veränderung Hospitalisierungen
+    - Évolution des hospitalisations
   total_hospitalizations:
     - Total Hospitalizations
     - Total Hospitalisierungen

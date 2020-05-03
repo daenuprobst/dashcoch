@@ -2,8 +2,15 @@
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Condensed:300,400,500&display=swap");
 
 body {
+  font-weight: 400;
   font-family: "IBM Plex Sans", "HelveticaNeue", "Helvetica Neue", Helvetica,
     Arial, sans-serif;
+  background-color: #17181a;
+}
+
+h4 {
+  margin-top: 1.6em;
+  font-size: 2.6em;
 }
 
 a {
@@ -16,7 +23,91 @@ a:hover {
 
 #main {
   background-color: #17181a;
+  margin-top: 10px;
 }
+
+#date-container {
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: 500;
+}
+
+#language-picker {
+  position: absolute;
+  display: inline-block;
+  right: 10px;
+  top: 0px;
+  margin: 0;
+  padding: 5px;
+  background-color: #00293b;
+}
+
+#language-picker span {
+  margin-left: 5px;
+}
+#language-picker span:last-child {
+  margin-right: 5px;
+}
+
+.update-container {
+  margin-bottom: 20px;
+  background-color: #1f2123;
+}
+
+.update-container .update-title {
+  padding: 10px;
+  font-size: 1.25em;
+  font-weight: 500;
+  background-color: #00293b;
+}
+
+.update-container .update-content {
+  padding: 10px;
+  color: #30d6d6;
+  font-size: 1em;
+}
+
+.update-container .update-content {
+  padding: 10px;
+  color: #999;
+  font-size: 1em;
+}
+
+.update-container .update-content span {
+  font-weight: 300;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin: 4px;
+  margin-left: 0px;
+  background-color: #323538;
+}
+
+.update-container .update-content span.True {
+  background-color: #186b6b;
+  color: #fff;
+}
+
+.total-container {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: #1f2123;
+}
+
+.total-container .total-title {
+  padding: 10px;
+  font-size: 1.25em;
+  font-weight: 500;
+  background-color: #00293b;
+}
+
+.total-container .total-content {
+  padding: 10px;
+  color: #30d6d6;
+  font-size: 2.5em;
+  text-align: center;
+}
+/* Totals */
 
 /* Override the bootstrap colours */
 .custom-control-input:checked ~ .custom-control-label::before {
@@ -69,7 +160,7 @@ div.Select div.Select-menu-outer {
 
 /* Map background */
 g.layer rect {
-  fill: #1f2123 !important;
+  fill: #17181a !important;
 }
 /* Map background */
 

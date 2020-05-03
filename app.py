@@ -19,7 +19,7 @@ external_scripts = [
 lang = 0
 
 meta_tags = [
-    # {"name": "viewport", "content": "width=device-width, initial-scale=1"},
+    {"name": "viewport", "content": "width=device-width, initial-scale=1"},
     {"property": "og:title", "content": cfg["i18n"]["title"][lang].get()},
     {"property": "og:type", "content": "website"},
     {
@@ -130,25 +130,6 @@ def get_layout():
                                 else []
                             ),
                         ),
-                        html.Br(),
-                        html.P(
-                            id="glueckskette",
-                            style={"display": cfg["banner"]["display"].get()},
-                            children=[
-                                html.A(
-                                    [
-                                        html.Img(
-                                            style={
-                                                "maxWidth": "100%",
-                                                "width": cfg["banner"]["width"].get(),
-                                            },
-                                            src=cfg["banner"]["src"].get(),
-                                        ),
-                                    ],
-                                    href=cfg["banner"]["href"].get(),
-                                ),
-                            ],
-                        ),
                     ],
                 ),
             ]
@@ -242,21 +223,28 @@ def get_layout():
         content.extend(
             [
                 html.Div(
-                    id="update-container",
-                    className="slider-container",
+                    className="update-container",
                     children=[
-                        html.Div(children=cfg["i18n"]["latest_updates"][lang].get())
-                    ]
-                    + [
-                        html.Span(
-                            className=str(vals["Updated_Today"]),
-                            children=region
-                            + ": "
-                            + date.fromisoformat(vals["Date"]).strftime("%d. %m.")
-                            + " "
-                            + vals["Time"],
-                        )
-                        for region, vals in data.last_updated.iterrows()
+                        html.Div(
+                            className="update-title",
+                            children=cfg["i18n"]["latest_updates"][lang].get(),
+                        ),
+                        html.Div(
+                            className="update-content",
+                            children=[
+                                html.Span(
+                                    className=str(vals["Updated_Today"]),
+                                    children=region
+                                    + ": "
+                                    + date.fromisoformat(vals["Date"]).strftime(
+                                        "%d. %m."
+                                    )
+                                    + " "
+                                    + vals["Time"],
+                                )
+                                for region, vals in data.last_updated.iterrows()
+                            ],
+                        ),
                     ],
                 ),
             ]
@@ -640,7 +628,6 @@ def get_layout():
                         )
                     ],
                 ),
-                html.Div(id="date-container-regional", className="slider-container"),
                 html.Div(id="caseincrease-regional-data", style={"display": "none"}),
                 dbc.Row([dbc.Col([dcc.Graph(id="caseincrease-regional-graph")])]),
                 html.Div(
@@ -656,7 +643,11 @@ def get_layout():
                             id="slider-date-regional",
                             min=0,
                             max=len(data.swiss_cases["Date"]) - 1,
-                            step=1,
+                            marks={
+                                i: date.fromisoformat(d).strftime("%d. %m.")
+                                for i, d in enumerate(data.swiss_cases["Date"])
+                                if date.fromisoformat(d).weekday() == 0
+                            },
                             value=len(data.moving_total) - 1,
                             updatemode="drag",
                         ),
@@ -1530,7 +1521,7 @@ except:
     pass
 
 #
-# Log-Log Plot Coutnry
+# Log-Log Plot Country
 #
 try:
 

@@ -58,11 +58,11 @@ window.dash_clientside.clientside = {
         mode: "lines",
         name: canton,
         marker: {
-          color: "#22E7FF"
+          color: "#22e7ff"
         },
         line: {
           width: hovered_canton == canton ? 2.0 : 1.0,
-          color: hovered_canton == canton ? "#22E7FF" : "rgba(255, 255, 255, 0.5)",
+          color: hovered_canton == canton ? "#22e7ff" : "rgba(255, 255, 255, 0.5)",
         },
         text: data.moving_total["date_label"].slice(6, d),
         hovertemplate: data_raw["i18n"]["plot_log_log_region_weekly_hovertemplate"],
@@ -86,13 +86,10 @@ window.dash_clientside.clientside = {
       })
     })
 
-    // Updated the header
-    document.getElementById("date-container-regional").innerHTML = data.moving_total["date_label"][d - 1]
-
     return {
       data: traces,
       layout: {
-        title: data_raw["i18n"]["plot_loglog_region_title"],
+        title: data_raw["i18n"]["plot_loglog_region_title"] + " (" + data.moving_total["date_label"][d] + ")",
         height: 750,
         xaxis: {
           showgrid: true,
@@ -129,10 +126,10 @@ window.dash_clientside.clientside = {
           t: 60,
           b: 70
         },
-        plot_bgcolor: "#1F2123",
-        paper_bgcolor: "#1F2123",
+        plot_bgcolor: "#17181a",
+        paper_bgcolor: "#17181a",
         font: {
-          color: "#22E7FF"
+          color: "#22e7ff"
         },
       }
     }
