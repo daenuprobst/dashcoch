@@ -283,7 +283,7 @@ text.xtitle {
     font-size: 0.5em !important;
   }
 
-  #case-world-graph {
+  .dash-graph:not(#graph-map) {
     zoom: 0.5;
   }
 
