@@ -9,8 +9,12 @@ body {
 }
 
 h4 {
-  margin-top: 1.6em;
-  font-size: 2.6em;
+  margin-top: 0.6em;
+  margin-bottom: 0;
+  padding: 10px;
+  font-size: 2em;
+  color: #fff !important;
+  background-color: #96310f;
 }
 
 a {
@@ -22,14 +26,22 @@ a:hover {
 }
 
 #main {
-  background-color: #17181a;
   margin-top: 10px;
+  background-color: #17181a;
 }
 
-#date-container {
-  text-align: center;
-  font-size: 1.8em;
-  font-weight: 500;
+#map-slider,
+#map-slider-regional,
+#map-radios,
+#regional-links-container {
+  padding: 10px;
+  background-color: #1f2123;
+}
+
+#map-radios {
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #language-picker {
@@ -49,16 +61,34 @@ a:hover {
   margin-right: 5px;
 }
 
+.info-container {
+  padding: 10px;
+  background-color: #1f2123;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-container + h4 {
+  border-bottom: 0;
+}
+
+.plot-settings-container {
+  padding: 10px;
+  background-color: #1f2123;
+  /* border-top: 1px solid rgba(255, 255, 255, 0.05); */
+}
+
+.slider-text {
+  display: inline-block;
+  margin-bottom: 0;
+  padding: 5px;
+  color: #999;
+  font-size: 0.9em;
+}
+
 .update-container {
   margin-bottom: 20px;
   background-color: #1f2123;
-}
-
-.update-container .update-title {
-  padding: 10px;
-  font-size: 1.25em;
-  font-weight: 500;
-  background-color: #00293b;
 }
 
 .update-container .update-content {
@@ -92,16 +122,6 @@ a:hover {
   margin-bottom: 10px !important;
 }
 
-.total-container .total-title {
-  padding: 10px;
-  font-size: 1.25em;
-  font-weight: 500;
-  background-color: #00293b;
-  margin-bottom: 0px;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
 .total-container .total-content {
   padding: 10px;
   color: #30d6d6;
@@ -110,7 +130,29 @@ a:hover {
 }
 /* Totals */
 
+/* Titles */
+#date-container,
+.total-title,
+.update-title,
+.plot-title {
+  padding: 10px;
+  font-size: 1.25em;
+  font-weight: 500;
+  background-color: #00334a;
+  margin-bottom: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.plot-title {
+  margin-top: 10px !important;
+}
+/* Titles */
+
 /* Override the bootstrap colours */
+.form-group {
+  margin-bottom: 0px !important;
+}
 .custom-control-input:checked ~ .custom-control-label::before {
   background-color: #30d6d6 !important;
   border-color: #30d6d6 !important;
@@ -143,6 +185,10 @@ a:hover {
   color: #30d6d6 !important;
 }
 
+.rc-slider-mark-text {
+  white-space: nowrap !important;
+}
+
 #info-button {
   background-color: #17181a !important;
   border-color: #30d6d6 !important;
@@ -166,7 +212,7 @@ div.Select div.Select-menu-outer {
 
 /* Map */
 g.layer rect {
-  fill: #17181a !important;
+  fill: #1f2123 !important;
 }
 
 /* #graph-map {
@@ -211,17 +257,7 @@ text.xtitle {
     font-size: 0.9em;
   }
 
-  .total-container .total-title {
-    padding: 5px;
-    font-size: 0.8em;
-  }
-
   .total-container .total-content {
-    padding: 5px;
-    font-size: 1em;
-  }
-
-  .update-container .update-title {
     padding: 5px;
     font-size: 1em;
   }
@@ -231,12 +267,24 @@ text.xtitle {
     font-size: 0.5em;
   }
 
+  #date-container,
+  .total-title,
+  .update-title,
+  .plot-title {
+    padding: 5px;
+    font-size: 1em;
+  }
+
   .rc-slider-mark-text.rc-slider-mark-text-active {
     font-size: 0.56em !important;
   }
 
   #graph-map text {
     font-size: 0.5em !important;
+  }
+
+  #case-world-graph {
+    zoom: 0.5;
   }
 
   /* #graph-map {

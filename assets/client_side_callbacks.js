@@ -89,7 +89,6 @@ window.dash_clientside.clientside = {
     return {
       data: traces,
       layout: {
-        title: data_raw["i18n"]["plot_loglog_region_title"] + " (" + data.moving_total["date_label"][d] + ")",
         height: 750,
         xaxis: {
           showgrid: true,
@@ -126,8 +125,8 @@ window.dash_clientside.clientside = {
           t: 60,
           b: 70
         },
-        plot_bgcolor: "#17181a",
-        paper_bgcolor: "#17181a",
+        plot_bgcolor: "#1f2123",
+        paper_bgcolor: "#1f2123",
         font: {
           color: "#22e7ff"
         },

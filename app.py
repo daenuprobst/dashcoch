@@ -284,12 +284,22 @@ def get_layout():
     if cfg["show"]["map"]:
         content.extend(
             [
+                html.Div(id="date-container", className="slider-container"),
+                html.Div(
+                    children=[
+                        dcc.Graph(
+                            id="graph-map",
+                            config={"staticPlot": True},
+                            style={"height": "62vw", "maxHeight": "600px"},
+                        ),
+                    ],
+                ),
                 dbc.Row(
                     dbc.Col(
                         dbc.FormGroup(
                             [
                                 dbc.RadioItems(
-                                    id="radio-prevalence",
+                                    id="map-radios",
                                     options=[
                                         {
                                             "label": cfg["i18n"][
@@ -341,18 +351,8 @@ def get_layout():
                         ),
                     )
                 ),
-                html.Div(id="date-container", className="slider-container"),
                 html.Div(
-                    children=[
-                        dcc.Graph(
-                            id="graph-map",
-                            config={"staticPlot": True},
-                            style={"height": "62vw"},
-                        ),
-                    ],
-                ),
-                html.Div(
-                    className="slider-container",
+                    id="map-slider",
                     children=[
                         html.P(
                             className="slider-text",
@@ -382,19 +382,15 @@ def get_layout():
         content.extend(
             [
                 html.Div(
-                    className="slider-container",
+                    className="plot-title",
+                    children=cfg["i18n"]["regional_data"][lang].get(),
+                ),
+                html.Div(
+                    id="regional-links-container",
                     children=[
-                        html.P(
-                            className="slider-text",
-                            children=cfg["i18n"]["regional_data"][lang].get(),
-                        ),
-                        html.P(
-                            children=[
-                                html.A(children=region["region"], href=region["detail"])
-                                for region in cfg["regions"].get()
-                                if "detail" in region
-                            ]
-                        ),
+                        html.A(children=region["region"], href=region["detail"])
+                        for region in cfg["regions"].get()
+                        if "detail" in region
                     ],
                 ),
                 html.Br(),
@@ -411,10 +407,10 @@ def get_layout():
                 ),
                 html.Div(
                     className="info-container",
-                    children=[html.P(children=cfg["i18n"]["info_main"][lang].get())],
+                    children=cfg["i18n"]["info_main"][lang].get(),
                 ),
                 html.Div(
-                    className="slider-container",
+                    className="plot-settings-container",
                     children=[
                         dbc.FormGroup(
                             [
@@ -444,15 +440,74 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-ch-graph")], md=12, lg=6),
-                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_total_reported_cases_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="case-ch-graph", config={"displayModeBar": False}
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_total_fatalities_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="fatalities-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ],
                 ),
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="new-case-ch-graph")], md=12, lg=6),
-                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_daily_reported_cases_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="new-case-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_daily_fatalities_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="new-fatalities-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ],
                 ),
                 html.Br(),
@@ -466,9 +521,37 @@ def get_layout():
                 dbc.Row(
                     [
                         dbc.Col(
-                            [dcc.Graph(id="hospitalizations-ch-graph")], md=12, lg=6
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_hospitalizations_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="hospitalizations-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
                         ),
-                        dbc.Col([dcc.Graph(id="releases-ch-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_releases_country_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="releases-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ]
                 ),
                 html.Br(),
@@ -478,7 +561,24 @@ def get_layout():
     if cfg["show"]["hospitalizations"] and not cfg["show"]["hospital_releases"]:
         content.extend(
             [
-                dbc.Row([dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")])]),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_hospitalizations_country_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="hospitalizations-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        )
+                    ]
+                ),
                 html.Br(),
             ]
         )
@@ -487,13 +587,30 @@ def get_layout():
     if cfg["show"]["log_log_development"]:
         content.extend(
             [
-                html.Div(
-                    className="info-container",
-                    children=[
-                        html.P(children=cfg["i18n"]["info_log_log_main"][lang].get())
-                    ],
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_loglog_country_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                html.Div(
+                                    className="info-container",
+                                    children=cfg["i18n"]["info_log_log_main"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="caseincrease-ch-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        )
+                    ]
                 ),
-                dbc.Row([dbc.Col([dcc.Graph(id="caseincrease-ch-graph")])]),
                 html.Br(),
             ]
         )
@@ -504,8 +621,38 @@ def get_layout():
             [
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-world-graph")], md=12, lg=6),
-                        dbc.Col([dcc.Graph(id="fatalities-world-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_world_cases_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="case-world-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_world_cfr_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="fatalities-world-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ],
                 ),
                 html.Br(),
@@ -523,14 +670,10 @@ def get_layout():
                 ),
                 html.Div(
                     className="info-container",
-                    children=[
-                        html.P(
-                            children=cfg["i18n"]["info_age_distribution"][lang].get()
-                        )
-                    ],
+                    children=cfg["i18n"]["info_age_distribution"][lang].get(),
                 ),
                 html.Div(
-                    className="slider-container-secondary",
+                    className="plot-settings-container",
                     children=[
                         html.P(
                             className="slider-text",
@@ -555,7 +698,7 @@ def get_layout():
                     ],
                 ),
                 html.Div(
-                    className="slider-container-secondary",
+                    className="plot-settings-container",
                     children=[
                         dbc.FormGroup(
                             [
@@ -583,9 +726,40 @@ def get_layout():
                     ],
                 ),
                 html.Br(),
-                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")], md=12, lg=12)]),
                 dbc.Row(
-                    [dbc.Col([dcc.Graph(id="fatalities-bag-graph")], md=12, lg=12)]
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    id="age-dist-cases-title", className="plot-title",
+                                ),
+                                dcc.Graph(
+                                    id="cases-bag-graph",
+                                    config={"displayModeBar": False,},
+                                ),
+                            ],
+                            md=12,
+                            lg=12,
+                        )
+                    ]
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    id="age-dist-fatalities-title",
+                                    className="plot-title",
+                                ),
+                                dcc.Graph(
+                                    id="fatalities-bag-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=12,
+                        )
+                    ]
                 ),
                 html.Br(),
             ]
@@ -601,12 +775,10 @@ def get_layout():
                 ),
                 html.Div(
                     className="info-container",
-                    children=[
-                        html.P(children=cfg["i18n"]["info_regional"][lang].get())
-                    ],
+                    children=cfg["i18n"]["info_regional"][lang].get(),
                 ),
                 html.Div(
-                    id="plot-settings-container",
+                    className="plot-settings-container",
                     children=[
                         dbc.FormGroup(
                             [
@@ -646,12 +818,57 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-graph")], md=12, lg=6),
-                        dbc.Col([dcc.Graph(id="case-pc-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_cases_regional_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="case-graph", config={"displayModeBar": False}
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_cases_pc_regional_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="case-pc-graph", config={"displayModeBar": False}
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ]
                 ),
                 html.Br(),
-                dbc.Row([dbc.Col([dcc.Graph(id="case-graph-diff")])]),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_cases_new_regional_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="case-graph-diff",
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        )
+                    ]
+                ),
                 html.Br(),
             ]
         )
@@ -660,18 +877,33 @@ def get_layout():
     if cfg["show"]["log_log_regional_development"]:
         content.extend(
             [
-                html.Div(
-                    className="info-container",
-                    children=[
-                        html.P(
-                            children=cfg["i18n"]["info_log_log_regional"][lang].get()
-                        )
-                    ],
-                ),
                 html.Div(id="caseincrease-regional-data", style={"display": "none"}),
-                dbc.Row([dbc.Col([dcc.Graph(id="caseincrease-regional-graph")])]),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_loglog_region_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                html.Div(
+                                    className="info-container",
+                                    children=cfg["i18n"]["info_log_log_regional"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="caseincrease-regional-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        )
+                    ]
+                ),
                 html.Div(
-                    className="slider-container",
+                    id="map-slider-regional",
                     children=[
                         html.P(
                             className="slider-text",
@@ -707,15 +939,42 @@ def get_layout():
                 ),
                 html.Div(
                     className="info-container",
-                    children=[html.P(children=cfg["i18n"]["info_corr"][lang].get())],
+                    children=cfg["i18n"]["info_corr"][lang].get(),
                 ),
                 html.Br(),
                 dbc.Row(
                     [
                         dbc.Col(
-                            [dcc.Graph(id="prevalence-density-graph")], md=12, lg=6
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_corr_density_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="prevalence-density-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
                         ),
-                        dbc.Col([dcc.Graph(id="cfr-age-graph")], md=12, lg=6),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_corr_age_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="cfr-age-graph", config={"displayModeBar": False}
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
                     ]
                 ),
                 html.Br(),
@@ -784,7 +1043,7 @@ try:
 
     @app.callback(
         Output("graph-map", "figure"),
-        [Input("slider-date", "value"), Input("radio-prevalence", "value")],
+        [Input("slider-date", "value"), Input("map-radios", "value")],
     )
     def update_graph_map(selected_date_index, mode):
         lang = get_lang()
@@ -945,9 +1204,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_total_reported_cases_country_title"][
-                    lang
-                ].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -967,7 +1223,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1045,7 +1301,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_total_fatalities_country_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1061,7 +1316,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1139,9 +1394,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_daily_reported_cases_country_title"][
-                    lang
-                ].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1161,7 +1413,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1265,7 +1517,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_daily_fatalities_country_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1281,7 +1532,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1427,7 +1678,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_hospitalizations_country_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1443,7 +1693,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1518,7 +1768,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_releases_country_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1534,7 +1783,7 @@ try:
                 },
                 "hovermode": "closest",
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1621,7 +1870,6 @@ try:
                 },
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_loglog_country_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1646,7 +1894,7 @@ try:
                     "borderwidth": 1,
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1681,7 +1929,6 @@ try:
                 if country != "Day"
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_world_cases_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1695,7 +1942,7 @@ try:
                     "title": cfg["i18n"]["plot_world_cases_y"][lang].get(),
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1727,7 +1974,6 @@ try:
                 }
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_world_cfr_title"][lang].get(),
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1742,7 +1988,7 @@ try:
                     "title": cfg["i18n"]["plot_world_cfr_y"][lang].get(),
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1759,6 +2005,16 @@ except:
 try:
 
     @app.callback(
+        Output("age-dist-cases-title", "children"),
+        [Input("radio-absolute-norm", "value")],
+    )
+    def updated_cases_bag_title(norm):
+        if norm == "scaled":
+            return cfg["i18n"]["plot_age_dist_scaled_title"][lang].get()
+        else:
+            return cfg["i18n"]["plot_age_dist_abs_title"][lang].get()
+
+    @app.callback(
         Output("cases-bag-graph", "figure"),
         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
     )
@@ -1766,13 +2022,11 @@ try:
         lang = get_lang()
         field = "cases"
         factor = 1
-        title = cfg["i18n"]["plot_age_dist_abs_title"][lang].get()
         ytitle = cfg["i18n"]["plot_age_dist_abs_y"][lang].get()
 
         if norm == "scaled":
             field = "cases_pp"
             factor = 100
-            title = cfg["i18n"]["plot_age_dist_scaled_title"][lang].get()
             ytitle = cfg["i18n"]["plot_age_dist_scaled_y"][lang].get()
 
         return {
@@ -1807,7 +2061,6 @@ try:
                 },
             ],
             "layout": {
-                "title": title,
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1821,11 +2074,20 @@ try:
                     "rangemode": "tozero",
                     "title": ytitle,
                 },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
                 "barmode": "overlay",
                 # "barmode": "stack",
                 "bargap": 0,
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background_secondary"],
                 "paper_bgcolor": style.theme["background_secondary"],
                 "font": {"color": style.theme["foreground_secondary"]},
@@ -1839,6 +2101,16 @@ except:
 try:
 
     @app.callback(
+        Output("age-dist-fatalities-title", "children"),
+        [Input("radio-absolute-norm", "value")],
+    )
+    def updated_cases_bag_title(norm):
+        if norm == "scaled":
+            return cfg["i18n"]["plot_age_dist_fatalities_scaled_title"][lang].get()
+        else:
+            return cfg["i18n"]["plot_age_dist_fatalities_abs_title"][lang].get()
+
+    @app.callback(
         Output("fatalities-bag-graph", "figure"),
         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
     )
@@ -1846,13 +2118,11 @@ try:
         lang = get_lang()
         field = "fatalities"
         factor = 1
-        title = cfg["i18n"]["plot_age_dist_fatalities_abs_title"][lang].get()
         ytitle = cfg["i18n"]["plot_age_dist_fatalities_abs_y"][lang].get()
 
         if norm == "scaled":
             field = "fatalities_pp"
             factor = 100
-            title = cfg["i18n"]["plot_age_dist_fatalities_scaled_title"][lang].get()
             ytitle = cfg["i18n"]["plot_age_dist_fatalities_scaled_y"][lang].get()
 
         return {
@@ -1887,7 +2157,6 @@ try:
                 },
             ],
             "layout": {
-                "title": title,
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
@@ -1901,11 +2170,20 @@ try:
                     "rangemode": "tozero",
                     "title": ytitle,
                 },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
                 "barmode": "overlay",
                 # "barmode": "stack",
                 "bargap": 0,
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background_secondary"],
                 "paper_bgcolor": style.theme["background_secondary"],
                 "font": {"color": style.theme["foreground_secondary"]},
@@ -1939,7 +2217,6 @@ try:
                 if region in selected_regions
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_cases_regional_title"][lang].get(),
                 "height": 750,
                 "xaxis": {
                     "showgrid": True,
@@ -1953,7 +2230,7 @@ try:
                     "title": cfg["i18n"]["plot_cases_regional_y"][lang].get(),
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -1984,7 +2261,6 @@ try:
                 if region in selected_regions
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_cases_pc_regional_title"][lang].get(),
                 "height": 750,
                 "xaxis": {
                     "showgrid": True,
@@ -1998,7 +2274,7 @@ try:
                     "title": cfg["i18n"]["plot_cases_pc_regional_y"][lang].get(),
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -2052,7 +2328,6 @@ try:
                 if region in selected_regions
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_cases_new_regional_title"][lang].get(),
                 "height": 750,
                 "xaxis": {
                     "showgrid": True,
@@ -2066,7 +2341,7 @@ try:
                     "title": cfg["i18n"]["plot_cases_new_regional_y"][lang].get(),
                 },
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -2171,7 +2446,6 @@ try:
                 if region in selected_regions
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_corr_density_title"][lang].get(),
                 "hovermode": "closest",
                 "height": 750,
                 "xaxis": {
@@ -2205,7 +2479,7 @@ try:
                     }
                 ],
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
@@ -2254,7 +2528,6 @@ try:
                 if region in selected_regions
             ],
             "layout": {
-                "title": cfg["i18n"]["plot_corr_age_title"][lang].get(),
                 "hovermode": "closest",
                 "height": 750,
                 "xaxis": {
@@ -2289,7 +2562,7 @@ try:
                     }
                 ],
                 "dragmode": False,
-                "margin": {"l": 60, "r": 20, "t": 60, "b": 70},
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},

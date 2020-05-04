@@ -65,8 +65,8 @@ settings:
       - 10.5421
 
 theme:
-  background: "#17181a"
-  background_secondary: "#17181a"
+  background: "#1f2123"
+  background_secondary: "#1f2123"
   foreground: "#30D6D6"
   foreground_secondary: "#96BD0D"
   accent: "#7fafdf"
@@ -238,9 +238,9 @@ i18n:
     - "Zuletzt Aktualisiert"
     - "Dernière Mise à Jour"
   drag_the_slider_to_change_the_date:
-    - "Drag the slider to change the date:"
-    - "Ziehen sie den Slider um das Datum zu ändern:"
-    - "Faites Glisser le Curseur pour Modifier la Date:"
+    - "Drag the slider to change the date"
+    - "Ziehen sie den Slider um das Datum zu ändern"
+    - "Faites Glisser le Curseur pour Modifier la Date"
   new_cases:
     - Newly Reported Cases
     - Neue Bestätigte Fälle
@@ -286,9 +286,9 @@ i18n:
     - BAG Daten Schweiz
     - OFSP Données de la Suisse
   show_data_for:
-    - "Show Data for:"
-    - "Daten Anzeigen für:"
-    - "Afficher les Données pour:"
+    - "Show Data for"
+    - "Daten Anzeigen für"
+    - "Afficher les Données pour"
   absolute_numbers:
     - Absolute Numbers
     - Absolute Zahlen
