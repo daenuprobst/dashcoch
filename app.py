@@ -343,7 +343,13 @@ def get_layout():
                 ),
                 html.Div(id="date-container", className="slider-container"),
                 html.Div(
-                    children=[dcc.Graph(id="graph-map", config={"staticPlot": True},),]
+                    children=[
+                        dcc.Graph(
+                            id="graph-map",
+                            config={"staticPlot": True},
+                            style={"height": "62vw"},
+                        ),
+                    ],
                 ),
                 html.Div(
                     className="slider-container",
@@ -438,15 +444,15 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-ch-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="case-ch-graph")], md=12, lg=6),
+                        dbc.Col([dcc.Graph(id="fatalities-ch-graph")], md=12, lg=6),
                     ],
                 ),
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="new-case-ch-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="new-case-ch-graph")], md=12, lg=6),
+                        dbc.Col([dcc.Graph(id="new-fatalities-ch-graph")], md=12, lg=6),
                     ],
                 ),
                 html.Br(),
@@ -459,8 +465,10 @@ def get_layout():
             [
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="hospitalizations-ch-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="releases-ch-graph")], md=12),
+                        dbc.Col(
+                            [dcc.Graph(id="hospitalizations-ch-graph")], md=12, lg=6
+                        ),
+                        dbc.Col([dcc.Graph(id="releases-ch-graph")], md=12, lg=6),
                     ]
                 ),
                 html.Br(),
@@ -496,8 +504,8 @@ def get_layout():
             [
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-world-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="fatalities-world-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="case-world-graph")], md=12, lg=6),
+                        dbc.Col([dcc.Graph(id="fatalities-world-graph")], md=12, lg=6),
                     ],
                 ),
                 html.Br(),
@@ -575,8 +583,10 @@ def get_layout():
                     ],
                 ),
                 html.Br(),
-                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")], md=12)]),
-                dbc.Row([dbc.Col([dcc.Graph(id="fatalities-bag-graph")], md=12)]),
+                dbc.Row([dbc.Col([dcc.Graph(id="cases-bag-graph")], md=12, lg=12)]),
+                dbc.Row(
+                    [dbc.Col([dcc.Graph(id="fatalities-bag-graph")], md=12, lg=12)]
+                ),
                 html.Br(),
             ]
         )
@@ -636,8 +646,8 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="case-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="case-pc-graph")], md=12),
+                        dbc.Col([dcc.Graph(id="case-graph")], md=12, lg=6),
+                        dbc.Col([dcc.Graph(id="case-pc-graph")], md=12, lg=6),
                     ]
                 ),
                 html.Br(),
@@ -702,8 +712,10 @@ def get_layout():
                 html.Br(),
                 dbc.Row(
                     [
-                        dbc.Col([dcc.Graph(id="prevalence-density-graph")], md=12),
-                        dbc.Col([dcc.Graph(id="cfr-age-graph")], md=12),
+                        dbc.Col(
+                            [dcc.Graph(id="prevalence-density-graph")], md=12, lg=6
+                        ),
+                        dbc.Col([dcc.Graph(id="cfr-age-graph")], md=12, lg=6),
                     ]
                 ),
                 html.Br(),
@@ -889,7 +901,6 @@ try:
                     "projection": {"type": "transverse mercator"},
                 },
                 "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
-                "height": 600,
                 "plot_bgcolor": cfg["theme"]["background"].get(),
                 "paper_bgcolor": cfg["theme"]["background"].get(),
             },

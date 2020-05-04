@@ -169,10 +169,10 @@ g.layer rect {
   fill: #17181a !important;
 }
 
-#graph-map {
+/* #graph-map {
   height: 70vw !important;
   max-height: 600px !important;
-}
+} */
 /* Map */
 
 /* Plots */
@@ -228,7 +228,7 @@ text.xtitle {
 
   .update-container .update-content {
     padding: 5px;
-    font-size: 0.75em;
+    font-size: 0.5em;
   }
 
   .rc-slider-mark-text.rc-slider-mark-text-active {
@@ -238,4 +238,8 @@ text.xtitle {
   #graph-map text {
     font-size: 0.5em !important;
   }
+
+  /* #graph-map {
+    height: 62vw;
+  } */
 }
