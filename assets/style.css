@@ -275,6 +275,7 @@ text.xtitle {
     font-size: 1em;
   }
 
+  .rc-slider-mark-text,
   .rc-slider-mark-text.rc-slider-mark-text-active {
     font-size: 0.56em !important;
   }
