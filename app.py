@@ -2230,6 +2230,7 @@ try:
                     "title": cfg["i18n"]["plot_cases_regional_y"][lang].get(),
                 },
                 "dragmode": False,
+                "hovermode": "x unified",
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
@@ -2274,6 +2275,7 @@ try:
                     "title": cfg["i18n"]["plot_cases_pc_regional_y"][lang].get(),
                 },
                 "dragmode": False,
+                "hovermode": "x unified",
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
@@ -2340,6 +2342,7 @@ try:
                     "color": "#ffffff",
                     "title": cfg["i18n"]["plot_cases_new_regional_y"][lang].get(),
                 },
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -2575,12 +2578,12 @@ except:
 
 
 # Kick off the updated thread
-# executor = ThreadPoolExecutor(max_workers=1)
-# executor.submit(update_data)
+executor = ThreadPoolExecutor(max_workers=1)
+executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
+        # debug=True,
         # dev_tools_hot_reload=True,
         # dev_tools_hot_reload_interval=50,
         # dev_tools_hot_reload_max_retry=30,
