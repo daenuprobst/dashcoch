@@ -765,6 +765,48 @@ def get_layout():
             ]
         )
 
+    # Age Distribution
+    if cfg["show"]["tests"]:
+        content.extend(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_tests_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="tests-graph",
+                                    figure=update_tests_graph(),
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_tests_ratio_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="tests-ratio-graph",
+                                    figure=update_tests_ratio_graph(),
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                html.Br(),
+            ]
+        )
+
     # Region Data
     if cfg["show"]["regional"]:
         content.extend(
@@ -2000,7 +2042,7 @@ except:
     pass
 
 #
-# BAG Data
+# Age Distribution Data
 #
 try:
 
@@ -2193,6 +2235,158 @@ try:
 
 except:
     pass
+
+#
+# Testing Data
+#
+def update_tests_graph():
+    lang = get_lang()
+    return {
+        "data": [
+            {
+                "x": data.tests.index,
+                "y": data.tests["neg"],
+                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
+                "mode": "lines",
+                "marker": {"color": style.theme["green"]},
+            },
+            {
+                "x": data.tests.index,
+                "y": data.tests["pos"],
+                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
+                "mode": "lines",
+                "marker": {"color": style.theme["red"]},
+            },
+        ],
+        "layout": {
+            "height": 400,
+            "xaxis": {
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
+            },
+            "yaxis": {
+                "type": "linear",
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
+            },
+            "legend": {
+                "x": 0.015,
+                "y": 1,
+                "traceorder": "normal",
+                "font": {"family": "sans-serif", "color": "white"},
+                "bgcolor": style.theme["background"],
+                "bordercolor": style.theme["accent"],
+                "borderwidth": 1,
+            },
+            "dragmode": False,
+            "hovermode": "x unified",
+            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "line",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": "2020-03-16",
+                    "y0": 0,
+                    "x1": "2020-03-16",
+                    "y1": 1,
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+                },
+            ],
+            "annotations": [
+                {
+                    "x": "2020-03-16",
+                    "y": 0.92,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Soft Lockdown",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
+        },
+    }
+
+
+def update_tests_ratio_graph():
+    lang = get_lang()
+    return {
+        "data": [
+            {
+                "x": data.tests.index,
+                "y": data.tests["pos_rate"],
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "hovertemplate": "%{y} %<extra></extra>",
+                "showlegend": False,
+            },
+        ],
+        "layout": {
+            "height": 400,
+            "xaxis": {
+                "showgrid": True,
+                "color": "#ffffff",
+                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
+            },
+            "yaxis": {
+                "type": "linear",
+                "showgrid": True,
+                "color": "#ffffff",
+                "rangemode": "tozero",
+                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
+            },
+            "dragmode": False,
+            "hovermode": "x unified",
+            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+            "plot_bgcolor": style.theme["background"],
+            "paper_bgcolor": style.theme["background"],
+            "font": {"color": style.theme["foreground"]},
+            "shapes": [
+                {
+                    "type": "line",
+                    "xref": "x",
+                    "yref": "paper",
+                    "x0": "2020-03-16",
+                    "y0": 0,
+                    "x1": "2020-03-16",
+                    "y1": 1,
+                    "opacity": 1.0,
+                    "layer": "below",
+                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+                },
+            ],
+            "annotations": [
+                {
+                    "x": "2020-03-16",
+                    "y": 0.92,
+                    "xref": "x",
+                    "yref": "paper",
+                    "text": "Soft Lockdown",
+                    "font": {"color": style.theme["accent"]},
+                    "align": "left",
+                    "showarrow": True,
+                    "arrowhead": 2,
+                    "arrowsize": 1,
+                    "arrowwidth": 1,
+                    "arrowcolor": style.theme["accent"],
+                }
+            ],
+        },
+    }
+
 
 #
 # Regional Data

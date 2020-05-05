@@ -153,6 +153,13 @@ class DataLoader:
             ].replace(0, np.nan)
 
         #
+        # Get testing data
+        #
+        if cfg["show"]["tests"]:
+            self.tests = pd.read_csv(cfg["urls"]["tests"].get(), index_col=[0])
+            self.tests["pos_rate"] = np.round(self.tests["pos_rate"] * 100, 2)
+
+        #
         # World related data
         #
         if cfg["show"]["international"]:

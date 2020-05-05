@@ -11,6 +11,7 @@ urls:
   world_recoveries: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
   last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/last_updated.csv
   age_distribution: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/age_distribution_latest.csv
+  tests: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/tests.csv
 
 show:
   header: On
@@ -26,6 +27,7 @@ show:
   log_log_development: On
   international: On
   age_distribution: On
+  tests: On
   regional: On
   log_log_regional_development: On
   demographic_correlation: On
@@ -74,6 +76,7 @@ theme:
   red: "#fc5c65"
   yellow: "#fed330"
   blue: "#45aaf2"
+  green: "#2ecc71"
 
 countries:
   France: 65273511
@@ -454,9 +457,9 @@ i18n:
     - Verstorbene / Bestätigte Fälle
     - Décédés / Cas Confirmés
   plot_age_dist_abs_title:
-    - Number of Reported Cases by Sex and Age
-    - Anzahl Bestätigter Fälle nach Geschlecht und Alter
-    - Nombre de Cas Confirmés par Sexe et Âge
+    - Number of Reported Cases by Sex and Age (FOPH Data)
+    - Anzahl Bestätigter Fälle nach Geschlecht und Alter (BAG Daten)
+    - Nombre de Cas Confirmés par Sexe et Âge (Données de l'OFSP)
   plot_age_dist_x:
     - Age 1 - 99+
     - Alter 1 - 99+
@@ -466,9 +469,9 @@ i18n:
     - Bestätigte Fälle
     - Cas Confirmés
   plot_age_dist_scaled_title:
-    - Percentage of Infected Population by Sex and Age based on Reported Cases
-    - Infizierte Bevölkerung nach Geschlecht und Alter in Prozent
-    - Population Infectée par Sexe et Âge en Pourcentage
+    - Percentage of Infected Population by Sex and Age based on Reported Cases (FOPH Data)
+    - Infizierte Bevölkerung nach Geschlecht und Alter in Prozent (BAG Daten)
+    - Population Infectée par Sexe et Âge en Pourcentage (Données de l'OFSP)
   plot_age_dist_scaled_y:
     - "Infected Population [%]"
     - "Infizierte Bevölkerung [%]"
@@ -482,9 +485,9 @@ i18n:
     - Weiblich
     - Femmes
   plot_age_dist_fatalities_abs_title:
-    - Number of Fatalities by Sex and Age
-    - Anzahl Verstorbene nach Geschlecht und Alter
-    - Nombre de Personnes Décédées par Sexe et Âge
+    - Number of Fatalities by Sex and Age (FOPH Data)
+    - Anzahl Verstorbene nach Geschlecht und Alter (BAG Daten)
+    - Nombre de Personnes Décédées par Sexe et Âge (Données de l'OFSP)
   plot_age_dist_fatalities_x:
     - Age 1 - 99+
     - Alter 1 - 99+
@@ -494,13 +497,45 @@ i18n:
     - Verstorbene
     - Décédé
   plot_age_dist_fatalities_scaled_title:
-    - Percentage of COVID-19 Fatalities among Population by Sex and Age
-    - Durch COVID-19 Verstorbene nach Geschlecht und Alter in Prozent
-    - Pourcentage de COVID-19 Décédé par Sexe et Âge
+    - Percentage of COVID-19 Fatalities among Population by Sex and Age (FOPH Data)
+    - Durch COVID-19 Verstorbene nach Geschlecht und Alter in Prozent (BAG Daten)
+    - Pourcentage de COVID-19 Décédé par Sexe et Âge (Données de l'OFSP)
   plot_age_dist_fatalities_scaled_y:
     - "Fatalities among Population [%]"
     - "Verstorbene Bevölkerung [%]"
     - "Population Décédée [%]"
+  plot_tests_title:
+    - Testing Outcomes (FOPH Data)
+    - Testresultate (BAG Daten)
+    - Résultats des Tests (Données de l'OFSP)
+  plot_tests_x:
+    - Date
+    - Datum
+    - Date
+  plot_tests_y:
+    - Number of Tests
+    - Anzahl Tests
+    - Nombre de Tests
+  plot_tests_pos:
+    - Positive
+    - Positiv
+    - Positif
+  plot_tests_neg:
+    - Negative
+    - Negativ
+    - Négatif
+  plot_tests_ratio_title:
+    - Percentage of Positive Testing Outcomes (FOPH Data)
+    - Positive Testresultate in Prozent (BAG Daten)
+    - Pourcentage de Résultats de Tests Positifs (Données de l'OFSP)
+  plot_tests_ratio_x:
+    - Date
+    - Datum
+    - Date
+  plot_tests_ratio_y:
+    - Percentage of Positive Outcomes
+    - Positive Tests in Prozent
+    - Pourcentage de Résultats Positifs
   plot_cases_regional_title:
     - Reported Cases per Canton
     - Bestätigte Fälle nach Kanton
@@ -596,7 +631,7 @@ i18n:
   case_fatality_ratio:
     - Case Fatality Ratio
     - Case Fatality Ratio
-    - Taux de Létalité 
+    - Taux de Létalité
 
   info_main:
     - Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading.
