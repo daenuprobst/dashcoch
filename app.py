@@ -1081,67 +1081,17 @@ except:
 #
 # The Map
 #
-# try:
+try:
 
+    @app.callback(
+        Output("graph-map", "figure"),
+        [Input("slider-date", "value"), Input("map-radios", "value")],
+    )
+    def update_graph_map(selected_date_index, mode):
+        lang = get_lang()
+        d = data.swiss_cases["Date"].iloc[selected_date_index]
 
-@app.callback(
-    Output("graph-map", "figure"),
-    [Input("slider-date", "value"), Input("map-radios", "value")],
-)
-def update_graph_map(selected_date_index, mode):
-    lang = get_lang()
-    d = data.swiss_cases["Date"].iloc[selected_date_index]
-
-    map_data = data.swiss_cases_by_date_filled
-    labels = [
-        region + ": " + str(int(map_data[region][d]))
-        if not math.isnan(float(map_data[region][d]))
-        else ""
-        for region in data.regional_centres
-    ]
-
-    if mode == "prevalence":
-        map_data = data.swiss_cases_by_date_filled_per_capita
-        labels = [
-            region + ": " + str(round((map_data[region][d]), 1))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-    elif mode == "fatalities":
-        map_data = data.swiss_fatalities_by_date_filled
-        labels = [
-            region + ": " + str(int(map_data[region][d]))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-    elif mode == "new":
-        map_data = data.swiss_cases_by_date_diff
-        labels = [
-            region + ": " + str(int(map_data[region][d]))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-    elif mode == "new_fatalities":
-        map_data = data.swiss_fatalities_by_date_diff
-        labels = [
-            region + ": " + str(int(map_data[region][d]))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-    elif mode == "new_hospitalizations":
-        map_data = data.swiss_hospitalizations_by_date_diff
-        labels = [
-            region + ": " + str(int(map_data[region][d]))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-    elif mode == "hospitalizations":
-        map_data = data.swiss_hospitalizations_by_date_filled
+        map_data = data.swiss_cases_by_date_filled
         labels = [
             region + ": " + str(int(map_data[region][d]))
             if not math.isnan(float(map_data[region][d]))
@@ -1149,64 +1099,117 @@ def update_graph_map(selected_date_index, mode):
             for region in data.regional_centres
         ]
 
-    return {
-        "data": [
-            {
-                "lat": [
-                    data.regional_centres[region]["lat"]
-                    for region in data.regional_centres
-                ],
-                "lon": [
-                    data.regional_centres[region]["lon"]
-                    for region in data.regional_centres
-                ],
-                "text": labels,
-                "mode": "text",
-                "type": "scattergeo",
-                "textfont": {
-                    "family": "Arial, sans-serif",
-                    "size": 16,
-                    "color": "white",
-                    "weight": "bold",
+        if mode == "prevalence":
+            map_data = data.swiss_cases_by_date_filled_per_capita
+            labels = [
+                region + ": " + str(round((map_data[region][d]), 1))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+        elif mode == "fatalities":
+            map_data = data.swiss_fatalities_by_date_filled
+            labels = [
+                region + ": " + str(int(map_data[region][d]))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+        elif mode == "new":
+            map_data = data.swiss_cases_by_date_diff
+            labels = [
+                region + ": " + str(int(map_data[region][d]))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+        elif mode == "new_fatalities":
+            map_data = data.swiss_fatalities_by_date_diff
+            labels = [
+                region + ": " + str(int(map_data[region][d]))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+        elif mode == "new_hospitalizations":
+            map_data = data.swiss_hospitalizations_by_date_diff
+            labels = [
+                region + ": " + str(int(map_data[region][d]))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+        elif mode == "hospitalizations":
+            map_data = data.swiss_hospitalizations_by_date_filled
+            labels = [
+                region + ": " + str(int(map_data[region][d]))
+                if not math.isnan(float(map_data[region][d]))
+                else ""
+                for region in data.regional_centres
+            ]
+
+        return {
+            "data": [
+                {
+                    "lat": [
+                        data.regional_centres[region]["lat"]
+                        for region in data.regional_centres
+                    ],
+                    "lon": [
+                        data.regional_centres[region]["lon"]
+                        for region in data.regional_centres
+                    ],
+                    "text": labels,
+                    "mode": "text",
+                    "type": "scattergeo",
+                    "textfont": {
+                        "family": "Arial, sans-serif",
+                        "size": 16,
+                        "color": "white",
+                        "weight": "bold",
+                    },
                 },
+                {
+                    "type": "choropleth",
+                    "showscale": False,
+                    "locations": data.region_labels,
+                    "z": [
+                        map_data[region][d]
+                        for region in map_data
+                        if region != cfg["settings"]["total_column_name"].get()
+                    ],
+                    "colorscale": style.turbo,
+                    "geojson": cfg["settings"]["choropleth"]["geojson_file"].get(),
+                    "featureidkey": cfg["settings"]["choropleth"]["feature"].get(),
+                    "marker": {"line": {"width": 0.0, "color": "#08302A"}},
+                    # "colorbar": {
+                    #     "thickness": 10,
+                    #     "bgcolor": "#252e3f",
+                    #     "tickfont": {"color": "white"},
+                    # },
+                },
+            ],
+            "layout": {
+                "geo": {
+                    "visible": False,
+                    "center": cfg["settings"]["choropleth"]["center"].get(),
+                    "lataxis": {
+                        "range": cfg["settings"]["choropleth"]["lataxis"].get()
+                    },
+                    "lonaxis": {
+                        "range": cfg["settings"]["choropleth"]["lonaxis"].get()
+                    },
+                    "projection": {"type": "transverse mercator"},
+                },
+                "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
+                "plot_bgcolor": cfg["theme"]["background"].get(),
+                "paper_bgcolor": cfg["theme"]["background"].get(),
             },
-            {
-                "type": "choropleth",
-                "showscale": False,
-                "locations": data.region_labels,
-                "z": [
-                    map_data[region][d]
-                    for region in map_data
-                    if region != cfg["settings"]["total_column_name"].get()
-                ],
-                "colorscale": style.turbo,
-                "geojson": cfg["settings"]["choropleth"]["geojson_file"].get(),
-                "featureidkey": cfg["settings"]["choropleth"]["feature"].get(),
-                "marker": {"line": {"width": 0.0, "color": "#08302A"}},
-                # "colorbar": {
-                #     "thickness": 10,
-                #     "bgcolor": "#252e3f",
-                #     "tickfont": {"color": "white"},
-                # },
-            },
-        ],
-        "layout": {
-            "geo": {
-                "visible": False,
-                "center": cfg["settings"]["choropleth"]["center"].get(),
-                "lataxis": {"range": cfg["settings"]["choropleth"]["lataxis"].get()},
-                "lonaxis": {"range": cfg["settings"]["choropleth"]["lonaxis"].get()},
-                "projection": {"type": "transverse mercator"},
-            },
-            "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
-            "plot_bgcolor": cfg["theme"]["background"].get(),
-            "paper_bgcolor": cfg["theme"]["background"].get(),
-        },
-    }
+        }
 
 
-# except:
-#     pass
+except:
+    pass
 
 #
 # Total cases Switzerland
@@ -1980,6 +1983,7 @@ try:
                     "color": "#ffffff",
                     "title": cfg["i18n"]["plot_world_cases_y"][lang].get(),
                 },
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
