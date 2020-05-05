@@ -1,5 +1,5 @@
 geojson==2.5.0
-dash==1.8.0
+dash==1.11.0
 pandas==0.25.1
 gunicorn==20.0.4
 pytz==2019.2
