@@ -1224,26 +1224,13 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_cases.iloc[:-3]["Date"],
-                    "y": data.swiss_cases.iloc[:-3][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
+                    "x": data.swiss_cases["Date"],
+                    "y": data.swiss_cases[cfg["settings"]["total_column_name"].get()],
                     "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
                     "showlegend": False,
-                },
-                {
-                    "x": data.swiss_cases.iloc[-4:]["Date"],
-                    "y": data.swiss_cases.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["settings"]["total_column_name"].get(),
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(44, 254, 193, 0.25)"},
-                    "showlegend": False,
-                },
+                }
             ],
             "layout": {
                 "height": 400,
@@ -1263,7 +1250,7 @@ try:
                         lang
                     ].get(),
                 },
-                "hovermode": "closest",
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -1279,8 +1266,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     }
                 ],
@@ -1321,24 +1308,13 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_fatalities[:-3]["Date"],
-                    "y": data.swiss_fatalities[:-3][
+                    "x": data.swiss_fatalities["Date"],
+                    "y": data.swiss_fatalities[
                         cfg["settings"]["total_column_name"].get()
                     ],
                     "name": cfg["settings"]["total_column_name"].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
-                    "showlegend": False,
-                },
-                {
-                    "x": data.swiss_fatalities.iloc[-4:]["Date"],
-                    "y": data.swiss_fatalities.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["settings"]["total_column_name"].get(),
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(44, 254, 193, 0.25)"},
                     "showlegend": False,
                 },
             ],
@@ -1356,7 +1332,7 @@ try:
                     "rangemode": "tozero",
                     "title": cfg["i18n"]["plot_total_fatalities_country_y"][lang].get(),
                 },
-                "hovermode": "closest",
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -1372,8 +1348,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     }
                 ],
@@ -1411,28 +1387,24 @@ try:
     )
     def update_new_case_ch_graph(selected_scale):
         lang = get_lang()
+        total_column_name = cfg["settings"]["total_column_name"].get()
         return {
             "data": [
                 {
-                    "x": data.swiss_cases_by_date_diff.iloc[:-3].index,
-                    "y": data.swiss_cases_by_date_diff.iloc[:-3][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["settings"]["total_column_name"].get(),
-                    "mode": "lines",
-                    "marker": {"color": style.theme["foreground"]},
+                    "x": data.swiss_cases_by_date_diff.index,
+                    "y": data.swiss_cases_by_date_diff[total_column_name],
+                    "name": total_column_name,
+                    "type": "bar",
+                    "marker": {"color": style.theme["foreground"], "opacity": 0.5},
                     "showlegend": False,
                 },
                 {
-                    "x": data.swiss_cases_by_date_diff.iloc[-4:].index,
-                    "y": data.swiss_cases_by_date_diff.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["settings"]["total_column_name"].get(),
+                    "x": data.swiss_cases_by_date_diff.index,
+                    "y": data.swiss_cases_by_date_diff[total_column_name + "_rolling"],
+                    "name": cfg["i18n"]["moving_average"][lang].get(),
                     "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(44, 254, 193, 0.25)"},
-                    "showlegend": False,
+                    "marker": {"color": style.theme["foreground"]},
+                    "fill": "tozeroy",
                 },
             ],
             "layout": {
@@ -1452,6 +1424,15 @@ try:
                     "title": cfg["i18n"]["plot_daily_reported_cases_country_y"][
                         lang
                     ].get(),
+                },
+                "legend": {
+                    "x": 0.015,
+                    "y": 0.9,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
                 },
                 "hovermode": "closest",
                 "dragmode": False,
@@ -1481,8 +1462,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     },
                 ],
@@ -1534,28 +1515,26 @@ try:
     )
     def update_new_fatalities_ch_graph(selected_scale):
         lang = get_lang()
+        total_column_name = cfg["settings"]["total_column_name"].get()
         return {
             "data": [
                 {
-                    "x": data.swiss_fatalities_by_date_diff[:-3].index,
-                    "y": data.swiss_fatalities_by_date_diff[:-3][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["settings"]["total_column_name"].get(),
-                    "mode": "lines",
-                    "marker": {"color": style.theme["foreground"]},
+                    "x": data.swiss_fatalities_by_date_diff.index,
+                    "y": data.swiss_fatalities_by_date_diff[total_column_name],
+                    "name": total_column_name,
+                    "type": "bar",
+                    "marker": {"color": style.theme["foreground"], "opacity": 0.5},
                     "showlegend": False,
                 },
                 {
-                    "x": data.swiss_fatalities_by_date_diff.iloc[-4:].index,
-                    "y": data.swiss_fatalities_by_date_diff.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
+                    "x": data.swiss_fatalities_by_date_diff.index,
+                    "y": data.swiss_fatalities_by_date_diff[
+                        total_column_name + "_rolling"
                     ],
-                    "name": cfg["settings"]["total_column_name"].get(),
+                    "name": cfg["i18n"]["moving_average"][lang].get(),
                     "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(44, 254, 193, 0.25)"},
-                    "showlegend": False,
+                    "marker": {"color": style.theme["foreground"]},
+                    "fill": "tozeroy",
                 },
             ],
             "layout": {
@@ -1571,6 +1550,15 @@ try:
                     "color": "#ffffff",
                     "rangemode": "tozero",
                     "title": cfg["i18n"]["plot_daily_fatalities_country_y"][lang].get(),
+                },
+                "legend": {
+                    "x": 0.015,
+                    "y": 0.9,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
                 },
                 "hovermode": "closest",
                 "dragmode": False,
@@ -1600,8 +1588,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     },
                 ],
@@ -1656,67 +1644,27 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_hospitalizations[:-3]["Date"],
-                    "y": data.swiss_hospitalizations[:-3][
+                    "x": data.swiss_hospitalizations["Date"],
+                    "y": data.swiss_hospitalizations[
                         cfg["settings"]["total_column_name"].get()
                     ],
                     "name": cfg["i18n"]["plot_hospitalizations_regular"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["yellow"]},
-                    "showlegend": False,
                 },
                 {
-                    "x": data.swiss_icu[:-3]["Date"],
-                    "y": data.swiss_icu[:-3][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
+                    "x": data.swiss_icu["Date"],
+                    "y": data.swiss_icu[cfg["settings"]["total_column_name"].get()],
                     "name": cfg["i18n"]["plot_hospitalizations_intensive"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["red"]},
-                    "showlegend": False,
                 },
                 {
-                    "x": data.swiss_vent[:-3]["Date"],
-                    "y": data.swiss_vent[:-3][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
+                    "x": data.swiss_vent["Date"],
+                    "y": data.swiss_vent[cfg["settings"]["total_column_name"].get()],
                     "name": cfg["i18n"]["plot_hospitalizations_ventilated"][lang].get(),
                     "mode": "lines",
                     "marker": {"color": style.theme["blue"]},
-                    "showlegend": False,
-                },
-                {
-                    "x": data.swiss_hospitalizations.iloc[-4:]["Date"],
-                    "y": data.swiss_hospitalizations.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["i18n"]["plot_hospitalizations_regular"][lang].get(),
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(254, 211, 48, 0.2)"},
-                    "showlegend": False,
-                },
-                {
-                    "x": data.swiss_icu.iloc[-4:]["Date"],
-                    "y": data.swiss_icu.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["i18n"]["plot_hospitalizations_intensive"][lang].get(),
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(252, 92, 101, 0.2)"},
-                    "showlegend": False,
-                },
-                {
-                    "x": data.swiss_vent.iloc[-4:]["Date"],
-                    "y": data.swiss_vent.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": cfg["i18n"]["plot_hospitalizations_ventilated"][lang].get(),
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(69, 170, 242, 0.2)"},
-                    "showlegend": False,
                 },
             ],
             "layout": {
@@ -1733,7 +1681,16 @@ try:
                     "rangemode": "tozero",
                     "title": cfg["i18n"]["plot_hospitalizations_country_y"][lang].get(),
                 },
-                "hovermode": "closest",
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -1749,8 +1706,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     }
                 ],
@@ -1788,24 +1745,13 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_releases[:-3]["Date"],
-                    "y": data.swiss_releases[:-3][
+                    "x": data.swiss_releases["Date"],
+                    "y": data.swiss_releases[
                         cfg["settings"]["total_column_name"].get()
                     ],
                     "name": "Regular",
                     "mode": "lines",
                     "marker": {"color": style.theme["foreground"]},
-                    "showlegend": False,
-                },
-                {
-                    "x": data.swiss_releases.iloc[-4:]["Date"],
-                    "y": data.swiss_releases.iloc[-4:][
-                        cfg["settings"]["total_column_name"].get()
-                    ],
-                    "name": "Regular",
-                    "mode": "lines",
-                    "line": {"dash": "dot"},
-                    "marker": {"color": "rgba(44, 254, 193, 0.25)"},
                     "showlegend": False,
                 },
             ],
@@ -1823,7 +1769,7 @@ try:
                     "rangemode": "tozero",
                     "title": cfg["i18n"]["plot_releases_country_y"][lang].get(),
                 },
-                "hovermode": "closest",
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -1839,8 +1785,8 @@ try:
                         "x1": data.swiss_cases_by_date_diff.index[-1],
                         "y1": 1,
                         "fillcolor": "#121314",
-                        "opacity": 1.0,
-                        "layer": "below",
+                        "opacity": 0.75,
+                        "layer": "above",
                         "line": {"width": 0},
                     }
                 ],
@@ -1964,8 +1910,6 @@ try:
                     "x": data.swiss_world_cases_normalized.index.values,
                     "y": data.swiss_world_cases_normalized[country],
                     "name": country,
-                    # "marker": {"color": theme["foreground"]},
-                    # "type": "bar",
                 }
                 for country in data.swiss_world_cases_normalized
                 if country != "Day"
@@ -1982,6 +1926,15 @@ try:
                     "showgrid": True,
                     "color": "#ffffff",
                     "title": cfg["i18n"]["plot_world_cases_y"][lang].get(),
+                },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
                 },
                 "hovermode": "x unified",
                 "dragmode": False,

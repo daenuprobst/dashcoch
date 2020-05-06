@@ -240,6 +240,10 @@ i18n:
     - "Latest Updates"
     - "Zuletzt Aktualisiert"
     - "Dernière Mise à Jour"
+  moving_average:
+    - Moving Average
+    - Gleitender Mittelwert
+    - Moyenne mobile
   drag_the_slider_to_change_the_date:
     - "Drag the slider to change the date"
     - "Ziehen sie den Slider um das Datum zu ändern"
@@ -634,10 +638,10 @@ i18n:
     - Taux de Létalité
 
   info_main:
-    - Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading.
+    - Please be aware that the shaded lines are based on data that has not yet been completely updated and so may be misleading.
     - Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind.
-    - Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
-    - Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti.
+    - Veuillez noter que les lignes en ombrées sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
+    - Si noti che le linee ombreggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti.
   info_log_log_main:
     - This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day.
     - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.

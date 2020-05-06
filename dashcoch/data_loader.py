@@ -10,6 +10,8 @@ class DataLoader:
     def __init__(self, cfg: confuse.Configuration):
         self.cfg = cfg
 
+        self.total_column_name = cfg["settings"]["total_column_name"].get()
+
         #
         # Load info on the latest updates
         #
@@ -39,6 +41,11 @@ class DataLoader:
         self.swiss_cases_by_date_diff = self.swiss_cases_by_date_filled.diff().replace(
             0, float("nan")
         )
+
+        self.swiss_cases_by_date_diff[self.total_column_name + "_rolling"] = np.round(
+            self.swiss_cases_by_date_diff[self.total_column_name].rolling(7).mean(), 0
+        )
+
         self.swiss_cases_by_date_diff["date_label"] = [
             date.fromisoformat(d).strftime("%d. %m.")
             for d in self.swiss_cases_by_date_diff.index.values
@@ -46,6 +53,15 @@ class DataLoader:
 
         self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace(
             0, float("nan")
+        )
+
+        self.swiss_fatalities_by_date_diff[
+            self.total_column_name + "_rolling"
+        ] = np.round(
+            self.swiss_fatalities_by_date_diff[self.total_column_name]
+            .rolling(7)
+            .mean(),
+            0,
         )
 
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
@@ -85,8 +101,7 @@ class DataLoader:
         self.region_labels = [
             region
             for region in self.swiss_cases_as_dict
-            if region != self.cfg["settings"]["total_column_name"].get()
-            and region != "Date"
+            if region != self.total_column_name and region != "Date"
         ]
         self.regional_centres = self.__get_regional_centres()
 
@@ -231,24 +246,18 @@ class DataLoader:
         l = len(self.swiss_cases_by_date_filled)
         return (
             self.swiss_cases_by_date_filled.diff().iloc[l - 1].sum()
-            - self.swiss_cases_by_date_filled.diff().iloc[l - 1][
-                self.cfg["settings"]["total_column_name"].get()
-            ]
+            - self.swiss_cases_by_date_filled.diff().iloc[l - 1][self.total_column_name]
         )
 
     def __get_total_swiss_cases(self):
         l = len(self.swiss_cases_by_date_filled)
         return (
             self.swiss_cases_by_date_filled.iloc[l - 1].sum()
-            - self.swiss_cases_by_date_filled.iloc[l - 1][
-                self.cfg["settings"]["total_column_name"].get()
-            ]
+            - self.swiss_cases_by_date_filled.iloc[l - 1][self.total_column_name]
         )
 
     def __get_total_swiss_fatalities(self):
-        return self.swiss_fatalities_by_date_filled.iloc[-1][
-            self.cfg["settings"]["total_column_name"].get()
-        ]
+        return self.swiss_fatalities_by_date_filled.iloc[-1][self.total_column_name]
 
     def __get_swiss_cases_as_normalized_dict(self):
         tmp = [
@@ -287,9 +296,7 @@ class DataLoader:
         tmp = self.world_cases.copy()
         # Don't take today from switzerland, as values are usually very incomplete
         tmp["Switzerland"] = pd.Series(
-            self.swiss_cases_as_dict[self.cfg["settings"]["total_column_name"].get()][
-                :-1
-            ]
+            self.swiss_cases_as_dict[self.total_column_name][:-1]
         )
 
         for column in tmp:
