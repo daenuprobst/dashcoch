@@ -43,7 +43,10 @@ class DataLoader:
         )
 
         self.swiss_cases_by_date_diff[self.total_column_name + "_rolling"] = np.round(
-            self.swiss_cases_by_date_diff[self.total_column_name].rolling(7).mean(), 0
+            self.swiss_cases_by_date_diff[self.total_column_name]
+            .rolling(7, center=True)
+            .mean(),
+            0,
         )
 
         self.swiss_cases_by_date_diff["date_label"] = [
@@ -59,7 +62,7 @@ class DataLoader:
             self.total_column_name + "_rolling"
         ] = np.round(
             self.swiss_fatalities_by_date_diff[self.total_column_name]
-            .rolling(7)
+            .rolling(7, center=True)
             .mean(),
             0,
         )
