@@ -533,9 +533,9 @@ i18n:
     - Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind.
     - Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
   info_log_log_main:
-    - This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the green line shows the total number of cases during a week to each day.
-    - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigt die grüne Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.
-    - Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne verte indique le nombre total de cas pendant une semaine à chaque jour.
+    - This plot shows the development of new cases based on total cases. The daily new cases are shown as the yellow line, however, they vary strongly between days. To show a smoother development, the blue line shows the total number of cases during a week to each day.
+    - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen werden als gelbe Linie angezeigt, variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigt die blaue Linie die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.
+    - Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens sont représentés par la ligne jaune, mais ils varient fortement d'un jour à l'autre. Pour montrer un développement plus fluide, la ligne bleue indique le nombre total de cas pendant une semaine à chaque jour.
   info_age_distribution:
     - A few cases with unknown sex and/or age are not shown in this visualization.
     - Einige Fälle mit unbekanntem Geschlecht und / oder Alter sind in dieser Visualisierung nicht dargestellt.
