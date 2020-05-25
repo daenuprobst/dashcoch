@@ -241,9 +241,9 @@ i18n:
     - "Zuletzt Aktualisiert"
     - "Dernière Mise à Jour"
   moving_average:
-    - Moving Average
-    - Gleitender Mittelwert
-    - Moyenne mobile
+    - Moving<br>Average
+    - Gleitender<br>Mittelwert
+    - Moyenne<br>Mobile
   drag_the_slider_to_change_the_date:
     - "Drag the slider to change the date"
     - "Ziehen sie den Slider um das Datum zu ändern"

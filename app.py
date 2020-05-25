@@ -44,7 +44,6 @@ server = app.server
 app.title = cfg["i18n"]["title"][lang].get()
 style = StyleLoader(cfg)
 
-
 def get_data():
     global data
     try:
@@ -1046,6 +1045,71 @@ def get_layout():
 app.layout = get_layout
 
 # -------------------------------------------------------------------------------
+# Globals used by Callbacks
+# -------------------------------------------------------------------------------
+phase_shapes = [
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-03-16",
+        "y0": 0,
+        "x1": "2020-03-16",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-04-27",
+        "y0": 0,
+        "x1": "2020-04-27",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-05-11",
+        "y0": 0,
+        "x1": "2020-05-11",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+]
+phase_annotations = [
+    {
+        "x": "2020-04-06",
+        "y": 1.0,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Soft Lockdown",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    },
+    {
+        "x": "2020-05-04",
+        "y": 1.0,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase I",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    }
+]
+
+
+# -------------------------------------------------------------------------------
 # Callbacks
 # -------------------------------------------------------------------------------
 try:
@@ -1434,25 +1498,13 @@ try:
                     "bordercolor": style.theme["accent"],
                     "borderwidth": 1,
                 },
-                "hovermode": "closest",
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
-                "shapes": [
-                    {
-                        "type": "line",
-                        "xref": "x",
-                        "yref": "paper",
-                        "x0": "2020-03-16",
-                        "y0": 0,
-                        "x1": "2020-03-16",
-                        "y1": 1,
-                        "opacity": 1.0,
-                        "layer": "below",
-                        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-                    },
+                "shapes": phase_shapes + [
                     {
                         "type": "rect",
                         "xref": "x",
@@ -1463,25 +1515,11 @@ try:
                         "y1": 1,
                         "fillcolor": "#121314",
                         "opacity": 0.75,
-                        "layer": "above",
+                        "layer": "below",
                         "line": {"width": 0},
                     },
                 ],
-                "annotations": [
-                    {
-                        "x": "2020-03-16",
-                        "y": 0.92,
-                        "xref": "x",
-                        "yref": "paper",
-                        "text": "Soft Lockdown",
-                        "font": {"color": style.theme["accent"]},
-                        "align": "left",
-                        "showarrow": True,
-                        "arrowhead": 2,
-                        "arrowsize": 1,
-                        "arrowwidth": 1,
-                        "arrowcolor": style.theme["accent"],
-                    },
+                "annotations": phase_annotations + [
                     {
                         "x": data.swiss_cases_by_date_diff.index[-3],
                         "y": 0.95,
@@ -1560,25 +1598,13 @@ try:
                     "bordercolor": style.theme["accent"],
                     "borderwidth": 1,
                 },
-                "hovermode": "closest",
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
-                "shapes": [
-                    {
-                        "type": "line",
-                        "xref": "x",
-                        "yref": "paper",
-                        "x0": "2020-03-16",
-                        "y0": 0,
-                        "x1": "2020-03-16",
-                        "y1": 1,
-                        "opacity": 1.0,
-                        "layer": "below",
-                        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-                    },
+                "shapes": phase_shapes + [
                     {
                         "type": "rect",
                         "xref": "x",
@@ -1589,25 +1615,11 @@ try:
                         "y1": 1,
                         "fillcolor": "#121314",
                         "opacity": 0.75,
-                        "layer": "above",
+                        "layer": "below",
                         "line": {"width": 0},
                     },
                 ],
-                "annotations": [
-                    {
-                        "x": "2020-03-16",
-                        "y": 0.92,
-                        "xref": "x",
-                        "yref": "paper",
-                        "text": "Soft Lockdown",
-                        "font": {"color": style.theme["accent"]},
-                        "align": "left",
-                        "showarrow": True,
-                        "arrowhead": 2,
-                        "arrowsize": 1,
-                        "arrowwidth": 1,
-                        "arrowcolor": style.theme["accent"],
-                    },
+                "annotations": phase_annotations + [
                     {
                         "x": data.swiss_cases_by_date_diff.index[-3],
                         "y": 0.95,
@@ -2241,36 +2253,8 @@ def update_tests_graph():
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
-            "shapes": [
-                {
-                    "type": "line",
-                    "xref": "x",
-                    "yref": "paper",
-                    "x0": "2020-03-16",
-                    "y0": 0,
-                    "x1": "2020-03-16",
-                    "y1": 1,
-                    "opacity": 1.0,
-                    "layer": "below",
-                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-                },
-            ],
-            "annotations": [
-                {
-                    "x": "2020-03-16",
-                    "y": 0.92,
-                    "xref": "x",
-                    "yref": "paper",
-                    "text": "Soft Lockdown",
-                    "font": {"color": style.theme["accent"]},
-                    "align": "left",
-                    "showarrow": True,
-                    "arrowhead": 2,
-                    "arrowsize": 1,
-                    "arrowwidth": 1,
-                    "arrowcolor": style.theme["accent"],
-                }
-            ],
+            "shapes": phase_shapes,
+            "annotations": phase_annotations,
         },
     }
 
@@ -2308,36 +2292,8 @@ def update_tests_ratio_graph():
             "plot_bgcolor": style.theme["background"],
             "paper_bgcolor": style.theme["background"],
             "font": {"color": style.theme["foreground"]},
-            "shapes": [
-                {
-                    "type": "line",
-                    "xref": "x",
-                    "yref": "paper",
-                    "x0": "2020-03-16",
-                    "y0": 0,
-                    "x1": "2020-03-16",
-                    "y1": 1,
-                    "opacity": 1.0,
-                    "layer": "below",
-                    "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-                },
-            ],
-            "annotations": [
-                {
-                    "x": "2020-03-16",
-                    "y": 0.92,
-                    "xref": "x",
-                    "yref": "paper",
-                    "text": "Soft Lockdown",
-                    "font": {"color": style.theme["accent"]},
-                    "align": "left",
-                    "showarrow": True,
-                    "arrowhead": 2,
-                    "arrowsize": 1,
-                    "arrowwidth": 1,
-                    "arrowcolor": style.theme["accent"],
-                }
-            ],
+            "shapes": phase_shapes,
+            "annotations": phase_annotations,
         },
     }
 
@@ -2497,6 +2453,8 @@ try:
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
                 "barmode": "stack",
+                "shapes": phase_shapes,
+                "annotations": phase_annotations,
             },
         }
 
@@ -2732,7 +2690,7 @@ executor.submit(update_data)
 if __name__ == "__main__":
     app.run_server(
         # debug=True,
-        # dev_tools_hot_reload=True,
-        # dev_tools_hot_reload_interval=50,
-        # dev_tools_hot_reload_max_retry=30,
+        dev_tools_hot_reload=True,
+        dev_tools_hot_reload_interval=50,
+        dev_tools_hot_reload_max_retry=30,
     )

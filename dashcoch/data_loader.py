@@ -38,9 +38,7 @@ class DataLoader:
             method="ffill", axis=0
         )
 
-        self.swiss_cases_by_date_diff = self.swiss_cases_by_date_filled.diff().replace(
-            0, float("nan")
-        )
+        self.swiss_cases_by_date_diff = self.swiss_cases_by_date_filled.diff().replace()
 
         self.swiss_cases_by_date_diff[self.total_column_name + "_rolling"] = np.round(
             self.swiss_cases_by_date_diff[self.total_column_name]
@@ -54,9 +52,7 @@ class DataLoader:
             for d in self.swiss_cases_by_date_diff.index.values
         ]
 
-        self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace(
-            0, float("nan")
-        )
+        self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace()
 
         self.swiss_fatalities_by_date_diff[
             self.total_column_name + "_rolling"
