@@ -81,7 +81,7 @@ class DataLoader:
 
         self.latest_date = self.__get_latest_date()
         self.updated_regions = self.__get_updated_regions()
-        self.new_swiss_cases = self.__get_new_cases()
+        self.new_swiss_cases = max(0, self.__get_new_cases())
         self.total_swiss_cases = self.__get_total_swiss_cases()
         self.total_swiss_fatalities = self.__get_total_swiss_fatalities()
         self.swiss_case_fatality_rate = (
