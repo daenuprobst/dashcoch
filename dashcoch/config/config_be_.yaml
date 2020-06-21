@@ -31,7 +31,6 @@ show:
   raw: Off
 
 banner:
-  display: none
   href: 
   src: 
   width: 
@@ -40,6 +39,12 @@ logo:
   display: block
   width: 50px
   src: /assets/be.png
+
+banner:
+  display: none
+  href: 
+  src: 
+  width:
 
 settings:
   update_interval: 600
@@ -132,11 +137,11 @@ i18n:
   title:
     - COVID-19 Information for the Canton of Bern
     - COVID-19 Informationen Kanton Bern
-    - Informations COVID-19 Canton de Berne
+    - Informations COVID-19 canton de Berne
   description:
     - Latest updates of COVID-19 development in Berne
     - Neuste Entwicklungen der COVID-19 Pandemie in Bern
-    - Dernières mises à jour du développement de COVID-19 en Berne
+    - Dernières mises à jour sur la pandémie de COVID-19 dans le canton de Berne
   info:
     - "[Contact me on Twitter](https://twitter.com/skepteis).
       The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
@@ -145,72 +150,72 @@ i18n:
       Die Datenquellen finden Sie [hier](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), eine Zusammenfassung der verschiedenen von openZH bereitgestellten Dateien [hier](https://github.com/daenuprobst/covid19-case-switzerland) und alternativ als [Excel-Datei](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
       Seitenaufrufe werden durch die datenschutzorientierten [Simple Analytics] (https://simpleanalytics.com?ref=corona-data.ch) gezählt. Die Daten können [hier](https://simpleanalytics.com/corona-data) angezeigt werden."
     - "[Contactez-moi sur Twitter](https://twitter.com/skepteis).
-      Vous pouvez trouver les sources de données [ici](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), un résumé des différents fichiers fournis par openZH [ici](https://github.com/daenuprobst/covid19-case-switzerland) et alternativement sous forme de [fichier Excel](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
-      Les pages vues sont comptabilisées par le [Simple Analytics orienté vers la confidentialité](https://simpleanalytics.com?ref=corona-data.ch). Les données peuvent être consultées [ici](https://simpleanalytics.com/corona-data)."
+      Vous pouvez trouver les sources de données [ici](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), un résumé des différents fichiers fournis par openZH [ici](https://github.com/daenuprobst/covid19-case-switzerland) et alternativement sous forme de [fichier Excel](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
+      Les pages vues sont comptabilisées par le [Simple Analytics orienté vers la confidentialité](https://simpleanalytics.com?ref=corona-data.ch). Les données peuvent être consultées [ici](https://simpleanalytics.com/corona-data)."
   more_info:
     - "More scientific information on the pandemic can be found here: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Recent scientific articles curated by the University Hospital Bern](https://www.update-covid.ch)"
     - "Weitere wissenschaftliche Informationen zur Pandemie finden Sie hier: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Aktuelle wissenschaftliche Artikel des Universitätsklinikums Bern](https://www.update-covid.ch)"
     - "De plus amples informations scientifiques sur la pandémie sont disponibles ici: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentrum/wig/projekte/covid-19-social-monitor/) , [Articles scientifiques actuels de la Clinique universitaire de Berne](https://www.update-covid.ch)"
-    total_reported_cases:
+  total_reported_cases:
     - Total Reported Cases
     - Total Bestätigte Fälle
-    - Total des Cas Confirmés
+    - Total des cas confirmés
   reported_cases_today:
-    - Reported Cases Today
-    - Bestätigte Fälle Heute
-    - Cas Confirmés Aujourd'hui
+    - Newly Reported Cases
+    - Neu Bestätigte Fälle
+    - Cas nouvellement confirmés
   total_fatalities:
     - Total Fatalities
     - Total Verstorbene
-    - Totalement Décédé
+    - Total des décès
   regions_updated_today:
-    - Regions Updated Today
-    - Heute Aktualisierte Verwaltungskreise
-    - Mise à Jour des Arrondissements Administratifs Aujourd'hui
+    - Regions Updated 
+    - Aktualisierte Verwaltungskreise
+    - Mise à jour des arrondissements administratifs
   latest_updates:
     - "Latest Updates:"
     - "Zuletzt Aktualisiert:"
-    - "Dernière Mise à Jour:"
+    - "Dernière mise à jour:"
   drag_the_slider_to_change_the_date:
     - "Drag the slider to change the date:"
     - "Ziehen sie den Slider um das Datum zu ändern:"
-    - "Faites Glisser le Curseur pour Modifier la Date:"
+    - "Faites glisser le curseur pour modifier la date:"
   new_cases:
     - Newly Reported Cases
     - Neue Bestätigte Fälle
-    - Nouveaux Cas Confirmés
+    - Nouveaux cas confirmés
   cumulative_prevalence:
     - Cumulative Prevalence (per 10,000)
     - Kumulative Prävalenz (pro 10'000)
-    - Prévalence Cumulée (pour 10'000)
+    - Prévalence cumulée (pour 10'000)
   new_hospitalizations:
     - New Hospitalizations
     - Neue Hospitalisierungen
-    - Nouvelles Hospitalisations
+    - Nouvelles hospitalisations
   total_hospitalizations:
     - Total Hospitalizations
     - Total Hospitalisierungen
-    - Total des Hospitalisations
+    - Total des hospitalisations
   new_fatalities:
     - New Fatalities
     - Neue Todesfälle
-    - Nouveaux Décès
+    - Nouveaux décès
   total_fatalities:
     - Total Fatalities
     - Total Todesfälle
-    - Nombre Total de Décès
+    - Nombre total de décès
   main_data_title:
     - Data for Bern
     - Daten Bern
-    - Données de Berne
+    - Données du canton de Berne
   linear_scale:
     - Linear Scale
     - Lineare Skalierung
-    - Mise à l'Échelle Linéaire
+    - Mise à l'échelle linéaire
   log_scale:
     - Logarithmic Scale
     - Logarithmische Skalierung
-    - Mise à l'Échelle Logarithmique
+    - Mise à l'échelle logarithmique
   age_distribution_title:
     - Age and Sex Distribution
     - Alters- und Geschlechtsverteilung
@@ -218,27 +223,27 @@ i18n:
   show_data_for:
     - "Show Data for:"
     - "Daten Anzeigen für:"
-    - "Afficher les Données pour:"
+    - "Afficher les données pour:"
   absolute_numbers:
     - Absolute Numbers
     - Absolute Zahlen
-    - Nombres Absolus
+    - Nombres absolus
   scaled_by_age_dist:
     - Scaled by Age Distribution
     - Skaliert nach Alter
-    - Échelles selon l'Âge
+    - Échelles selon l'âge
   regional_data_title:
     - Data per Administrative Region
     - Daten nach Verwaltungskreisen
-    - Données par Arrondissements Administratifs
+    - Données par arrondissements administratifs
   demographic_correlation_title:
     - Demographic Correlation
     - Demographische Korrelation
-    - Corrélation Démographique
+    - Corrélation démographique
   raw_data_title:
     - Raw Data
     - Rohdaten
-    - Données Brutes
+    - Données brutes
   raw_data_content:
     - "The raw data can be found [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file here](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true)"
     - "Die Rohdaten finden sie [hier](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file here](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true)"
@@ -246,11 +251,11 @@ i18n:
   incomplete_data:
     - Incomplete Data
     - Fehlende Daten
-    - Données Brutes
+    - Données brutes
   plot_total_reported_cases_country_title:
     - Total Reported Cases Bern
     - Total Bestätigte Fälle Bern
-    - Total des Cas Confirmés en Bern
+    - Total des cas confirmés dans le canton de Berne
   plot_total_reported_cases_country_x:
     - Date
     - Datum
@@ -258,11 +263,11 @@ i18n:
   plot_total_reported_cases_country_y:
     - Reported Cases
     - Bestätigte Fälle
-    - Cas Confirmés
+    - Cas confirmés
   plot_total_fatalities_country_title:
     - Total Fatalities Bern
     - Total Todesfälle Bern
-    - Total des Décès en Berne
+    - Total des décès dans le canton de Berne
   plot_total_fatalities_country_x:
     - Date
     - Datum
@@ -274,7 +279,7 @@ i18n:
   plot_daily_reported_cases_country_title:
     - Daily Reported Cases Bern
     - Täglich Bestätigte Fälle Bern
-    - Des Cas Confirmés Quotidiennement en Berne
+    - Cas confirmés quotidiennement dans le canton de Berne
   plot_daily_reported_cases_country_x:
     - Date
     - Datum
@@ -282,11 +287,11 @@ i18n:
   plot_daily_reported_cases_country_y:
     - Reported Cases
     - Bestätigte Fälle
-    - Cas Confirmés
+    - Cas confirmés
   plot_daily_fatalities_country_title:
     - Daily Fatalities Bern
     - Täglich Todesfälle Bern
-    - Décès Quotidiens en Berne
+    - Décès quotidiens dans le canton de Berne
   plot_daily_fatalities_country_x:
     - Date
     - Datum
@@ -298,15 +303,15 @@ i18n:
   plot_hospitalizations_country_title:
     - Cumulative Hospitalizations (Releases are not Subtracted)
     - Kumulative Hospitalisierungen (Entlassungen nicht Abgezogen)
-    - Hospitalisations Cumulées (Mises à Pied non Déduites)
+    - Hospitalisations cumulées (Sorties non déduites)
   plot_hospitalizations_country_x:
     - Date
     - Datum
     - Date
   plot_hospitalizations_country_y:
-    - Fatalities
-    - Todesfälle
-    - Décès
+    - Hospitalizatoins
+    - Hospitalisierungen
+    - Hospitalisations
   plot_hospitalizations_regular:
     - Regular
     - Regulär
@@ -318,11 +323,11 @@ i18n:
   plot_hospitalizations_ventilated:
     - Ventilated
     - Beatmet
-    - Respirations
+    - Sous respiration
   plot_releases_country_title:
     - Total Reported Hospital Releases
     - Total Bestätigte Spitalentlassungen
-    - Total des Congés Hospitaliers Confirmés
+    - Total sorties de l’hôpital
   plot_releases_country_x:
     - Date
     - Datum
@@ -330,51 +335,51 @@ i18n:
   plot_releases_country_y:
     - Releases
     - Entlassungen
-    - Licenciements
+    - Sorties
   plot_loglog_country_title:
     - Newly Reported Cases
     - Neu Bestätige Fälle
-    - Nouveaux Cas Confirmés
+    - Nouveaux cas confirmés
   plot_loglog_country_x:
     - Total Reported Cases
     - Total Bestätigte Fälle
-    - Total des Cas Confirmés
+    - Total des cas confirmés
   plot_loglog_country_y:
     - Newly Reported Cases
     - Neu Bestätige Fälle
-    - Nouveaux Cas Cconfirmés
+    - Nouveaux cas confirmés
   plot_loglog_country_weekly:
     - "New Cases During<br>the Last Week"
     - "Neue Fälle während<br>der Letzten Woche"
-    - "Nouveaux Cas au cours<br>de la Dernière Semaine"
+    - "Nouveaux cas au cours<br>de la dernière semaine"
   plot_loglog_country_daily:
     - Daily new Cases
     - Tägliche Fälle
-    - Cas Quotidiens
+    - Cas quotidiens
   plot_log_log_country_weekly_hovertemplate:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>between <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>zwischen <b>%{text}</b><br><extra></extra>"
-    - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux Cas<br>entre <b>%{text}</b><br><extra></extra>"
+    - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux cas<br>entre <b>%{text}</b><br><extra></extra>"
   plot_log_log_country_daily_hovertemplate:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>on <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>am <b>%{text}</b><br><extra></extra>"
-    - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux Cas<br>le <b>%{text}</b><br><extra></extra>"
+    - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux cas<br>le <b>%{text}</b><br><extra></extra>"
   plot_world_cases_title:
     - Cumulative Prevalence per 10,000 Inhabitants
     - Kumulative Prävalenz pro 10'000 Einwohner
-    - Prévalence Cumulée pour 10'000 Habitants
+    - Prévalence cumulée pour 10'000 habitants
   plot_world_cases_x:
     - Days since Prevalence >0.4 per 10,000
     - Tage seit Prävalenz >0.4 pro 10'000
-    - Jours depuis la Prévalence> 0,4 pour 10'000
+    - Jours depuis la prévalence >0,4 pour 10'000
   plot_world_cases_y:
     - Reported Cases / Population * 10,000
     - Bestätigte Fälle / Einwohnerzahl * 10'000
-    - Cas confirmés / population * 10 000
+    - Cas confirmés / population * 10'000
   plot_world_cfr_title:
     - Case Fatality Ratios (Fatalities / Reported Cases)
     - Case Fatality Ratios (Verstorbene / Bestätigte Fälle)
-    - Cas Confirmés / Population * 10'000
+    - Cas confirmés / population * 10'000
   plot_world_cfr_x:
     - Country
     - Land
@@ -382,11 +387,11 @@ i18n:
   plot_world_cfr_y:
     - Fatalities / Reported Cases
     - Verstorbene / Bestätigte Fälle
-    - Décédés / Cas Confirmés
+    - Décès/ Cas confirmés
   plot_age_dist_abs_title:
     - Number of Reported Cases by Sex and Age
     - Anzahl Bestätigter Fälle nach Geschlecht und Alter
-    - Nombre de Cas Confirmés par Sexe et Âge
+    - Nombre de cas confirmés par sexe et âge
   plot_age_dist_x:
     - Age 1 - 99+
     - Alter 1 - 99+
@@ -394,15 +399,15 @@ i18n:
   plot_age_dist_abs_y:
     - Reported Cases
     - Bestätigte Fälle
-    - Cas Confirmés
+    - Cas confirmés
   plot_age_dist_scaled_title:
     - Percentage of Infected Population by Sex and Age based on Reported Cases
     - Infizierte Bevölkerung nach Geschlecht und Alter in Prozent
-    - Population Infectée par Sexe et Âge en Pourcentage
+    - Population infectée par sexe et âge en pourcentage
   plot_age_dist_scaled_y:
     - "Infected Population [%]"
     - "Infizierte Bevölkerung [%]"
-    - "Population Infectée [%]"
+    - "Population infectée [%]"
   male:
     - Male
     - Männlich
@@ -414,7 +419,7 @@ i18n:
   plot_age_dist_fatalities_abs_title:
     - Number of Fatalities by Sex and Age
     - Anzahl Verstorbene nach Geschlecht und Alter
-    - - Nombre de Personnes Décédées par Sexe et Âge
+    - Nombre de décès par sexe et âge
   plot_age_dist_fatalities_x:
     - Age 1 - 99+
     - Alter 1 - 99+
@@ -422,19 +427,19 @@ i18n:
   plot_age_dist_fatalities_abs_y:
     - Fatalities
     - Verstorbene
-    - Décédé
+    - Décès
   plot_age_dist_fatalities_scaled_title:
     - Percentage of COVID-19 Fatalities among Population by Sex and Age
     - Durch COVID-19 Verstorbene nach Geschlecht und Alter in Prozent
-    - Pourcentage de COVID-19 Décédé par Sexe et Âge
+    - Pourcentage de décès COVID-19 par sexe et âge
   plot_age_dist_fatalities_scaled_y:
     - "Fatalities among Population [%]"
     - "Verstorbene Bevölkerung [%]"
-    - "Population Décédée [%]"
+    - "Population décédée [%]"
   plot_cases_regional_title:
     - Reported Cases per Administrative Region
     - Bestätigte Fälle nach Verwaltungskreis
-    - Cas confirmés par Arrondissements Administratifs
+    - Cas confirmés par arrondissements administratifs
   plot_cases_regional_x:
     - Date
     - Datum
@@ -442,11 +447,11 @@ i18n:
   plot_cases_regional_y:
     - Reported Cases
     - Bestätigte Fälle
-    - Cas Confirmés
+    - Cas confirmés
   plot_cases_pc_regional_title:
     - Reported Cases per Administrative Region
     - Bestätigte Fälle nach Verwaltungskreis
-    - Cas Confirmés par Arrondissements Administratifs
+    - Cas confirmés par arrondissements administratifs
   plot_cases_pc_regional_x:
     - Date
     - Datum
@@ -454,11 +459,11 @@ i18n:
   plot_cases_pc_regional_y:
     - Reported Cases / Population * 10,000
     - Bestätigte Fälle / Einwohnerzahl * 10'000
-    - Cas Confirmés / Population * 10'000
+    - Cas confirmés / population * 10'000
   plot_cases_new_regional_title:
     - Newly Reported Cases per Administrative Region
     - Neu Bestätigte Fälle pro Verwaltungskreis
-    - Cas Nouvellement Confirmés par Arrondissements Administratifs
+    - Cas nouvellement confirmés par arrondissements administratifs
   plot_cases_new_regional_x:
     - Date
     - Datum
@@ -466,19 +471,19 @@ i18n:
   plot_cases_new_regional_y:
     - Reported Cases
     - Bestätigte Fälle
-    - Cas Confirmés
+    - Cas confirmés
   plot_loglog_region_title:
     - Newly Reported Cases
     - Neu Bestätige Fälle
-    - Nouveaux cas Confirmés
+    - Nouveaux cas confirmés
   plot_loglog_region_x:
     - Total Reported Cases
     - Total Bestätigte Fälle
-    - Total des Cas Confirmés
+    - Total des cas confirmés
   plot_loglog_region_y:
     - Newly Reported Cases
     - Neu Bestätige Fälle
-    - Nouveaux cas Confirmés
+    - Nouveaux cas confirmés
   plot_log_log_region_weekly_hovertemplate:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>between <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>zwischen <b>%{text}</b><br><extra></extra>"
@@ -486,11 +491,11 @@ i18n:
   plot_corr_density_title:
     - Prevalence vs Population Density
     - Prävalenz und Bevölkerungsdichte
-    - Prévalence et Densité de Population
+    - Prévalence et densité de population
   plot_corr_density_x:
     - "Population Density [Inhabitants/km2 Settlement Area]"
     - "Bevölkerungsdichte [Einwohner/km2 Siedlungsfläche]"
-    - "Densité de la Population [Habitants / km2 de Zone de Peuplement]"
+    - "Densité de la population [Habitants / km2 de zone de peuplement]"
   plot_corr_density_y:
     - Prevalence
     - Prävalenz
@@ -498,15 +503,15 @@ i18n:
   plot_corr_age_title:
     - Case Fatality Ratio vs Population over 65
     - Case Fatality Ratio und Bevölkerung über 65
-    - Taux de Létalité et Population de plus de 65 Ans
+    - Taux de létalité et population de plus de 65 Ans
   plot_corr_age_x:
     - "Population over 65 [%]"
     - "Bevölkerung über 65 [%]"
-    - "Population de plus de 65 Ans [%]"
+    - "Population de plus de 65 ans [%]"
   plot_corr_age_y:
     - Case Fatality Ratio
     - Case Fatality Ratio
-    - Taux de Létalité 
+    - Taux de létalité 
   prevalence:
     - Prevalence
     - Prävalenz
@@ -514,19 +519,19 @@ i18n:
   population_density:
     - Population Density
     - Bevölkerungsdichte
-    - Densité de Population
+    - Densité de population
   cases:
     - Cases
     - Fälle
-    - Nombre de Cas
+    - Nombre de cas
   population_over_65:
     - Population over 65
     - Bevölkerung über 65
-    - Population de plus de 65 Ans
+    - Population de plus de 65 ans
   case_fatality_ratio:
     - Case Fatality Ratio
     - Case Fatality Ratio
-    - Taux de Létalité 
+    - Taux de létalité 
 
   info_main:
     - Please be aware that the dotted lines are based on data that has not yet been completely updated and so may be misleading.
