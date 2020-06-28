@@ -266,17 +266,17 @@ i18n:
     - Veränderung Hospitalisierungen
     - Évolution des Hospitalisations
   total_hospitalizations:
-    - Total Hospitalizations
-    - Total Hospitalisierungen
-    - Total des Hospitalisations
+    - Total Hospitalizations since 1. 6.
+    - Total Hospitalisierungen seit dem 1. 6.
+    - Total des Hospitalisations depuis le 1. 6.
   new_fatalities:
     - New Fatalities
     - Neue Todesfälle
     - Nouveaux Décès
   total_fatalities:
-    - Total Fatalities
-    - Total Todesfälle
-    - Nombre Total de Décès
+    - Total Fatalities since 1. 6.
+    - Total Todesfälle seit dem 1. 6.
+    - Nombre Total de Décès depuis le 1. 6.
   regional_data:
     - "Regional data are available for the following cantons:"
     - "Regionale Daten sind für die folgenden Kantone verfügbar:"
