@@ -226,17 +226,17 @@ i18n:
     - "Weitere wissenschaftliche Informationen zur Pandemie finden Sie hier: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentren/wig/projekte/covid-19-social-monitor/), [Aktuelle wissenschaftliche Artikel des Universitätsklinikums Bern](https://www.update-covid.ch)"
     - "De plus amples informations scientifiques sur la pandémie sont disponibles ici: [ZHAW COVID-19 Social Monitor](https://www.zhaw.ch/de/sml/institute-zentrum/wig/projekte/covid-19-social-monitor/) , [Articles scientifiques actuels de la Clinique universitaire de Berne](https://www.update-covid.ch)"
   total_reported_cases:
-    - Total Reported Cases
-    - Total Bestätigte Fälle
-    - Total des Cas Confirmés
+    - Reported Cases since 1. 6.
+    - Bestätigte Fälle seit dem 1. 6.
+    - Des Cas Confirmés depuis le 1. 6.
   reported_cases_today:
     - Reported Cases Today
     - Bestätigte Fälle Heute
     - Cas Nouvellement Confirmés
   total_fatalities:
-    - Total Fatalities
-    - Total Verstorbene
-    - Total des Décès
+    - Fatalities since 1. 6.
+    - Verstorbene seit dem 1. 6.
+    - des Décès depuis le 1. 6.
   regions_updated_today:
     - Cantons Updated Today
     - Heute Aktualisierte Kantone
