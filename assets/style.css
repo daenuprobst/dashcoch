@@ -30,6 +30,16 @@ a:hover {
   background-color: #17181a;
 }
 
+#muy-importante {
+  background-color: #4A0710;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#muy-importante p {
+  margin-bottom: 0 !important;
+}
+
 #map-slider,
 #map-slider-regional,
 #map-radios,

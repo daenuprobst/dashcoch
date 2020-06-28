@@ -171,7 +171,12 @@ class DataLoader:
         #
         if cfg["show"]["tests"]:
             self.tests = pd.read_csv(cfg["urls"]["tests"].get(), index_col=[0])
+            self.tests = self.tests[self.tests.index >= cfg["settings"]["start_date"].get()]
             self.tests["pos_rate"] = np.round(self.tests["pos_rate"] * 100, 2)
+
+            self.tests["pos_rate_rolling"] = self.tests["pos_rate"].rolling(
+                7, center=True
+            ).mean()
 
         #
         # World related data
@@ -283,7 +288,7 @@ class DataLoader:
         df = df.T
         df.drop(
             df.columns.difference(
-                [c for c in [*self.cfg["countries"].get()] if c != "Switzerland"]
+                [c for c in [*self.cfg["countries"].get()]]
             ),
             1,
             inplace=True,
@@ -293,10 +298,6 @@ class DataLoader:
 
     def __get_swiss_world_cases_normalized(self, min_prevalence: int = 0.4):
         tmp = self.world_cases.copy()
-        # Don't take today from switzerland, as values are usually very incomplete
-        tmp["Switzerland"] = pd.Series(
-            self.swiss_cases_as_dict[self.total_column_name][:-1]
-        )
 
         for column in tmp:
             tmp[column] = tmp[column] / self.world_population[column] * 10000

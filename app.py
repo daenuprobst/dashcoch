@@ -114,6 +114,7 @@ def get_layout():
                             },
                         ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
+                        html.Div(id="muy-importante", children=[dcc.Markdown(cfg["i18n"]["important"][lang].get())]),
                         dbc.Button(
                             "Info",
                             id="info-button",
@@ -1048,30 +1049,30 @@ app.layout = get_layout
 # Globals used by Callbacks
 # -------------------------------------------------------------------------------
 phase_shapes = [
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-03-16",
-        "y0": 0,
-        "x1": "2020-03-16",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-04-27",
-        "y0": 0,
-        "x1": "2020-04-27",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-03-16",
+    #     "y0": 0,
+    #     "x1": "2020-03-16",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    # },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-04-27",
+    #     "y0": 0,
+    #     "x1": "2020-04-27",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    # },
     {
         "type": "line",
         "xref": "x",
@@ -1110,26 +1111,26 @@ phase_shapes = [
     },
 ]
 phase_annotations = [
-    {
-        "x": "2020-04-06",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Soft Lockdown",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-05-04",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase I",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
+    # {
+    #     "x": "2020-04-06",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Soft Lockdown",
+    #     "font": {"color": "#ffffff"},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-05-04",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase I",
+    #     "font": {"color": "#ffffff"},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
     {
         "x": "2020-05-24",
         "y": -0.12,
@@ -1926,31 +1927,31 @@ try:
         return {
             "data": [
                 {
-                    "x": data.swiss_cases.iloc[6:-1][
+                    "x": data.swiss_cases.iloc[6:-2][
                         cfg["settings"]["total_column_name"].get()
                     ],
                     "y": data.moving_total[cfg["settings"]["total_column_name"].get()][
-                        6:-1
+                        6:-2
                     ],
                     "mode": "lines+markers",
                     "name": cfg["i18n"]["plot_loglog_country_weekly"][lang].get(),
                     "marker": {"color": style.theme["foreground"]},
-                    "text": data.moving_total["date_label"][6:-1],
+                    "text": data.moving_total["date_label"][6:-2],
                     "hovertemplate": cfg["i18n"][
                         "plot_log_log_country_weekly_hovertemplate"
                     ][lang].get(),
                 },
                 {
-                    "x": data.swiss_cases.iloc[6:-1][
+                    "x": data.swiss_cases.iloc[6:-2][
                         cfg["settings"]["total_column_name"].get()
                     ],
                     "y": data.swiss_cases_by_date_diff[
                         cfg["settings"]["total_column_name"].get()
-                    ][6:-1],
+                    ][6:-2],
                     "mode": "lines+markers",
                     "name": cfg["i18n"]["plot_loglog_country_daily"][lang].get(),
                     "marker": {"color": style.theme["yellow"]},
-                    "text": data.swiss_cases_by_date_diff["date_label"][6:-1],
+                    "text": data.swiss_cases_by_date_diff["date_label"][6:-2],
                     "hovertemplate": cfg["i18n"][
                         "plot_log_log_country_daily_hovertemplate"
                     ][lang].get(),
@@ -2353,11 +2354,21 @@ def update_tests_ratio_graph():
             {
                 "x": data.tests.index,
                 "y": data.tests["pos_rate"],
-                "mode": "lines",
-                "marker": {"color": style.theme["foreground"]},
+                "type": "bar",
+                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
                 "hovertemplate": "%{y} %<extra></extra>",
                 "showlegend": False,
             },
+            {
+                "x": data.tests.index,
+                "y": data.tests["pos_rate_rolling"],
+                "mode": "lines",
+                "marker": {"color": style.theme["foreground"]},
+                "name": cfg["i18n"]["moving_average"][lang].get(),
+                "hovertemplate": "%{y} %<extra></extra>",
+                "showlegend": True,
+                "fill": "tozeroy",
+            }
         ],
         "layout": {
             "height": 400,
@@ -2372,6 +2383,15 @@ def update_tests_ratio_graph():
                 "color": "#ffffff",
                 "rangemode": "tozero",
                 "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
+            },
+            "legend": {
+                "x": 0.015,
+                "y": 0.9,
+                "traceorder": "normal",
+                "font": {"family": "sans-serif", "color": "white"},
+                "bgcolor": style.theme["background"],
+                "bordercolor": style.theme["accent"],
+                "borderwidth": 1,
             },
             "dragmode": False,
             "hovermode": "x unified",
