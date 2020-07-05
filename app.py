@@ -11,6 +11,8 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State, ClientsideFunction
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 from dashcoch.config import config as cfg
+from flask_caching import Cache
+
 
 external_scripts = [
     "https://cdn.simpleanalytics.io/hello.js",
@@ -83,6 +85,157 @@ def get_lang():
     except:
         lang = cfg["settings"]["default_language"].get()
 
+
+# -------------------------------------------------------------------------------
+# Globals used by Callbacks
+# -------------------------------------------------------------------------------
+phase_shapes = [
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-03-16",
+    #     "y0": 0,
+    #     "x1": "2020-03-16",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    # },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-04-27",
+    #     "y0": 0,
+    #     "x1": "2020-04-27",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    # },
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-05-11",
+        "y0": 0,
+        "x1": "2020-05-11",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-06-06",
+        "y0": 0,
+        "x1": "2020-06-06",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+    {
+        "type": "line",
+        "xref": "x",
+        "yref": "paper",
+        "x0": "2020-06-22",
+        "y0": 0,
+        "x1": "2020-06-22",
+        "y1": 1,
+        "opacity": 1.0,
+        "layer": "below",
+        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
+    },
+]
+phase_annotations = [
+    # {
+    #     "x": "2020-04-06",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Soft Lockdown",
+    #     "font": {"color": "#ffffff"},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-05-04",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase I",
+    #     "font": {"color": "#ffffff"},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    {
+        "x": "2020-05-24",
+        "y": -0.12,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase II",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    },
+    {
+        "x": "2020-06-14",
+        "y": -0.12,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase III",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    }
+]
+
+phase_annotations_double_height = [
+    {
+        "x": "2020-04-06",
+        "y": -0.06,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Soft Lockdown",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    },
+    {
+        "x": "2020-05-04",
+        "y": -0.06,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase I",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    },
+    {
+        "x": "2020-05-24",
+        "y": -0.06,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase II",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    },
+    {
+        "x": "2020-06-14",
+        "y": -0.06,
+        "xref": "x",
+        "yref": "paper",
+        "text": "Phase III",
+        "font": {"color": "#ffffff"},
+        "align": "center",
+        "showarrow": False,
+    }
+]
 
 def get_layout():
     lang = get_lang()
@@ -781,7 +934,56 @@ def get_layout():
                                 ),
                                 dcc.Graph(
                                     id="tests-graph",
-                                    figure=update_tests_graph(),
+                                    figure={
+                                        "data": [
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["neg"],
+                                                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["green"]},
+                                            },
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos"],
+                                                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["red"]},
+                                            },
+                                        ],
+                                        "layout": {
+                                            "height": 400,
+                                            "xaxis": {
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
+                                            },
+                                            "yaxis": {
+                                                "type": "linear",
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "rangemode": "tozero",
+                                                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
+                                            },
+                                            "legend": {
+                                                "x": 0.015,
+                                                "y": 1,
+                                                "traceorder": "normal",
+                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "bgcolor": style.theme["background"],
+                                                "bordercolor": style.theme["accent"],
+                                                "borderwidth": 1,
+                                            },
+                                            "dragmode": False,
+                                            "hovermode": "x unified",
+                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "plot_bgcolor": style.theme["background"],
+                                            "paper_bgcolor": style.theme["background"],
+                                            "font": {"color": style.theme["foreground"]},
+                                            "shapes": phase_shapes,
+                                            "annotations": phase_annotations,
+                                        },
+                                    },
                                     config={"displayModeBar": False},
                                 ),
                             ]
@@ -796,7 +998,60 @@ def get_layout():
                                 ),
                                 dcc.Graph(
                                     id="tests-ratio-graph",
-                                    figure=update_tests_ratio_graph(),
+                                    figure={
+                                        "data": [
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos_rate"],
+                                                "type": "bar",
+                                                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
+                                                "hovertemplate": "%{y} %<extra></extra>",
+                                                "showlegend": False,
+                                            },
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos_rate_rolling"],
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["foreground"]},
+                                                "name": cfg["i18n"]["moving_average"][lang].get(),
+                                                "hovertemplate": "%{y} %<extra></extra>",
+                                                "showlegend": True,
+                                                "fill": "tozeroy",
+                                            }
+                                        ],
+                                        "layout": {
+                                            "height": 400,
+                                            "xaxis": {
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
+                                            },
+                                            "yaxis": {
+                                                "type": "linear",
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "rangemode": "tozero",
+                                                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
+                                            },
+                                            "legend": {
+                                                "x": 0.015,
+                                                "y": 0.9,
+                                                "traceorder": "normal",
+                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "bgcolor": style.theme["background"],
+                                                "bordercolor": style.theme["accent"],
+                                                "borderwidth": 1,
+                                            },
+                                            "dragmode": False,
+                                            "hovermode": "x unified",
+                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "plot_bgcolor": style.theme["background"],
+                                            "paper_bgcolor": style.theme["background"],
+                                            "font": {"color": style.theme["foreground"]},
+                                            "shapes": phase_shapes,
+                                            "annotations": phase_annotations,
+                                        },
+                                    },
                                     config={"displayModeBar": False},
                                 ),
                             ]
@@ -1044,157 +1299,6 @@ def get_layout():
 
 
 app.layout = get_layout
-
-# -------------------------------------------------------------------------------
-# Globals used by Callbacks
-# -------------------------------------------------------------------------------
-phase_shapes = [
-    # {
-    #     "type": "line",
-    #     "xref": "x",
-    #     "yref": "paper",
-    #     "x0": "2020-03-16",
-    #     "y0": 0,
-    #     "x1": "2020-03-16",
-    #     "y1": 1,
-    #     "opacity": 1.0,
-    #     "layer": "below",
-    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    # },
-    # {
-    #     "type": "line",
-    #     "xref": "x",
-    #     "yref": "paper",
-    #     "x0": "2020-04-27",
-    #     "y0": 0,
-    #     "x1": "2020-04-27",
-    #     "y1": 1,
-    #     "opacity": 1.0,
-    #     "layer": "below",
-    #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    # },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-05-11",
-        "y0": 0,
-        "x1": "2020-05-11",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-06-06",
-        "y0": 0,
-        "x1": "2020-06-06",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-06-22",
-        "y0": 0,
-        "x1": "2020-06-22",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-]
-phase_annotations = [
-    # {
-    #     "x": "2020-04-06",
-    #     "y": -0.12,
-    #     "xref": "x",
-    #     "yref": "paper",
-    #     "text": "Soft Lockdown",
-    #     "font": {"color": "#ffffff"},
-    #     "align": "center",
-    #     "showarrow": False,
-    # },
-    # {
-    #     "x": "2020-05-04",
-    #     "y": -0.12,
-    #     "xref": "x",
-    #     "yref": "paper",
-    #     "text": "Phase I",
-    #     "font": {"color": "#ffffff"},
-    #     "align": "center",
-    #     "showarrow": False,
-    # },
-    {
-        "x": "2020-05-24",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase II",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-06-14",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase III",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    }
-]
-
-phase_annotations_double_height = [
-    {
-        "x": "2020-04-06",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Soft Lockdown",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-05-04",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase I",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-05-24",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase II",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-06-14",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase III",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    }
-]
 
 
 # -------------------------------------------------------------------------------
@@ -2192,7 +2296,6 @@ except:
     pass
 
 try:
-
     @app.callback(
         Output("age-dist-fatalities-title", "children"),
         [Input("radio-absolute-norm", "value")],
@@ -2286,121 +2389,6 @@ try:
 
 except:
     pass
-
-#
-# Testing Data
-#
-def update_tests_graph():
-    lang = get_lang()
-    return {
-        "data": [
-            {
-                "x": data.tests.index,
-                "y": data.tests["neg"],
-                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
-                "mode": "lines",
-                "marker": {"color": style.theme["green"]},
-            },
-            {
-                "x": data.tests.index,
-                "y": data.tests["pos"],
-                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
-                "mode": "lines",
-                "marker": {"color": style.theme["red"]},
-            },
-        ],
-        "layout": {
-            "height": 400,
-            "xaxis": {
-                "showgrid": True,
-                "color": "#ffffff",
-                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
-            },
-            "yaxis": {
-                "type": "linear",
-                "showgrid": True,
-                "color": "#ffffff",
-                "rangemode": "tozero",
-                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
-            },
-            "legend": {
-                "x": 0.015,
-                "y": 1,
-                "traceorder": "normal",
-                "font": {"family": "sans-serif", "color": "white"},
-                "bgcolor": style.theme["background"],
-                "bordercolor": style.theme["accent"],
-                "borderwidth": 1,
-            },
-            "dragmode": False,
-            "hovermode": "x unified",
-            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-            "plot_bgcolor": style.theme["background"],
-            "paper_bgcolor": style.theme["background"],
-            "font": {"color": style.theme["foreground"]},
-            "shapes": phase_shapes,
-            "annotations": phase_annotations,
-        },
-    }
-
-
-def update_tests_ratio_graph():
-    lang = get_lang()
-    return {
-        "data": [
-            {
-                "x": data.tests.index,
-                "y": data.tests["pos_rate"],
-                "type": "bar",
-                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
-                "hovertemplate": "%{y} %<extra></extra>",
-                "showlegend": False,
-            },
-            {
-                "x": data.tests.index,
-                "y": data.tests["pos_rate_rolling"],
-                "mode": "lines",
-                "marker": {"color": style.theme["foreground"]},
-                "name": cfg["i18n"]["moving_average"][lang].get(),
-                "hovertemplate": "%{y} %<extra></extra>",
-                "showlegend": True,
-                "fill": "tozeroy",
-            }
-        ],
-        "layout": {
-            "height": 400,
-            "xaxis": {
-                "showgrid": True,
-                "color": "#ffffff",
-                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
-            },
-            "yaxis": {
-                "type": "linear",
-                "showgrid": True,
-                "color": "#ffffff",
-                "rangemode": "tozero",
-                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
-            },
-            "legend": {
-                "x": 0.015,
-                "y": 0.9,
-                "traceorder": "normal",
-                "font": {"family": "sans-serif", "color": "white"},
-                "bgcolor": style.theme["background"],
-                "bordercolor": style.theme["accent"],
-                "borderwidth": 1,
-            },
-            "dragmode": False,
-            "hovermode": "x unified",
-            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-            "plot_bgcolor": style.theme["background"],
-            "paper_bgcolor": style.theme["background"],
-            "font": {"color": style.theme["foreground"]},
-            "shapes": phase_shapes,
-            "annotations": phase_annotations,
-        },
-    }
-
 
 #
 # Regional Data
