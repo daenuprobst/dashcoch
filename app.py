@@ -2050,7 +2050,6 @@ except:
     pass
 
 try:
-
     @app.callback(
         Output("fatalities-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -2060,10 +2059,8 @@ try:
         return {
             "data": [
                 {
-                    "x": ["Switzerland"]
-                    + data.world_case_fatality_rate.index.values.tolist(),
-                    "y": [data.swiss_case_fatality_rate]
-                    + [val for val in data.world_case_fatality_rate],
+                    "x": data.world_case_fatality_rate.index.values.tolist(),
+                    "y": [val for val in data.world_case_fatality_rate],
                     "name": cfg["settings"]["total_column_name"].get(),
                     "marker": {"color": style.theme["foreground"]},
                     "type": "bar",

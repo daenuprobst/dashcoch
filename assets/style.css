@@ -282,7 +282,8 @@ text.xtitle {
   .update-title,
   .plot-title {
     padding: 5px;
-    font-size: 1em;
+    /* font-size: 1em; */
+    font-size: 2.5vw;
   }
 
   .rc-slider-mark-text,
