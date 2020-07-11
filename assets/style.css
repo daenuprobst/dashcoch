@@ -291,13 +291,13 @@ text.xtitle {
     font-size: 0.56em !important;
   }
 
-  #graph-map text {
-    font-size: 0.25em !important;
+  #update-map text {
+    font-size: 0.5em !important;
   }
 
-  /* .dash-graph:not(#graph-map) {
+  .dash-graph:not(#update-map) {
     zoom: 0.5;
-  } */
+  }
 
   /* #graph-map {
     height: 62vw;
