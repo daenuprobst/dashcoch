@@ -3,6 +3,154 @@ if (!window.dash_clientside) {
 }
 
 window.dash_clientside.clientside = {
+  update_map: function(mode, slider_date_index, div_data) {
+    data_raw = JSON.parse(div_data);
+
+    var data = {
+      swiss_cases: {},
+      swiss_cases_by_date_filled: {},
+      swiss_cases_by_date_filled_per_capita: {},
+      swiss_fatalities_by_date_filled: {},
+      regional_centres: {},
+      swiss_cases_by_date_diff: {},
+      swiss_fatalities_by_date_diff: {},
+      swiss_hospitalizations_by_date_diff: {},
+      swiss_hospitalizations_by_date_filled: {},
+    };
+
+    for (var n in data) {
+      for (var key in data_raw[n]) {
+        if (data_raw[n].hasOwnProperty(key)) {
+          values = []
+          for (var subkey in data_raw[n][key]) {
+            if (data_raw[n][key].hasOwnProperty(subkey)) {
+              values.push(data_raw[n][key][subkey])
+            }
+          }
+          data[n][key] = values
+        }
+      }
+    }
+    
+    var d = slider_date_index;
+    var map_data = data["swiss_cases_by_date_filled"];
+    var labels = []
+
+    for (var region in data.regional_centres)
+      if (region !== null)
+        labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+      else
+        labels.push("");
+
+    if (mode === "prevalence") {
+      labels = [];
+      map_data = data["swiss_cases_by_date_filled_per_capita"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null)
+          labels.push(region + ": " + (Math.round(map_data[region][d] * 100) / 100).toString());
+        else
+          labels.push("");
+    } else if (mode === "fatalities") {
+      labels = [];
+      map_data = data["swiss_fatalities_by_date_filled"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null)
+          labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        else
+          labels.push("");
+    } else if (mode === "new") {
+      labels = [];
+      map_data = data["swiss_cases_by_date_diff"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null && data_raw["region_updates"][region])
+         labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        else
+          labels.push("");
+    } else if (mode === "new_fatalities") {
+      labels = [];
+      map_data = data["swiss_fatalities_by_date_diff"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null)
+          labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        else
+          labels.push("");
+    } else if (mode === "new_hospitalizations") {
+      labels = [];
+      map_data = data["swiss_hospitalizations_by_date_diff"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null)
+          labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        else
+          labels.push("");
+    } else if (mode === "hospitalizations") {
+      labels = [];
+      map_data = data["swiss_hospitalizations_by_date_filled"];
+      for (var region in data.regional_centres)
+        if (map_data[region][d] !== null)
+          labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        else
+          labels.push("");
+    }
+
+    var lat = [];
+    var lon = [];
+
+    for (var region in data["regional_centres"]) {
+      lat.push(data_raw["regional_centres"][region]["lat"]);
+      lon.push(data_raw["regional_centres"][region]["lon"]);
+    }
+
+    var z = [];
+
+    for (var region in map_data)
+      if (region !== data_raw["settings"]["total_column_name"])
+        z.push(map_data[region][d]);
+
+    return {
+      data: [
+        {
+          lat: lat,
+          lon: lon,
+          text: labels,
+          mode: "text",
+          type: "scattergeo",
+          textfont: {
+              family: "Arial, sans-serif",
+              size: 16,
+              color: "white",
+              weight: "bold",
+          },
+        },
+        {
+          type: "choropleth",
+          showscale: false,
+          locations: data_raw["region_labels"],
+          z: z,
+          colorscale: data_raw["turbo"],
+          geojson: data_raw["settings"]["choropleth"]["geojson_file"],
+          featureidkey: data_raw["settings"]["choropleth"]["feature"],
+          marker: {line: {width: 0.0, color: "#08302A"}},
+        },
+      ],
+      layout: {
+        geo: {
+          visible: false,
+          center: data_raw["settings"]["choropleth"]["center"],
+          lataxis: {
+            range: data_raw["settings"]["choropleth"]["lataxis"]
+          },
+          lonaxis: {
+            range: data_raw["settings"]["choropleth"]["lonaxis"]
+          },
+          projection: {type: "transverse mercator"},
+        },
+        margin: {l: 0, r: 0, t: 0, b: 0},
+        plot_bgcolor: data_raw["theme"]["background"],
+        paper_bgcolor: data_raw["theme"]["background"],
+      },
+    }
+
+  },
   update_caseincrease_regional_graph: function (selected_cantons, selected_scale, selected_date_index, hover_data, div_data) {
     hovered_canton = ""
     if (hover_data)
@@ -10,35 +158,24 @@ window.dash_clientside.clientside = {
 
     var d = selected_date_index
 
-    data_raw = JSON.parse(div_data)
+    data_raw = JSON.parse(div_data);
 
     var data = {
       swiss_cases_by_date_filled: {},
       moving_total: []
-    }
+    };
 
-    // Format the data & let's support IE
-    for (var key in data_raw["swiss_cases_by_date_filled"]) {
-      if (data_raw["swiss_cases_by_date_filled"].hasOwnProperty(key)) {
-        values = []
-        for (var subkey in data_raw["swiss_cases_by_date_filled"][key]) {
-          if (data_raw["swiss_cases_by_date_filled"][key].hasOwnProperty(subkey)) {
-            values.push(data_raw["swiss_cases_by_date_filled"][key][subkey])
+    for (var n in data) {
+      for (var key in data_raw[n]) {
+        if (data_raw[n].hasOwnProperty(key)) {
+          values = []
+          for (var subkey in data_raw[n][key]) {
+            if (data_raw[n][key].hasOwnProperty(subkey)) {
+              values.push(data_raw[n][key][subkey])
+            }
           }
+          data[n][key] = values
         }
-        data["swiss_cases_by_date_filled"][key] = values
-      }
-    }
-
-    for (var key in data_raw["moving_total"]) {
-      if (data_raw["moving_total"].hasOwnProperty(key)) {
-        values = []
-        for (var subkey in data_raw["moving_total"][key]) {
-          if (data_raw["moving_total"][key].hasOwnProperty(subkey)) {
-            values.push(data_raw["moving_total"][key][subkey])
-          }
-        }
-        data["moving_total"][key] = values
       }
     }
 

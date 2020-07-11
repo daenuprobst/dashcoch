@@ -112,21 +112,6 @@ class DataLoader:
         ).replace(0, float("nan"))
 
         #
-        # Some regression analysis on the data
-        #
-        if cfg["show"]["demographic_correlation"]:
-            self.prevalence_density_regression = self.__get_regression(
-                self.regional_demography["Density"],
-                self.swiss_cases_by_date_filled_per_capita.iloc[-1],
-            )
-
-            self.cfr_age_regression = self.__get_regression(
-                self.regional_demography["O65"], self.swiss_case_fatality_rates.iloc[-1]
-            )
-
-        self.scaled_cases = self.__get_scaled_cases()
-
-        #
         # Hospitalization Data
         #
         if cfg["show"]["hospitalizations"]:

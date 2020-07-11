@@ -2,6 +2,7 @@ import time
 from dashcoch import DataLoader, StyleLoader
 import math
 from datetime import date, datetime, timedelta
+import json
 import geojson
 import flask
 import dash
@@ -437,11 +438,12 @@ def get_layout():
     if cfg["show"]["map"]:
         content.extend(
             [
+                html.Div(id="map-data", style={"display": "none"}),
                 html.Div(id="date-container", className="slider-container"),
                 html.Div(
                     children=[
                         dcc.Graph(
-                            id="graph-map",
+                            id="update-map",
                             config={"staticPlot": True},
                             style={"height": "62vw", "maxHeight": "600px"},
                         ),
@@ -455,16 +457,16 @@ def get_layout():
                                     id="map-radios",
                                     options=[
                                         {
-                                            "label": cfg["i18n"][
-                                                "total_reported_cases"
-                                            ][lang].get(),
-                                            "value": "number",
-                                        },
-                                        {
                                             "label": cfg["i18n"]["new_cases"][
                                                 lang
                                             ].get(),
                                             "value": "new",
+                                        },
+                                        {
+                                            "label": cfg["i18n"][
+                                                "total_reported_cases"
+                                            ][lang].get(),
+                                            "value": "number",
                                         },
                                         {
                                             "label": cfg["i18n"][
@@ -497,7 +499,7 @@ def get_layout():
                                             "value": "fatalities",
                                         },
                                     ],
-                                    value="number",
+                                    value="new",
                                     inline=True,
                                 ),
                             ]
@@ -768,6 +770,150 @@ def get_layout():
             ]
         )
 
+    # Age Distribution
+    if cfg["show"]["tests"]:
+        content.extend(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_tests_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="tests-graph",
+                                    figure={
+                                        "data": [
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["neg"],
+                                                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["green"]},
+                                            },
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos"],
+                                                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["red"]},
+                                            },
+                                        ],
+                                        "layout": {
+                                            "height": 400,
+                                            "xaxis": {
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
+                                            },
+                                            "yaxis": {
+                                                "type": "linear",
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "rangemode": "tozero",
+                                                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
+                                            },
+                                            "legend": {
+                                                "x": 0.015,
+                                                "y": 1,
+                                                "traceorder": "normal",
+                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "bgcolor": style.theme["background"],
+                                                "bordercolor": style.theme["accent"],
+                                                "borderwidth": 1,
+                                            },
+                                            "dragmode": False,
+                                            "hovermode": "x unified",
+                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "plot_bgcolor": style.theme["background"],
+                                            "paper_bgcolor": style.theme["background"],
+                                            "font": {"color": style.theme["foreground"]},
+                                            "shapes": phase_shapes,
+                                            "annotations": phase_annotations,
+                                        },
+                                    },
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_tests_ratio_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="tests-ratio-graph",
+                                    figure={
+                                        "data": [
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos_rate"],
+                                                "type": "bar",
+                                                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
+                                                "hovertemplate": "%{y} %<extra></extra>",
+                                                "showlegend": False,
+                                            },
+                                            {
+                                                "x": data.tests.index,
+                                                "y": data.tests["pos_rate_rolling"],
+                                                "mode": "lines",
+                                                "marker": {"color": style.theme["foreground"]},
+                                                "name": cfg["i18n"]["moving_average"][lang].get(),
+                                                "hovertemplate": "%{y} %<extra></extra>",
+                                                "showlegend": True,
+                                                "fill": "tozeroy",
+                                            }
+                                        ],
+                                        "layout": {
+                                            "height": 400,
+                                            "xaxis": {
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
+                                            },
+                                            "yaxis": {
+                                                "type": "linear",
+                                                "showgrid": True,
+                                                "color": "#ffffff",
+                                                "rangemode": "tozero",
+                                                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
+                                            },
+                                            "legend": {
+                                                "x": 0.015,
+                                                "y": 0.9,
+                                                "traceorder": "normal",
+                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "bgcolor": style.theme["background"],
+                                                "bordercolor": style.theme["accent"],
+                                                "borderwidth": 1,
+                                            },
+                                            "dragmode": False,
+                                            "hovermode": "x unified",
+                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "plot_bgcolor": style.theme["background"],
+                                            "paper_bgcolor": style.theme["background"],
+                                            "font": {"color": style.theme["foreground"]},
+                                            "shapes": phase_shapes,
+                                            "annotations": phase_annotations,
+                                        },
+                                    },
+                                    config={"displayModeBar": False},
+                                ),
+                            ]
+                        ),
+                    ]
+                ),
+                html.Br(),
+            ]
+        )
+
     # International Data
     if cfg["show"]["international"]:
         content.extend(
@@ -912,150 +1058,6 @@ def get_layout():
                             md=12,
                             lg=12,
                         )
-                    ]
-                ),
-                html.Br(),
-            ]
-        )
-
-    # Age Distribution
-    if cfg["show"]["tests"]:
-        content.extend(
-            [
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                                html.Div(
-                                    className="plot-title",
-                                    children=cfg["i18n"]["plot_tests_title"][
-                                        lang
-                                    ].get(),
-                                ),
-                                dcc.Graph(
-                                    id="tests-graph",
-                                    figure={
-                                        "data": [
-                                            {
-                                                "x": data.tests.index,
-                                                "y": data.tests["neg"],
-                                                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
-                                                "mode": "lines",
-                                                "marker": {"color": style.theme["green"]},
-                                            },
-                                            {
-                                                "x": data.tests.index,
-                                                "y": data.tests["pos"],
-                                                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
-                                                "mode": "lines",
-                                                "marker": {"color": style.theme["red"]},
-                                            },
-                                        ],
-                                        "layout": {
-                                            "height": 400,
-                                            "xaxis": {
-                                                "showgrid": True,
-                                                "color": "#ffffff",
-                                                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
-                                            },
-                                            "yaxis": {
-                                                "type": "linear",
-                                                "showgrid": True,
-                                                "color": "#ffffff",
-                                                "rangemode": "tozero",
-                                                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
-                                            },
-                                            "legend": {
-                                                "x": 0.015,
-                                                "y": 1,
-                                                "traceorder": "normal",
-                                                "font": {"family": "sans-serif", "color": "white"},
-                                                "bgcolor": style.theme["background"],
-                                                "bordercolor": style.theme["accent"],
-                                                "borderwidth": 1,
-                                            },
-                                            "dragmode": False,
-                                            "hovermode": "x unified",
-                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                                            "plot_bgcolor": style.theme["background"],
-                                            "paper_bgcolor": style.theme["background"],
-                                            "font": {"color": style.theme["foreground"]},
-                                            "shapes": phase_shapes,
-                                            "annotations": phase_annotations,
-                                        },
-                                    },
-                                    config={"displayModeBar": False},
-                                ),
-                            ]
-                        ),
-                        dbc.Col(
-                            [
-                                html.Div(
-                                    className="plot-title",
-                                    children=cfg["i18n"]["plot_tests_ratio_title"][
-                                        lang
-                                    ].get(),
-                                ),
-                                dcc.Graph(
-                                    id="tests-ratio-graph",
-                                    figure={
-                                        "data": [
-                                            {
-                                                "x": data.tests.index,
-                                                "y": data.tests["pos_rate"],
-                                                "type": "bar",
-                                                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
-                                                "hovertemplate": "%{y} %<extra></extra>",
-                                                "showlegend": False,
-                                            },
-                                            {
-                                                "x": data.tests.index,
-                                                "y": data.tests["pos_rate_rolling"],
-                                                "mode": "lines",
-                                                "marker": {"color": style.theme["foreground"]},
-                                                "name": cfg["i18n"]["moving_average"][lang].get(),
-                                                "hovertemplate": "%{y} %<extra></extra>",
-                                                "showlegend": True,
-                                                "fill": "tozeroy",
-                                            }
-                                        ],
-                                        "layout": {
-                                            "height": 400,
-                                            "xaxis": {
-                                                "showgrid": True,
-                                                "color": "#ffffff",
-                                                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
-                                            },
-                                            "yaxis": {
-                                                "type": "linear",
-                                                "showgrid": True,
-                                                "color": "#ffffff",
-                                                "rangemode": "tozero",
-                                                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
-                                            },
-                                            "legend": {
-                                                "x": 0.015,
-                                                "y": 0.9,
-                                                "traceorder": "normal",
-                                                "font": {"family": "sans-serif", "color": "white"},
-                                                "bgcolor": style.theme["background"],
-                                                "bordercolor": style.theme["accent"],
-                                                "borderwidth": 1,
-                                            },
-                                            "dragmode": False,
-                                            "hovermode": "x unified",
-                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                                            "plot_bgcolor": style.theme["background"],
-                                            "paper_bgcolor": style.theme["background"],
-                                            "font": {"color": style.theme["foreground"]},
-                                            "shapes": phase_shapes,
-                                            "annotations": phase_annotations,
-                                        },
-                                    },
-                                    config={"displayModeBar": False},
-                                ),
-                            ]
-                        ),
                     ]
                 ),
                 html.Br(),
@@ -1226,58 +1228,6 @@ def get_layout():
             ]
         )
 
-    # Demographic Correlation
-    if cfg["show"]["demographic_correlation"]:
-        content.extend(
-            [
-                html.H4(
-                    children=cfg["i18n"]["demographic_correlation_title"][lang].get(),
-                    style={"color": style.theme["accent"]},
-                ),
-                html.Div(
-                    className="info-container",
-                    children=cfg["i18n"]["info_corr"][lang].get(),
-                ),
-                html.Br(),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                                html.Div(
-                                    className="plot-title",
-                                    children=cfg["i18n"]["plot_corr_density_title"][
-                                        lang
-                                    ].get(),
-                                ),
-                                dcc.Graph(
-                                    id="prevalence-density-graph",
-                                    config={"displayModeBar": False},
-                                ),
-                            ],
-                            md=12,
-                            lg=6,
-                        ),
-                        dbc.Col(
-                            [
-                                html.Div(
-                                    className="plot-title",
-                                    children=cfg["i18n"]["plot_corr_age_title"][
-                                        lang
-                                    ].get(),
-                                ),
-                                dcc.Graph(
-                                    id="cfr-age-graph", config={"displayModeBar": False}
-                                ),
-                            ],
-                            md=12,
-                            lg=6,
-                        ),
-                    ]
-                ),
-                html.Br(),
-            ]
-        )
-
     # Raw Data
     if cfg["show"]["raw"]:
         content.extend(
@@ -1334,138 +1284,6 @@ try:
 except:
     pass
 
-#
-# The Map
-#
-try:
-
-    @app.callback(
-        Output("graph-map", "figure"),
-        [Input("slider-date", "value"), Input("map-radios", "value")],
-    )
-    def update_graph_map(selected_date_index, mode):
-        lang = get_lang()
-        d = data.swiss_cases["Date"].iloc[selected_date_index]
-
-        map_data = data.swiss_cases_by_date_filled
-        labels = [
-            region + ": " + str(int(map_data[region][d]))
-            if not math.isnan(float(map_data[region][d]))
-            else ""
-            for region in data.regional_centres
-        ]
-
-        if mode == "prevalence":
-            map_data = data.swiss_cases_by_date_filled_per_capita
-            labels = [
-                region + ": " + str(round((map_data[region][d]), 1))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-        elif mode == "fatalities":
-            map_data = data.swiss_fatalities_by_date_filled
-            labels = [
-                region + ": " + str(int(map_data[region][d]))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-        elif mode == "new":
-            map_data = data.swiss_cases_by_date_diff
-            labels = [
-                region + ": " + str(int(map_data[region][d]))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-        elif mode == "new_fatalities":
-            map_data = data.swiss_fatalities_by_date_diff
-            labels = [
-                region + ": " + str(int(map_data[region][d]))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-        elif mode == "new_hospitalizations":
-            map_data = data.swiss_hospitalizations_by_date_diff
-            labels = [
-                region + ": " + str(int(map_data[region][d]))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-        elif mode == "hospitalizations":
-            map_data = data.swiss_hospitalizations_by_date_filled
-            labels = [
-                region + ": " + str(int(map_data[region][d]))
-                if not math.isnan(float(map_data[region][d]))
-                else ""
-                for region in data.regional_centres
-            ]
-
-        return {
-            "data": [
-                {
-                    "lat": [
-                        data.regional_centres[region]["lat"]
-                        for region in data.regional_centres
-                    ],
-                    "lon": [
-                        data.regional_centres[region]["lon"]
-                        for region in data.regional_centres
-                    ],
-                    "text": labels,
-                    "mode": "text",
-                    "type": "scattergeo",
-                    "textfont": {
-                        "family": "Arial, sans-serif",
-                        "size": 16,
-                        "color": "white",
-                        "weight": "bold",
-                    },
-                },
-                {
-                    "type": "choropleth",
-                    "showscale": False,
-                    "locations": data.region_labels,
-                    "z": [
-                        map_data[region][d]
-                        for region in map_data
-                        if region != cfg["settings"]["total_column_name"].get()
-                    ],
-                    "colorscale": style.turbo,
-                    "geojson": cfg["settings"]["choropleth"]["geojson_file"].get(),
-                    "featureidkey": cfg["settings"]["choropleth"]["feature"].get(),
-                    "marker": {"line": {"width": 0.0, "color": "#08302A"}},
-                    # "colorbar": {
-                    #     "thickness": 10,
-                    #     "bgcolor": "#252e3f",
-                    #     "tickfont": {"color": "white"},
-                    # },
-                },
-            ],
-            "layout": {
-                "geo": {
-                    "visible": False,
-                    "center": cfg["settings"]["choropleth"]["center"].get(),
-                    "lataxis": {
-                        "range": cfg["settings"]["choropleth"]["lataxis"].get()
-                    },
-                    "lonaxis": {
-                        "range": cfg["settings"]["choropleth"]["lonaxis"].get()
-                    },
-                    "projection": {"type": "transverse mercator"},
-                },
-                "margin": {"l": 0, "r": 0, "t": 0, "b": 0},
-                "plot_bgcolor": cfg["theme"]["background"].get(),
-                "paper_bgcolor": cfg["theme"]["background"].get(),
-            },
-        }
-
-
-except:
-    pass
 
 #
 # Total cases Switzerland
@@ -2196,199 +2014,198 @@ try:
 except:
     pass
 
-#
-# Age Distribution Data
-#
-try:
+# #
+# # Age Distribution Data
+# #
+# try:
 
-    @app.callback(
-        Output("age-dist-cases-title", "children"),
-        [Input("radio-absolute-norm", "value")],
-    )
-    def updated_cases_bag_title(norm):
-        if norm == "scaled":
-            return cfg["i18n"]["plot_age_dist_scaled_title"][lang].get()
-        else:
-            return cfg["i18n"]["plot_age_dist_abs_title"][lang].get()
+#     @app.callback(
+#         Output("age-dist-cases-title", "children"),
+#         [Input("radio-absolute-norm", "value")],
+#     )
+#     def updated_cases_bag_title(norm):
+#         if norm == "scaled":
+#             return cfg["i18n"]["plot_age_dist_scaled_title"][lang].get()
+#         else:
+#             return cfg["i18n"]["plot_age_dist_abs_title"][lang].get()
 
-    @app.callback(
-        Output("cases-bag-graph", "figure"),
-        [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
-    )
-    def update_cases_bag_graph(region, norm):
-        lang = get_lang()
-        field = "cases"
-        factor = 1
-        ytitle = cfg["i18n"]["plot_age_dist_abs_y"][lang].get()
+#     @app.callback(
+#         Output("cases-bag-graph", "figure"),
+#         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
+#     )
+#     def update_cases_bag_graph(region, norm):
+#         lang = get_lang()
+#         field = "cases"
+#         factor = 1
+#         ytitle = cfg["i18n"]["plot_age_dist_abs_y"][lang].get()
 
-        if norm == "scaled":
-            field = "cases_pp"
-            factor = 100
-            ytitle = cfg["i18n"]["plot_age_dist_scaled_y"][lang].get()
+#         if norm == "scaled":
+#             field = "cases_pp"
+#             factor = 100
+#             ytitle = cfg["i18n"]["plot_age_dist_scaled_y"][lang].get()
 
-        return {
-            "data": [
-                {
-                    "x": data.age_data_male_hist[
-                        data.age_data_male_hist["region"] == region
-                    ]["age"],
-                    "y": data.age_data_male_hist[
-                        data.age_data_male_hist["region"] == region
-                    ][field]
-                    * factor,
-                    "name": cfg["i18n"]["male"][lang].get(),
-                    # "mode": "lines",
-                    "type": "bar",
-                    "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
-                    "marker": {"color": "rgba(255, 5, 71, 0.5)"},
-                },
-                {
-                    "x": data.age_data_female_hist[
-                        data.age_data_female_hist["region"] == region
-                    ]["age"],
-                    "y": data.age_data_female_hist[
-                        data.age_data_female_hist["region"] == region
-                    ][field]
-                    * factor,
-                    "name": cfg["i18n"]["female"][lang].get(),
-                    # "mode": "lines",
-                    "type": "bar",
-                    "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
-                    "marker": {"color": "rgba(56, 206, 255, 0.5)"},
-                },
-            ],
-            "layout": {
-                "height": 400,
-                "xaxis": {
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_age_dist_x"][lang].get(),
-                },
-                "yaxis": {
-                    "type": "linear",
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "rangemode": "tozero",
-                    "title": ytitle,
-                },
-                "legend": {
-                    "x": 0.015,
-                    "y": 1,
-                    "traceorder": "normal",
-                    "font": {"family": "sans-serif", "color": "white"},
-                    "bgcolor": style.theme["background"],
-                    "bordercolor": style.theme["accent"],
-                    "borderwidth": 1,
-                },
-                "barmode": "overlay",
-                # "barmode": "stack",
-                "bargap": 0,
-                "dragmode": False,
-                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                "plot_bgcolor": style.theme["background_secondary"],
-                "paper_bgcolor": style.theme["background_secondary"],
-                "font": {"color": style.theme["foreground_secondary"]},
-            },
-        }
-
-
-except:
-    pass
-
-try:
-    @app.callback(
-        Output("age-dist-fatalities-title", "children"),
-        [Input("radio-absolute-norm", "value")],
-    )
-    def updated_cases_bag_title(norm):
-        if norm == "scaled":
-            return cfg["i18n"]["plot_age_dist_fatalities_scaled_title"][lang].get()
-        else:
-            return cfg["i18n"]["plot_age_dist_fatalities_abs_title"][lang].get()
-
-    @app.callback(
-        Output("fatalities-bag-graph", "figure"),
-        [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
-    )
-    def update_fatalities_bag_graph(region, norm):
-        lang = get_lang()
-        field = "fatalities"
-        factor = 1
-        ytitle = cfg["i18n"]["plot_age_dist_fatalities_abs_y"][lang].get()
-
-        if norm == "scaled":
-            field = "fatalities_pp"
-            factor = 100
-            ytitle = cfg["i18n"]["plot_age_dist_fatalities_scaled_y"][lang].get()
-
-        return {
-            "data": [
-                {
-                    "x": data.age_data_male_hist[
-                        data.age_data_male_hist["region"] == region
-                    ]["age"],
-                    "y": data.age_data_male_hist[
-                        data.age_data_male_hist["region"] == region
-                    ][field]
-                    * factor,
-                    "name": cfg["i18n"]["male"][lang].get(),
-                    # "mode": "lines",
-                    "type": "bar",
-                    "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
-                    "marker": {"color": "rgba(255, 5, 71, 0.5)"},
-                },
-                {
-                    "x": data.age_data_female_hist[
-                        data.age_data_female_hist["region"] == region
-                    ]["age"],
-                    "y": data.age_data_female_hist[
-                        data.age_data_female_hist["region"] == region
-                    ][field]
-                    * factor,
-                    "name": cfg["i18n"]["female"][lang].get(),
-                    # "mode": "lines",
-                    "type": "bar",
-                    "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
-                    "marker": {"color": "rgba(56, 206, 255, 0.5)"},
-                },
-            ],
-            "layout": {
-                "height": 400,
-                "xaxis": {
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_age_dist_fatalities_x"][lang].get(),
-                },
-                "yaxis": {
-                    "type": "linear",
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "rangemode": "tozero",
-                    "title": ytitle,
-                },
-                "legend": {
-                    "x": 0.015,
-                    "y": 1,
-                    "traceorder": "normal",
-                    "font": {"family": "sans-serif", "color": "white"},
-                    "bgcolor": style.theme["background"],
-                    "bordercolor": style.theme["accent"],
-                    "borderwidth": 1,
-                },
-                "barmode": "overlay",
-                # "barmode": "stack",
-                "bargap": 0,
-                "dragmode": False,
-                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                "plot_bgcolor": style.theme["background_secondary"],
-                "paper_bgcolor": style.theme["background_secondary"],
-                "font": {"color": style.theme["foreground_secondary"]},
-            },
-        }
+#         return {
+#             "data": [
+#                 {
+#                     "x": data.age_data_male_hist[
+#                         data.age_data_male_hist["region"] == region
+#                     ]["age"],
+#                     "y": data.age_data_male_hist[
+#                         data.age_data_male_hist["region"] == region
+#                     ][field]
+#                     * factor,
+#                     "name": cfg["i18n"]["male"][lang].get(),
+#                     # "mode": "lines",
+#                     "type": "bar",
+#                     "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
+#                     "marker": {"color": "rgba(255, 5, 71, 0.5)"},
+#                 },
+#                 {
+#                     "x": data.age_data_female_hist[
+#                         data.age_data_female_hist["region"] == region
+#                     ]["age"],
+#                     "y": data.age_data_female_hist[
+#                         data.age_data_female_hist["region"] == region
+#                     ][field]
+#                     * factor,
+#                     "name": cfg["i18n"]["female"][lang].get(),
+#                     # "mode": "lines",
+#                     "type": "bar",
+#                     "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
+#                     "marker": {"color": "rgba(56, 206, 255, 0.5)"},
+#                 },
+#             ],
+#             "layout": {
+#                 "height": 400,
+#                 "xaxis": {
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "title": cfg["i18n"]["plot_age_dist_x"][lang].get(),
+#                 },
+#                 "yaxis": {
+#                     "type": "linear",
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "rangemode": "tozero",
+#                     "title": ytitle,
+#                 },
+#                 "legend": {
+#                     "x": 0.015,
+#                     "y": 1,
+#                     "traceorder": "normal",
+#                     "font": {"family": "sans-serif", "color": "white"},
+#                     "bgcolor": style.theme["background"],
+#                     "bordercolor": style.theme["accent"],
+#                     "borderwidth": 1,
+#                 },
+#                 "barmode": "overlay",
+#                 # "barmode": "stack",
+#                 "bargap": 0,
+#                 "dragmode": False,
+#                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+#                 "plot_bgcolor": style.theme["background_secondary"],
+#                 "paper_bgcolor": style.theme["background_secondary"],
+#                 "font": {"color": style.theme["foreground_secondary"]},
+#             },
+#         }
 
 
-except:
-    pass
+# except:
+#     pass
+
+# try:
+#     @app.callback(
+#         Output("age-dist-fatalities-title", "children"),
+#         [Input("radio-absolute-norm", "value")],
+#     )
+#     def updated_cases_bag_title(norm):
+#         if norm == "scaled":
+#             return cfg["i18n"]["plot_age_dist_fatalities_scaled_title"][lang].get()
+#         else:
+#             return cfg["i18n"]["plot_age_dist_fatalities_abs_title"][lang].get()
+
+#     @app.callback(
+#         Output("fatalities-bag-graph", "figure"),
+#         [Input("select-regions-ch", "value"), Input("radio-absolute-norm", "value")],
+#     )
+#     def update_fatalities_bag_graph(region, norm):
+#         lang = get_lang()
+#         field = "fatalities"
+#         factor = 1
+#         ytitle = cfg["i18n"]["plot_age_dist_fatalities_abs_y"][lang].get()
+
+#         if norm == "scaled":
+#             field = "fatalities_pp"
+#             factor = 100
+#             ytitle = cfg["i18n"]["plot_age_dist_fatalities_scaled_y"][lang].get()
+
+#         return {
+#             "data": [
+#                 {
+#                     "x": data.age_data_male_hist[
+#                         data.age_data_male_hist["region"] == region
+#                     ]["age"],
+#                     "y": data.age_data_male_hist[
+#                         data.age_data_male_hist["region"] == region
+#                     ][field]
+#                     * factor,
+#                     "name": cfg["i18n"]["male"][lang].get(),
+#                     # "mode": "lines",
+#                     "type": "bar",
+#                     "line": {"width": 2.0, "color": "rgba(255, 5, 71, 1)",},
+#                     "marker": {"color": "rgba(255, 5, 71, 0.5)"},
+#                 },
+#                 {
+#                     "x": data.age_data_female_hist[
+#                         data.age_data_female_hist["region"] == region
+#                     ]["age"],
+#                     "y": data.age_data_female_hist[
+#                         data.age_data_female_hist["region"] == region
+#                     ][field]
+#                     * factor,
+#                     "name": cfg["i18n"]["female"][lang].get(),
+#                     # "mode": "lines",
+#                     "type": "bar",
+#                     "line": {"width": 2.0, "color": "rgba(56, 206, 255, 1)",},
+#                     "marker": {"color": "rgba(56, 206, 255, 0.5)"},
+#                 },
+#             ],
+#             "layout": {
+#                 "height": 400,
+#                 "xaxis": {
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "title": cfg["i18n"]["plot_age_dist_fatalities_x"][lang].get(),
+#                 },
+#                 "yaxis": {
+#                     "type": "linear",
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "rangemode": "tozero",
+#                     "title": ytitle,
+#                 },
+#                 "legend": {
+#                     "x": 0.015,
+#                     "y": 1,
+#                     "traceorder": "normal",
+#                     "font": {"family": "sans-serif", "color": "white"},
+#                     "bgcolor": style.theme["background"],
+#                     "bordercolor": style.theme["accent"],
+#                     "borderwidth": 1,
+#                 },
+#                 "barmode": "overlay",
+#                 # "barmode": "stack",
+#                 "bargap": 0,
+#                 "dragmode": False,
+#                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+#                 "plot_bgcolor": style.theme["background_secondary"],
+#                 "paper_bgcolor": style.theme["background_secondary"],
+#                 "font": {"color": style.theme["foreground_secondary"]},
+#             },
+#         }
+
+# except:
+#     pass
 
 #
 # Regional Data
@@ -2554,6 +2371,100 @@ try:
 except:
     pass
 
+#
+# Map (client-side)
+#
+
+try:
+    app.clientside_callback(
+        ClientsideFunction(
+            namespace="clientside", function_name="update_map"
+        ),
+        Output("update-map", "figure"),
+        [
+            Input("map-radios", "value"),
+            Input("slider-date", "value"),
+            Input("map-data", "children"),
+        ],
+    )
+except:
+    pass
+
+try:
+
+    @app.callback(
+        Output("map-data", "children"), [Input("url", "pathname")]
+    )
+    def store_map_data(value):
+        settings = {
+            "total_column_name": cfg["settings"]["total_column_name"].get(),
+            "choropleth": {
+                "geojson_file": cfg["settings"]["choropleth"]["geojson_file"].get(),
+                "feature": cfg["settings"]["choropleth"]["feature"].get(),
+                "center": cfg["settings"]["choropleth"]["center"].get(),
+                "lataxis": cfg["settings"]["choropleth"]["lataxis"].get(),
+                "lonaxis": cfg["settings"]["choropleth"]["lonaxis"].get(),
+            }
+        }
+
+        theme = {
+            "background": cfg["theme"]["background"].get()
+        }
+
+        return (
+            '{"swiss_cases": '
+            + data.swiss_cases.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_cases_by_date_filled": '
+            + data.swiss_cases_by_date_filled.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_cases_by_date_filled_per_capita": '
+            + data.swiss_cases_by_date_filled_per_capita.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_fatalities_by_date_filled": '
+            + data.swiss_fatalities_by_date_filled.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_cases_by_date_diff": '
+            + data.swiss_cases_by_date_diff.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_fatalities_by_date_diff": '
+            + data.swiss_fatalities_by_date_diff.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_hospitalizations_by_date_diff": '
+            + data.swiss_hospitalizations_by_date_diff.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "swiss_hospitalizations_by_date_filled": '
+            + data.swiss_hospitalizations_by_date_filled.to_json(
+                date_format="iso", orient="columns"
+            )
+            + ', "regional_centres": '
+            + json.dumps(data.regional_centres)
+            + ', "settings": '
+            + json.dumps(settings)
+            + ', "theme":'
+            + json.dumps(theme)
+            + ', "turbo":'
+            + json.dumps(style.turbo)
+            + ', "region_labels":'
+            + json.dumps(data.region_labels)
+            + ', "region_updates":'
+            + json.dumps(data.last_updated["Updated_Today"].to_dict())
+            + '}'
+        )
+except:
+    pass
+
+#
+# Regional log-log graph (client-based)
+#
+
 try:
     app.clientside_callback(
         ClientsideFunction(
@@ -2603,177 +2514,6 @@ try:
 
 except:
     pass
-
-#
-# Demographic Correlations
-#
-try:
-
-    @app.callback(
-        Output("prevalence-density-graph", "figure"),
-        [Input("dropdown-regions", "value")],
-    )
-    def update_prevalence_density_graph(selected_regions):
-        lang = get_lang()
-        return {
-            "data": [
-                {
-                    "x": data.prevalence_density_regression["x"],
-                    "y": data.prevalence_density_regression["y"],
-                    "mode": "lines",
-                    "hoverinfo": "skip",
-                    "showlegend": False,
-                    "line": {"dash": "dash", "width": 2.0, "color": "#ffffff",},
-                }
-            ]
-            + [
-                {
-                    "x": [data.regional_demography["Density"][region]],
-                    "y": [data.swiss_cases_by_date_filled_per_capita.iloc[-1][region]],
-                    "name": region,
-                    "mode": "markers",
-                    "text": region,
-                    "marker": {
-                        "color": style.region_colors[region],
-                        "size": data.scaled_cases[region],
-                    },
-                    "hoverinfo": "text",
-                    "hovertext": f"<span style='font-size:2.0em'><b>{region}</b></span><br>"
-                    + f"{cfg['i18n']['prevalence'][lang].get()}: <b>{data.swiss_cases_by_date_filled_per_capita.iloc[-1][region]:.3f}</b><br>"
-                    + f"{cfg['i18n']['population_density'][lang].get()}: <b>{data.regional_demography['Density'][region]:.0f}</b> Inhabitants / km<sup>2</sup><br>"
-                    + f"{cfg['i18n']['cases'][lang].get()}: <b>{data.swiss_cases_by_date_filled.iloc[-1][region]:.0f}</b>",
-                }
-                for _, region in enumerate(data.swiss_cases_as_dict)
-                if region in selected_regions
-            ],
-            "layout": {
-                "hovermode": "closest",
-                "height": 750,
-                "xaxis": {
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_corr_density_x"][lang].get(),
-                },
-                "yaxis": {
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_corr_density_y"][lang].get(),
-                },
-                "annotations": [
-                    {
-                        "x": data.prevalence_density_regression["x"][1],
-                        "y": data.prevalence_density_regression["y"][1],
-                        "xref": "x",
-                        "yref": "y",
-                        "text": "r: "
-                        + str(round(data.prevalence_density_regression["r_value"], 2))
-                        + "<br>"
-                        + "p-value: "
-                        + str(round(data.prevalence_density_regression["p_value"], 2)),
-                        "showarrow": True,
-                        "arrowhead": 4,
-                        "ax": 50,
-                        "ay": 50,
-                        "font": {"size": 12, "color": "#ffffff",},
-                        "arrowcolor": "#ffffff",
-                        "align": "left",
-                    }
-                ],
-                "dragmode": False,
-                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                "plot_bgcolor": style.theme["background"],
-                "paper_bgcolor": style.theme["background"],
-                "font": {"color": style.theme["foreground"]},
-            },
-        }
-
-
-except:
-    pass
-
-try:
-
-    @app.callback(
-        Output("cfr-age-graph", "figure"), [Input("dropdown-regions", "value")],
-    )
-    def update_cfr_age_graph(selected_regions):
-        lang = get_lang()
-        return {
-            "data": [
-                {
-                    "x": [v * 100 for v in data.cfr_age_regression["x"]],
-                    "y": data.cfr_age_regression["y"],
-                    "mode": "lines",
-                    "hoverinfo": "skip",
-                    "showlegend": False,
-                    "line": {"dash": "dash", "width": 2.0, "color": "#ffffff",},
-                }
-            ]
-            + [
-                {
-                    "x": [data.regional_demography["O65"][region] * 100],
-                    "y": [data.swiss_case_fatality_rates.iloc[-1][region]],
-                    "name": region,
-                    "mode": "markers",
-                    "marker": {
-                        "color": style.region_colors[region],
-                        "size": data.scaled_cases[region],
-                    },
-                    "hoverinfo": "text",
-                    "hovertext": f"<span style='font-size:2.0em'><b>{region}</b></span><br>"
-                    + f"{cfg['i18n']['population_over_65'][lang].get()}: <b>{data.regional_demography['O65'][region] * 100:.0f}%</b><br>"
-                    + f"{cfg['i18n']['case_fatality_ratio'][lang].get()}: <b>{data.swiss_case_fatality_rates.iloc[-1][region]:.3f}</b><br>"
-                    + f"{cfg['i18n']['cases'][lang].get()}: <b>{data.swiss_cases_by_date_filled.iloc[-1][region]:.0f}</b>",
-                }
-                for _, region in enumerate(data.swiss_cases_normalized_as_dict)
-                if region in selected_regions
-            ],
-            "layout": {
-                "hovermode": "closest",
-                "height": 750,
-                "xaxis": {
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_corr_age_x"][lang].get(),
-                },
-                "yaxis": {
-                    "type": "linear",
-                    "showgrid": True,
-                    "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_corr_age_y"][lang].get(),
-                },
-                "annotations": [
-                    {
-                        "x": data.cfr_age_regression["x"][1] * 100,
-                        "y": data.cfr_age_regression["y"][1],
-                        "xref": "x",
-                        "yref": "y",
-                        "text": "r: "
-                        + str(round(data.cfr_age_regression["r_value"], 2))
-                        + "<br>"
-                        + "p-value: "
-                        + str(round(data.cfr_age_regression["p_value"], 2)),
-                        "showarrow": True,
-                        "arrowhead": 4,
-                        "ax": -50,
-                        "ay": -50,
-                        "font": {"size": 12, "color": "#ffffff",},
-                        "arrowcolor": "#ffffff",
-                        "align": "left",
-                    }
-                ],
-                "dragmode": False,
-                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
-                "plot_bgcolor": style.theme["background"],
-                "paper_bgcolor": style.theme["background"],
-                "font": {"color": style.theme["foreground"]},
-            },
-        }
-
-
-except:
-    pass
-
 
 # Kick off the updated thread
 executor = ThreadPoolExecutor(max_workers=1)

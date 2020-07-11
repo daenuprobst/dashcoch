@@ -26,11 +26,10 @@ show:
   hospital_releases: On
   log_log_development: On
   international: On
-  age_distribution: On
+  age_distribution: Off
   tests: On
   regional: On
   log_log_regional_development: On
-  demographic_correlation: On
   raw: On
 
 logo:
@@ -313,10 +312,6 @@ i18n:
     - Data per Canton
     - Daten nach Kantonen
     - Données par Cantons
-  demographic_correlation_title:
-    - Demographic Correlation
-    - Demographische Korrelation
-    - Corrélation Démographique
   raw_data_title:
     - Raw Data
     - Rohdaten
@@ -597,30 +592,6 @@ i18n:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>between <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>zwischen <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux cas<br>entre <b>%{text}</b><br><extra></extra>"
-  plot_corr_density_title:
-    - Prevalence vs Population Density
-    - Prävalenz und Bevölkerungsdichte
-    - Prévalence et Densité de Population
-  plot_corr_density_x:
-    - "Population Density [Inhabitants/km2 Settlement Area]"
-    - "Bevölkerungsdichte [Einwohner/km2 Siedlungsfläche]"
-    - "Densité de la Population [Habitants / km2 de Zone de Peuplement]"
-  plot_corr_density_y:
-    - Prevalence
-    - Prävalenz
-    - Prévalence
-  plot_corr_age_title:
-    - Case Fatality Ratio vs Population over 65
-    - Case Fatality Ratio und Bevölkerung über 65
-    - Taux de Létalité et Population de plus de 65 Ans
-  plot_corr_age_x:
-    - "Population over 65 [%]"
-    - "Bevölkerung über 65 [%]"
-    - "Population de plus de 65 Ans [%]"
-  plot_corr_age_y:
-    - Case Fatality Ratio
-    - Case Fatality Ratio
-    - Taux de Létalité 
   prevalence:
     - Prevalence
     - Prävalenz
