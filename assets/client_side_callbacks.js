@@ -16,6 +16,7 @@ window.dash_clientside.clientside = {
       swiss_fatalities_by_date_diff: {},
       swiss_hospitalizations_by_date_diff: {},
       swiss_hospitalizations_by_date_filled: {},
+      swiss_cases_updated_mask_by_date: {}
     };
 
     for (var n in data) {
@@ -34,7 +35,8 @@ window.dash_clientside.clientside = {
     
     var d = slider_date_index;
     var map_data = data["swiss_cases_by_date_filled"];
-    var labels = []
+    var labels = [];
+    var mask = data["swiss_cases_updated_mask_by_date"];
 
     for (var region in data.regional_centres)
       if (region !== null)
@@ -62,8 +64,8 @@ window.dash_clientside.clientside = {
       labels = [];
       map_data = data["swiss_cases_by_date_diff"];
       for (var region in data.regional_centres)
-        if (map_data[region][d] !== null && data_raw["region_updates"][region])
-         labels.push(region + ": " + Math.round(map_data[region][d]).toString());
+        if (map_data[region][d] !== null && mask[region][d])
+          labels.push(region + ": " + Math.round(map_data[region][d]).toString());
         else
           labels.push("");
     } else if (mode === "new_fatalities") {

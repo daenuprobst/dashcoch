@@ -2444,6 +2444,10 @@ try:
             + data.swiss_hospitalizations_by_date_filled.to_json(
                 date_format="iso", orient="columns"
             )
+            + ', "swiss_cases_updated_mask_by_date": '
+            + data.swiss_cases_updated_mask_by_date.to_json(
+                date_format="iso", orient="columns"
+            )
             + ', "regional_centres": '
             + json.dumps(data.regional_centres)
             + ', "settings": '

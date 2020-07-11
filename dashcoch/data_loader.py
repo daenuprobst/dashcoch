@@ -33,6 +33,7 @@ class DataLoader:
 
         self.swiss_cases_by_date = self.swiss_cases.set_index("Date")
         self.swiss_fatalities_by_date = self.swiss_fatalities.set_index("Date")
+        self.swiss_cases_updated_mask_by_date = ~self.swiss_cases_by_date.isnull()
 
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
