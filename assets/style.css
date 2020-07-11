@@ -292,7 +292,7 @@ text.xtitle {
   }
 
   #graph-map text {
-    font-size: 0.5em !important;
+    font-size: 0.25em !important;
   }
 
   /* .dash-graph:not(#graph-map) {
