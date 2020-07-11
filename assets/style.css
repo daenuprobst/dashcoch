@@ -295,9 +295,9 @@ text.xtitle {
     font-size: 0.5em !important;
   }
 
-  .dash-graph:not(#graph-map) {
+  /* .dash-graph:not(#graph-map) {
     zoom: 0.5;
-  }
+  } */
 
   /* #graph-map {
     height: 62vw;
