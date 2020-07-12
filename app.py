@@ -1,4 +1,5 @@
 import time
+import numpy as np
 from dashcoch import DataLoader, StyleLoader
 import math
 from datetime import date, datetime, timedelta
@@ -1121,6 +1122,24 @@ def get_layout():
                             [
                                 html.Div(
                                     className="plot-title",
+                                    children=cfg["i18n"]["plot_regional_overview_title"][lang].get()
+                                ),
+                                dcc.Graph(
+                                    id="region-boxes", config={"displayModeBar": False}
+                                ),
+                            ],
+                            md=12,
+                            lg=12,
+                        )
+                    ]
+                ),
+                html.Br(),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
                                     children=cfg["i18n"]["plot_cases_regional_title"][
                                         lang
                                     ].get(),
@@ -2207,6 +2226,61 @@ except:
 # except:
 #     pass
 
+try:
+    @app.callback(
+        Output("region-boxes", "figure"),
+        [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
+    )
+    def update_region_boxes(selected_regions, selected_scale):
+        lang = get_lang()
+        d = data.swiss_cases_by_date_diff
+        d_selected = d[selected_regions]
+
+        d_mask = data.swiss_cases_updated_mask_by_date[selected_regions]
+        values = np.log(d_selected.values / d_mask.values).clip(0).transpose()
+
+        return {
+            "data": [
+                {
+                    "x": d["date_label"],
+                    "y": list(d_selected.columns),
+                    "z": values,
+                    "customdata": d_selected.values.transpose(),
+                    "colorbar": {
+                        "tick0": 0,
+                        "tickmode": "array",
+                        "tickvals": np.linspace(0, np.nanmax(values), num=5),
+                        "ticktext": np.rint(np.exp(np.linspace(0, np.nanmax(values), num=5)))
+                    },
+                    "colorscale": style.get_turbo(),
+                    # "hovertemplate": "%{customdata} (%{y}, %{x})<extra></extra>",
+                    "hovertemplate": "<br><span style='font-size:2.0em'><b>%{customdata}</b></span><b> %{y}</b><br>%{x}<extra></extra>",
+                    "type": "heatmap",
+                }
+            ],
+            "layout": {
+                "height": 500,
+                "xaxis": {
+                    "showgrid": False,
+                    "title": cfg["i18n"]["plot_regional_overview_x"][lang].get(),
+                },
+                "yaxis": {
+                    "showgrid": False,
+                    "title": cfg["i18n"]["plot_regional_overview_y"][lang].get(),
+                },
+                # "hovermode": "x unified",
+                "dragmode": False,
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 80},
+                "plot_bgcolor": style.theme["background"],
+                "paper_bgcolor": style.theme["background"],
+                "font": {"color": style.theme["foreground"]},
+                # "shapes": phase_shapes,
+                # "annotations": phase_annotations_double_height,
+            },
+        }
+except:
+    pass
+
 #
 # Regional Data
 #
@@ -2520,12 +2594,12 @@ except:
     pass
 
 # Kick off the updated thread
-executor = ThreadPoolExecutor(max_workers=1)
-executor.submit(update_data)
+# executor = ThreadPoolExecutor(max_workers=1)
+# executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        # debug=True,
+        debug=True,
         dev_tools_hot_reload=True,
         dev_tools_hot_reload_interval=50,
         dev_tools_hot_reload_max_retry=30,

@@ -592,6 +592,18 @@ i18n:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> new cases<br>between <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>zwischen <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux cas<br>entre <b>%{text}</b><br><extra></extra>"
+  plot_regional_overview_title:
+    - "Cantonal Overview"
+    - "Kantonale Übersicht"
+    - "Aperçu Cantonal"
+  plot_regional_overview_x:
+    - "Date"
+    - "Datum"
+    - "Date"
+  plot_regional_overview_y:
+    - "Canton"
+    - "Kanton"
+    - "Canton"
   prevalence:
     - Prevalence
     - Prävalenz
