@@ -20,6 +20,7 @@ show:
   totals: On
   updates: On
   map: On
+  region_overview: On
   region_links: On
   main: On
   hospitalizations: On
@@ -207,9 +208,9 @@ i18n:
     - Neuste Entwicklungen der COVID-19 Pandemie in der Schweiz
     - Dernières mises à jour sur la pandémie de COVID-19 en Suisse
   important:
-    - "##### In order to visualize the current development of the pandemic better, the data has been reset beginning with 1. 6. 2020.\n\nIf you like, you can also take part in this study:\n\nCosa ne pensa delle misure di protezione contro la diffusione del nuovo coronavirus? Come sta andando ora che le misure sono state allentate? Condivida la sua esperienza partecipando a questo [studio internazionale «PSY-COVID»](https://psy-sowi-web.uzh.ch/soscisurvey/Psy-COVIDStudyItal/) (10-15 minuti)"
-    - "##### Um die momentane Entwicklung der Pandemie besser zu visualisieren, wurden die Daten per 1. 6. 2020 auf 0 zurückgesetzt.\n\nWenn du möchtest, kannst du auch an dieser Studie Teilnehmen:\n\nWas halten Sie von den Massnahmen zur Eindämmung der Verbreitung des neuen Coronavirus? Und wie geht es Ihnen nach der Lockerungen der Massnahmen? Teilen Sie Ihre Erfahrungen hier: [internationale Studie «PSY-COVID»](https://psy-sowi-web.uzh.ch/soscisurvey/PSY-COVIDStudy/) (10-15 Minuten)"
-    - "##### Afin de mieux visualiser l'évolution actuelle de la pandémie, les données ont été réinitialisées à partir du 1. 6. 2020\n\nSi tu veux, tu peux participer à cette étude:\n\nQue pensez-vous des mesures de protection contre la propagation du nouveau coronavirus? Et comment allez-vous après l'assouplissement des mesures? Participez à cette [étude internationale «PSY-COVID»](https://psy-sowi-web.uzh.ch/soscisurvey/psy-covid-fr/) (10-15 minutes)"
+    - "In order to visualize the current development of the pandemic better, the data has been reset beginning with 1. 6. 2020."
+    - "Um die momentane Entwicklung der Pandemie besser zu visualisieren, wurden die Daten per 1. 6. 2020 auf 0 zurückgesetzt."
+    - "Afin de mieux visualiser l'évolution actuelle de la pandémie, les données ont été réinitialisées à partir du 1. 6. 2020."
   info:
     - "[Contact me on Twitter](https://twitter.com/skepteis). This website ist open and free of charge, but please consider [donating to the Glückskette](https://www.glueckskette.ch/).
       The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
@@ -265,9 +266,9 @@ i18n:
     - Veränderung Hospitalisierungen
     - Évolution des Hospitalisations
   total_hospitalizations:
-    - Total Hospitalizations since 1. 6.
-    - Total Hospitalisierungen seit dem 1. 6.
-    - Total des Hospitalisations depuis le 1. 6.
+    - Change in Hospitalizations since 1. 6.
+    - Veränderung Hospitalisierungen seit dem 1. 6.
+    - Évolution des Hospitalisations depuis le 1. 6.
   new_fatalities:
     - New Fatalities
     - Neue Todesfälle
@@ -373,9 +374,9 @@ i18n:
     - Todesfälle
     - Décès
   plot_hospitalizations_country_title:
-    - Current Hospitalizations (Releases are Subtracted)
-    - Aktuelle Hospitalisierungen (Entlassungen Abgezogen)
-    - Hospitalisations en cours (Sortis Déduites)
+    - Change in Hospitalizations since 1. 6. (Releases are Subtracted)
+    - Veränderung in Hospitalisierungen seit dem 1. 6. (Entlassungen Abgezogen)
+    - Évolution des Hospitalisations depuis le 1. 6. (Sortis Déduites)
   plot_hospitalizations_country_x:
     - Date
     - Datum
@@ -593,9 +594,9 @@ i18n:
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> neue Fälle<br>zwischen <b>%{text}</b><br><extra></extra>"
     - "<br><span style='font-size:2.0em'><b>%{y:.0f}</b></span> nouveaux cas<br>entre <b>%{text}</b><br><extra></extra>"
   plot_regional_overview_title:
-    - "Cantonal Overview"
-    - "Kantonale Übersicht"
-    - "Aperçu Cantonal"
+    - "Cantonal Overview: New Cases by Day"
+    - "Kantonale Übersicht: Neue Fälle nach Tag"
+    - "Aperçu Cantonal: Nouveaux Cas par Jour"
   plot_regional_overview_x:
     - "Date"
     - "Datum"
@@ -604,6 +605,10 @@ i18n:
     - "Canton"
     - "Kanton"
     - "Canton"
+  plot_regional_null:
+    - "No Data"
+    - "Keine Daten"
+    - "Pas de Données"
   prevalence:
     - Prevalence
     - Prävalenz

@@ -533,6 +533,27 @@ def get_layout():
             ]
         )
 
+    if cfg["show"]["region_overview"]:
+        content.extend([
+            dbc.Row(
+                [
+                    dbc.Col(
+                        [
+                            html.Div(
+                                className="plot-title",
+                                children=cfg["i18n"]["plot_regional_overview_title"][lang].get()
+                            ),
+                            dcc.Graph(
+                                id="region-boxes", config={"displayModeBar": False}
+                            ),
+                        ],
+                        md=12,
+                        lg=12,
+                    )
+                ]
+            ),
+        ])
+
     # Links to regional websites
     if cfg["show"]["region_links"]:
         content.extend(
@@ -1114,24 +1135,6 @@ def get_layout():
                             multi=True,
                         ),
                     ],
-                ),
-                html.Br(),
-                dbc.Row(
-                    [
-                        dbc.Col(
-                            [
-                                html.Div(
-                                    className="plot-title",
-                                    children=cfg["i18n"]["plot_regional_overview_title"][lang].get()
-                                ),
-                                dcc.Graph(
-                                    id="region-boxes", config={"displayModeBar": False}
-                                ),
-                            ],
-                            md=12,
-                            lg=12,
-                        )
-                    ]
                 ),
                 html.Br(),
                 dbc.Row(
@@ -2234,26 +2237,21 @@ try:
     def update_region_boxes(selected_regions, selected_scale):
         lang = get_lang()
         d = data.swiss_cases_by_date_diff
-        d_selected = d[selected_regions]
-
-        d_mask = data.swiss_cases_updated_mask_by_date[selected_regions]
-        values = np.log(d_selected.values / d_mask.values).clip(0).transpose()
-
+        d_selected = d[selected_regions] / data.swiss_cases_updated_mask_by_date[selected_regions]
+        
+        region_order = d_selected.transpose().sum(axis=1).sort_values().transpose().index
+        
+        d_selected = d_selected[region_order]
+        values = d_selected.values.transpose()
+        
         return {
             "data": [
                 {
-                    "x": d["date_label"],
+                    "x": d.index,
                     "y": list(d_selected.columns),
                     "z": values,
-                    "customdata": d_selected.values.transpose(),
-                    "colorbar": {
-                        "tick0": 0,
-                        "tickmode": "array",
-                        "tickvals": np.linspace(0, np.nanmax(values), num=5),
-                        "ticktext": np.rint(np.exp(np.linspace(0, np.nanmax(values), num=5)))
-                    },
-                    "colorscale": style.get_turbo(),
-                    # "hovertemplate": "%{customdata} (%{y}, %{x})<extra></extra>",
+                    "customdata": d_selected.replace(np.nan, cfg["i18n"]["plot_regional_null"][lang].get(), regex=True).values.transpose(),
+                    "colorscale": "Portland",
                     "hovertemplate": "<br><span style='font-size:2.0em'><b>%{customdata}</b></span><b> %{y}</b><br>%{x}<extra></extra>",
                     "type": "heatmap",
                 }
@@ -2594,12 +2592,12 @@ except:
     pass
 
 # Kick off the updated thread
-# executor = ThreadPoolExecutor(max_workers=1)
-# executor.submit(update_data)
+executor = ThreadPoolExecutor(max_workers=1)
+executor.submit(update_data)
 
 if __name__ == "__main__":
     app.run_server(
-        debug=True,
+        # debug=True,
         dev_tools_hot_reload=True,
         dev_tools_hot_reload_interval=50,
         dev_tools_hot_reload_max_retry=30,
