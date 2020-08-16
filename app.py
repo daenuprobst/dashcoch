@@ -951,7 +951,7 @@ def get_layout():
                                     ].get(),
                                 ),
                                 dcc.Graph(
-                                    id="case-world-graph",
+                                    id="cases-world-graph",
                                     config={"displayModeBar": False},
                                 ),
                             ],
@@ -962,7 +962,7 @@ def get_layout():
                             [
                                 html.Div(
                                     className="plot-title",
-                                    children=cfg["i18n"]["plot_world_cfr_title"][
+                                    children=cfg["i18n"]["plot_world_fatalities_title"][
                                         lang
                                     ].get(),
                                 ),
@@ -973,6 +973,68 @@ def get_layout():
                             ],
                             md=12,
                             lg=6,
+                        ),
+                    ],
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_world_tests_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="new-tests-world-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        ),
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_world_positivity_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="test-positivity-world-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=6,
+                        )
+                    ],
+                ),
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"]["plot_tests_vs_positivity_title"][
+                                        lang
+                                    ].get(),
+                                ),
+                                html.Div(
+                                    className="info-container",
+                                    children=cfg["i18n"]["info_plot_tests_vs_positivity"][
+                                        lang
+                                    ].get(),
+                                ),
+                                dcc.Graph(
+                                    id="tests-vs-positivity-world-graph",
+                                    config={"displayModeBar": False},
+                                ),
+                            ],
+                            md=12,
+                            lg=12,
                         ),
                     ],
                 ),
@@ -1861,7 +1923,6 @@ except:
 # Log-Log Plot Country
 #
 try:
-
     @app.callback(
         Output("caseincrease-ch-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -1932,8 +1993,6 @@ try:
                 "font": {"color": style.theme["foreground"]},
             },
         }
-
-
 except:
     pass
 
@@ -1943,20 +2002,22 @@ except:
 try:
 
     @app.callback(
-        Output("case-world-graph", "figure"),
+        Output("cases-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
     )
-    def update_case_world_graph(selected_scale):
+    def update_cases_world_graph(selected_scale):
         lang = get_lang()
         return {
             "data": [
                 {
-                    "x": data.swiss_world_cases_normalized.index.values,
-                    "y": data.swiss_world_cases_normalized[country],
+                    "x": data.world[country]["date"],
+                    "y": data.world[country]["total_cases_per_ten_thousand"],
                     "name": country,
+                    "line": {
+                        "width": 1.0,
+                    }
                 }
-                for country in data.swiss_world_cases_normalized
-                if country != "Day"
+                for country in data.world
             ],
             "layout": {
                 "height": 400,
@@ -1994,6 +2055,7 @@ except:
     pass
 
 try:
+
     @app.callback(
         Output("fatalities-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -2003,27 +2065,38 @@ try:
         return {
             "data": [
                 {
-                    "x": data.world_case_fatality_rate.index.values.tolist(),
-                    "y": [val for val in data.world_case_fatality_rate],
-                    "name": cfg["settings"]["total_column_name"].get(),
-                    "marker": {"color": style.theme["foreground"]},
-                    "type": "bar",
+                    "x": data.world[country]["date"],
+                    "y": data.world[country]["total_deaths_per_ten_thousand"],
+                    "name": country,
+                    "line": {
+                        "width": 1.0,
+                    }
                 }
+                for country in data.world
             ],
             "layout": {
                 "height": 400,
                 "xaxis": {
                     "showgrid": True,
                     "color": "#ffffff",
-                    "title": cfg["i18n"]["plot_world_cfr_x"][lang].get(),
+                    "title": cfg["i18n"]["plot_world_fatalities_x"][lang].get(),
                 },
                 "yaxis": {
                     "type": selected_scale,
                     "showgrid": True,
                     "color": "#ffffff",
-                    "rangemode": "tozero",
-                    "title": cfg["i18n"]["plot_world_cfr_y"][lang].get(),
+                    "title": cfg["i18n"]["plot_world_fatalities_y"][lang].get(),
                 },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
+                "hovermode": "x unified",
                 "dragmode": False,
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
@@ -2033,6 +2106,181 @@ try:
         }
 
 
+except:
+    pass
+
+try:
+    @app.callback(
+        Output("new-tests-world-graph", "figure"),
+        [Input("radio-scale-switzerland", "value")],
+    )
+    def update_tests_world_graph(selected_scale):
+        lang = get_lang()
+        return {
+            "data": [
+                {
+                    "x": data.world[country]["date"],
+                    "y": data.world[country]["new_tests_smoothed_per_ten_thousand"],
+                    "name": country,
+                    "line": {
+                        "width": 1.0,
+                    }
+                }
+                for country in data.world
+            ],
+            "layout": {
+                "height": 400,
+                "xaxis": {
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "title": cfg["i18n"]["plot_world_tests_x"][lang].get(),
+                },
+                "yaxis": {
+                    "type": selected_scale,
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "title": cfg["i18n"]["plot_world_tests_y"][lang].get(),
+                },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
+                "hovermode": "x unified",
+                "dragmode": False,
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                "plot_bgcolor": style.theme["background"],
+                "paper_bgcolor": style.theme["background"],
+                "font": {"color": style.theme["foreground"]},
+            },
+        }
+
+except:
+    pass
+
+
+try:
+    @app.callback(
+        Output("test-positivity-world-graph", "figure"),
+        [Input("radio-scale-switzerland", "value")],
+    )
+    def update_test_positivity_world_graph(selected_scale):
+        lang = get_lang()
+        return {
+            "data": [
+                {
+                    "x": data.world[country]["date"],
+                    "y": data.world[country]["positive_rate"],
+                    "name": country,
+                    "mode": "lines",
+                    "line": {
+                        "width": 1.0,
+                    }
+                }
+                for country in data.world
+            ],
+            "layout": {
+                "height": 400,
+                "xaxis": {
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "title": cfg["i18n"]["plot_world_positivity_x"][lang].get(),
+                },
+                "yaxis": {
+                    "type": selected_scale,
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "title": cfg["i18n"]["plot_world_positivity_y"][lang].get(),
+                },
+                "legend": {
+                    "x": 0.015,
+                    "y": 1,
+                    "traceorder": "normal",
+                    "font": {"family": "sans-serif", "color": "white"},
+                    "bgcolor": style.theme["background"],
+                    "bordercolor": style.theme["accent"],
+                    "borderwidth": 1,
+                },
+                "hovermode": "x unified",
+                "dragmode": False,
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                "plot_bgcolor": style.theme["background"],
+                "paper_bgcolor": style.theme["background"],
+                "font": {"color": style.theme["foreground"]},
+            },
+        }
+
+
+except:
+    pass
+
+
+try:
+    @app.callback(
+        Output("tests-vs-positivity-world-graph", "figure"),
+        [Input("radio-scale-switzerland", "value")],
+    )
+    def update_caseincrease_ch_graph(selected_scale):
+        lang = get_lang()
+        return {
+            "data": [
+                {
+                    "x": data.world_no_na[country]["new_tests_smoothed_per_ten_thousand"].tail(7),
+                    "y": data.world_no_na[country]["positive_rate"].tail(7) * 100,
+                    "customdata": data.world_no_na[country]["date_label"].tail(7),
+                    "name": country,
+                    "mode": "lines",
+                    "line": {
+                        "width": 1.0,
+                    },
+                    "showlegend": False,
+                    "hovertemplate": cfg["i18n"]["plot_tests_vs_positivity_hovertemplate"][lang].get(),
+                }
+                for country in data.world_no_na
+            ] + [
+                {
+                    "x": data.world_no_na[country]["new_tests_smoothed_per_ten_thousand"].tail(1),
+                    "y": data.world_no_na[country]["positive_rate"].tail(1) * 100,
+                    "customdata": data.world_no_na[country]["date_label"].tail(1),
+                    "name": country,
+                    "text": country,
+                    "mode": "markers+text",
+                    "marker": {
+                        "color": "white",
+                    },
+                    "showlegend": False,
+                    "hovertemplate": cfg["i18n"]["plot_tests_vs_positivity_hovertemplate"][lang].get(),
+                    "textposition": "top center",
+                }
+                for country in data.world_no_na
+            ],
+            "layout": {
+                "height": 700,
+                "xaxis": {
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "title": cfg["i18n"]["plot_tests_vs_positivity_x"][lang].get(),
+                    "type": selected_scale,
+                },
+                "yaxis": {
+                    "type": selected_scale,
+                    "showgrid": True,
+                    "color": "#ffffff",
+                    "rangemode": "tozero",
+                    "title": cfg["i18n"]["plot_tests_vs_positivity_y"][lang].get(),
+                },
+                "hovermode": "closest",
+                "dragmode": False,
+                "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                "plot_bgcolor": style.theme["background"],
+                "paper_bgcolor": style.theme["background"],
+                "font": {"color": style.theme["foreground"]},
+            },
+        }
 except:
     pass
 
@@ -2598,7 +2846,7 @@ executor.submit(update_data)
 if __name__ == "__main__":
     app.run_server(
         # debug=True,
-        dev_tools_hot_reload=True,
-        dev_tools_hot_reload_interval=50,
-        dev_tools_hot_reload_max_retry=30,
+        # dev_tools_hot_reload=True,
+        # dev_tools_hot_reload_interval=50,
+        # dev_tools_hot_reload_max_retry=30,
     )

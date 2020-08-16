@@ -6,9 +6,7 @@ urls:
   vent: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_vent_switzerland_openzh-phase2.csv
   releases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_released_switzerland_openzh-phase2.csv
   demography: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv
-  world_cases: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
-  world_fatalities: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
-  world_recoveries: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
+  world: https://covid.ourworldindata.org/data/owid-covid-data.csv
   last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/last_updated.csv
   age_distribution: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/age_distribution_latest.csv
   tests: https://raw.githubusercontent.com/daenuprobst/covid-data-analysis/master/tests.csv
@@ -80,11 +78,12 @@ theme:
   green: "#2ecc71"
 
 countries:
+  Austria: 8858775
   France: 65273511
   Germany: 83783942
   Italy: 60461826
   Spain: 46754778
-  US: 331002651
+  # US: 331002651
   United Kingdom: 67886011
   Switzerland: 8654622
   Korea, South: 51269185
@@ -208,9 +207,9 @@ i18n:
     - Neuste Entwicklungen der COVID-19 Pandemie in der Schweiz
     - Dernières mises à jour sur la pandémie de COVID-19 en Suisse
   important:
-    - "In order to visualize the current development of the pandemic better, the data has been reset beginning with 1. 6. 2020."
-    - "Um die momentane Entwicklung der Pandemie besser zu visualisieren, wurden die Daten per 1. 6. 2020 auf 0 zurückgesetzt."
-    - "Afin de mieux visualiser l'évolution actuelle de la pandémie, les données ont été réinitialisées à partir du 1. 6. 2020."
+    - "During this pandemic, I watched with concern how officials and politicians ignore and brush aside science and scientists. However, what caused me to write this message were recent statements by politicians across the political spectrum and exponents of economic interest groups that scientists (members of the Covid-19-Task Force) should not voice the scientific position publicly.\n\nAs a scientist myself and as this website, its content, as well as the internet and the device you use to access it, are the products of science, I think it is appropriate to use it to convey this message: **Listen to science.**\n\n You may now ask, 'which science'? Given the platform the media has given to some fringe 'scientific' opinions that are often pure speculation, this question is understandable. However, what is communicated by the members of the Task Force is the current scientific consensus that is backed up by the vast majority of international scientists and experts. It is important to remember that science is a self-correcting process and that this consensus may change with time. However, it has, given all available information, the highest probability to be the truth. And keep in mind that in science, in contrast to politics, finding the truth usually starts careers and doesn't end them."
+    - "Während dieser Pandemie beobachtete ich besorgt, wie Beamte und PolitikerInnen Wissenschaft und WissenschaftlerInnen ignorierten und beiseite schoben. Was mich jedoch veranlasste diese Nachricht zu schreiben, waren die jüngsten Aussagen von PolitikernInnen aus dem gesamten politischen Spektrum sowie VertreterInnen wirtschaftlicher Interessengruppen, dass WissenschaftlerInnen (Mitglieder der Covid-19-Task Force) die wissenschaftliche Position nicht öffentlich vertreten sollen.\n\n Als Wissenschaftler, und da diese Website, deren Inhalt, sowie das Internet und das Gerät mit dem du darauf zugreifst Produkte der Wissenschaft sind, halte ich es für angebracht, die Website zu verwenden, um diese Nachricht zu vermitteln: **Höre auf die Wissenschaft.**\n\n Du kannst jetzt fragen, welche Wissenschaft? Angesichts der Plattform, welche die Medien einigen 'wissenschaftlichen' Randmeinungen gegeben haben, die oft reine Spekulation sind, ist diese Frage verständlich. Aber: Die Informationen welche die Mitglieder der Task Force vermitteln sind der aktuelle wissenschaftliche Konsens, der von der überwiegenden Mehrheit der internationalen WissenschaftlerInnen und ExpertInnen unterstützt wird. Es ist wichtig, sich daran zu erinnern, dass Wissenschaft ein selbstkorrigierender Prozess ist und dass sich der wissenschaftliche Konsens mit der Zeit ändern kann. Aufgrund allen verfügbaren Informationen hat dieser Konsens jedoch die höchste Wahrscheinlichkeit, der Wahrheit, also den Naturgesetzen, zu entsprechen. Und denke daran, dass das Finden der Wahrheit in der Wissenschaft oft Karrieren startet, während es diese in der Politik eher beendet."
+    - "Comme mon français n'est pas assez bon pour traduire ce message (désolé anciens professeurs de français), le voici en anglais:\n\nDuring this pandemic, I watched with concern how officials and politicians ignore and brush aside science and scientists. However, what caused me to write this message were recent statements by politicians across the political spectrum and exponents of economic interest groups that scientists (members of the Covid-19-Task Force) should not voice the scientific position publicly.\n\nAs a scientist myself and as this website, its content, as well as the internet and the device you use to access it, are the products of science, I think it is appropriate to use it to convey this message: **Listen to science.**\n\n You may now ask, 'which science'? Given the platform the media has given to some fringe 'scientific' opinions that are often pure speculation, this question is understandable. However, what is communicated by the members of the Task Force is the current scientific consensus that is backed up by the vast majority of international scientists and experts. It is important to remember that science is a self-correcting process and that this consensus may change with time. However, it has, given all available information, the highest probability to be the truth. And keep in mind that in science, in contrast to politics, finding the truth usually starts careers and doesn't end them."
   info:
     - "[Contact me on Twitter](https://twitter.com/skepteis). This website ist open and free of charge, but please consider [donating to the Glückskette](https://www.glueckskette.ch/).
       The data sources can be found [here](https://github.com/openZH/covid_19/tree/master/fallzahlen_kanton_total_csv), an aggregation of the different files provided by openZH [here](https://github.com/daenuprobst/covid19-cases-switzerland), and alternatively as an [Excel file](https://github.com/daenuprobst/covid19-cases-switzerland/blob/master/covid_19_data_switzerland.xlsx?raw=true).
@@ -442,25 +441,81 @@ i18n:
     - Kumulative Prävalenz pro 10'000 Einwohner
     - Prévalence Cumulée pour 10'000 Habitants
   plot_world_cases_x:
-    - Days since Prevalence >0.4 per 10,000
-    - Tage seit Prävalenz >0.4 pro 10'000
-    - Jours depuis la Prévalence >0,4 pour 10'000
+    - Date
+    - Datum
+    - Date
   plot_world_cases_y:
     - Reported Cases / Population * 10,000
     - Bestätigte Fälle / Einwohnerzahl * 10'000
     - Cas confirmés / population * 10 000
-  plot_world_cfr_title:
-    - Case Fatality Ratios (Fatalities / Reported Cases)
-    - Case Fatality Ratios (Verstorbene / Bestätigte Fälle)
-    - Cas Confirmés / Population * 10'000
-  plot_world_cfr_x:
-    - Country
-    - Land
-    - Pays
-  plot_world_cfr_y:
-    - Fatalities / Reported Cases
-    - Verstorbene / Bestätigte Fälle
-    - Décédés / Cas Confirmés
+  # plot_world_cfr_title:
+  #   - Case Fatality Ratios (Fatalities / Reported Cases)
+  #   - Case Fatality Ratios (Verstorbene / Bestätigte Fälle)
+  #   - Cas Confirmés / Population * 10'000
+  # plot_world_cfr_x:
+  #   - Country
+  #   - Land
+  #   - Pays
+  # plot_world_cfr_y:
+  #   - Fatalities / Reported Cases
+  #   - Verstorbene / Bestätigte Fälle
+  #   - Décédés / Cas Confirmés
+  plot_world_fatalities_title:
+    - Cumulative Fatalities per 10,000 Inhabitants
+    - Kumulative Todesfälle pro 10'000 Einwohner
+    - Décès Cumulatif pour 10'000 Habitants
+  plot_world_fatalities_x:
+    - Date
+    - Datum
+    - Date
+  plot_world_fatalities_y:
+    - Reported Fatalities / Population * 10,000
+    - Bestätigte Todesfälle / Einwohnerzahl * 10'000
+    - Décès confirmés / Population * 10 000
+  plot_world_tests_title:
+    - Daily Tests per 10,000 Inhabitants
+    - Tägliche Tests pro 10'000 Einwohner
+    - Tests Quotidiens pour 10'000 Habitants
+  plot_world_tests_x:
+    - Date
+    - Datum
+    - Date
+  plot_world_tests_y:
+    - Daily Tests / Population * 10,000
+    - Tägliche Tests / Einwohnerzahl * 10'000
+    - Tests Quotidiens / Population * 10 000
+  plot_world_positivity_title:
+    - "Daily Percentage of Positive Tests"
+    - "Tägliche Positive Tests in Prozent"
+    - "Pourcentage de Tests Positifs Quotidien"
+  plot_world_positivity_x:
+    - Date
+    - Datum
+    - Date
+  plot_world_positivity_y:
+    - Daily Percentage of Positive Tests
+    - Tägliche Positive Tests in Prozent
+    - Pourcentage de Tests Positifs Quotidien
+  plot_tests_vs_positivity_title:
+    - "Daily Percentage of Positive Tests and Daily Tests per 10'000 (Last 7 Days)"
+    - "Tägliche Positive Tests in Prozent und Tägliche Tests pro 10'000 (Lezte 7 Tage)"
+    - "Pourcentage de Tests Positifs Quotidien et Tests pour 10'000 Quotidien (Les 7 Derniers Jours)"
+  info_plot_tests_vs_positivity:
+    - The global data on testing is not updated daily. For each country, the last 7 known values are shown.
+    - Die globalen Daten betreffend Tests werden nicht täglich aktualisiert. Für jedes Land werden die letzten 7 bekannten Tage angezeigt.
+    - Les données mondiales sur les tests ne sont pas mises à jour quotidiennement. Pour chaque pays, les 7 dernières valeurs connues sont affichées.
+  plot_tests_vs_positivity_x:
+    - Daily Tests per 10'000
+    - Tägliche Tests pro 10'000
+    - Tests pour 10'000 Quotidien
+  plot_tests_vs_positivity_y:
+    - Daily Percentage of Positive Tests
+    - Tägliche Positive Tests in Prozent
+    - Pourcentage de Tests Positifs Quotidien
+  plot_tests_vs_positivity_hovertemplate:
+    - "<br><span style='font-size:2.0em'><b>%{y:.1f}%</b></span> positive tests<br><b>%{x:.1f} tests per 10'000</b><br>%{customdata}<br><extra></extra>"
+    - "<br><span style='font-size:2.0em'><b>%{y:.1f}%</b></span> positive Tests<br><b>%{x:.1f} Tests pro 10'000</b><br>%{customdata}<br><extra></extra>"
+    - "<br><span style='font-size:2.0em'><b>%{y:.1f}%</b></span> tests positifs<br><b>%{x:.1f} tests pour 10'000</b><br>%{customdata}<br><extra></extra>"
   plot_age_dist_abs_title:
     - Number of Reported Cases by Sex and Age (FOPH Data)
     - Anzahl Bestätigter Fälle nach Geschlecht und Alter (BAG Daten)

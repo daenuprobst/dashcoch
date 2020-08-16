@@ -168,23 +168,31 @@ class DataLoader:
         # World related data
         #
         if cfg["show"]["international"]:
-            self.world_cases = self.__simplify_world_data(
-                pd.read_csv(cfg["urls"]["world_cases"].get())
-            )
+            # self.world_cases = self.__simplify_world_data(
+            #     pd.read_csv(cfg["urls"]["world_cases"].get())
+            # )
+            
+            self.world = pd.read_csv(cfg["urls"]["world"].get())
+            self.world = self.world[(self.world["location"].isin([*self.cfg["countries"].get()])) & (self.world["date"] >= "2020-05-31")]
+            
+            # Set new for last of May to zero, so all start at 0
+            self.world.loc[self.world["date"] == "2020-05-31", ["new_cases", "new_deaths", "new_tests"]] = 0
 
-            self.world_fataltities = self.__simplify_world_data(
-                pd.read_csv(cfg["urls"]["world_fatalities"].get())
-            )
-
-            self.world_population = self.cfg["countries"].get()
-
-            self.world_case_fatality_rate = (
-                self.world_fataltities.iloc[-1] / self.world_cases.iloc[-1]
-            )
-
-            self.swiss_world_cases_normalized = (
-                self.__get_swiss_world_cases_normalized()
-            )
+            self.world["total_cases"] = self.world.groupby("location")["new_cases"].cumsum().fillna(0)
+            self.world["total_deaths"] = self.world.groupby("location")["new_deaths"].cumsum().fillna(0)
+            self.world["total_tests"] = self.world.groupby("location")["new_tests"].cumsum().fillna(0)
+            self.world["total_cases_per_ten_thousand"] = (self.world["total_cases"] / self.world["population"] * 10000).round(decimals=3)
+            self.world["total_deaths_per_ten_thousand"] = (self.world["total_deaths"] / self.world["population"] * 10000).round(decimals=3)
+            self.world["cfr"] = (self.world["total_deaths"] / self.world["total_cases"]).round(decimals=3)
+            self.world["new_tests_smoothed_per_ten_thousand"] = (self.world["new_tests_smoothed"] / self.world["population"] * 10000).round(decimals=3)
+            self.world["date_label"] = pd.to_datetime(self.world["date"]).dt.strftime("%d. %m.")
+            # Put in per-country dict to avoid doing this with every callback
+            tmp = {}
+            self.world_no_na = {}
+            for country in self.world["location"].unique():
+                tmp[country] = self.world[self.world["location"] == country].copy()
+                self.world_no_na[country] = self.world[self.world["location"] == country].copy().dropna(subset=["new_tests_smoothed_per_ten_thousand", "positive_rate"])
+            self.world = tmp
 
     def __get_iso(self, df):
         isos = []
