@@ -43,10 +43,14 @@ class DataLoader:
 
         self.swiss_cases_by_date_diff[self.total_column_name + "_rolling"] = np.round(
             self.swiss_cases_by_date_diff[self.total_column_name]
-            .rolling(7, center=True)
+            .rolling(7, center=True, min_periods=1)
             .mean(),
             0,
         )
+
+        self.swiss_cases_by_date_diff.loc[
+            self.swiss_cases_by_date_diff.tail(7).index, self.total_column_name + "_rolling"
+        ] = np.nan
 
         self.swiss_cases_by_date_diff["date_label"] = [
             date.fromisoformat(d).strftime("%d. %m.")
@@ -59,10 +63,14 @@ class DataLoader:
             self.total_column_name + "_rolling"
         ] = np.round(
             self.swiss_fatalities_by_date_diff[self.total_column_name]
-            .rolling(7, center=True)
+            .rolling(7, center=True, min_periods=1)
             .mean(),
             0,
         )
+
+        self.swiss_fatalities_by_date_diff.loc[
+            self.swiss_fatalities_by_date_diff.tail(7).index, self.total_column_name + "_rolling"
+        ] = np.nan
 
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
             method="ffill", axis=0
