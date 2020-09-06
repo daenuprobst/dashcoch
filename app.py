@@ -269,7 +269,7 @@ def get_layout():
                             },
                         ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
-                        html.Div(id="muy-importante", children=[dcc.Markdown(cfg["i18n"]["important"][lang].get())]),
+                        #html.Div(id="muy-importante", children=[dcc.Markdown(cfg["i18n"]["important"][lang].get())]),
                         dbc.Button(
                             "Info",
                             id="info-button",
