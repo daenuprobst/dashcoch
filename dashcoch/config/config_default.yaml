@@ -1,10 +1,10 @@
 urls:
-  cases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland_openzh-phase2.csv
-  fatalities: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland_openzh-phase2.csv
-  hospitalizations: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_hospitalized_switzerland_openzh-phase2.csv
-  icu: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_icu_switzerland_openzh-phase2.csv
-  vent: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_vent_switzerland_openzh-phase2.csv
-  releases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_released_switzerland_openzh-phase2.csv
+  cases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_cases_switzerland_openzh.csv
+  fatalities: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_fatalities_switzerland_openzh.csv
+  hospitalizations: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_hospitalized_switzerland_openzh.csv
+  icu: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_icu_switzerland_openzh.csv
+  vent: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_vent_switzerland_openzh.csv
+  releases: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/covid19_released_switzerland_openzh.csv
   demography: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/demographics.csv
   world: https://covid.ourworldindata.org/data/owid-covid-data.csv
   last_updated: https://raw.githubusercontent.com/daenuprobst/covid19-cases-switzerland/master/last_updated.csv
@@ -196,6 +196,7 @@ regions:
     lat: 47.41275
     lon: 8.65508
     color: "#0abde3"
+    detail: "https://www.zh.ch/de/gesundheit/coronavirus/zahlen-fakten-covid-19.html?keyword=covid19#/home"
 
 i18n:
   title:
@@ -705,6 +706,12 @@ i18n:
     - Bitte beachten Sie, dass die Abflachung der Kurven irreführend sein kann, da die heutigen Daten noch nicht vollständig aktualisiert sind.
     - Veuillez noter que les lignes en pointillés sont basées sur des données qui n'ont pas encore été complètement mises à jour et peuvent donc être trompeuses.
     - Si noti che le linee tratteggiate si basano su dati che non sono stati ancora completamente aggiornati e quindi potrebbero essere fuorvianti.
+  info_polar_regional:
+    - This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day.
+    - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.
+    - Ce graphique montre l'évolution de nouveaux cas sur la base du nombre total de cas. Les nouveaux cas quotidiens varient cependant fortement d'un jour à l'autre. Pour montrer un développement plus fluide, les lignes indiquent le nombre total de cas pendant une semaine à chaque jour.
+    - Questo diagramma mostra lo sviluppo di nuovi casi basati sul totale dei casi. I nuovi casi quotidiani, tuttavia, variano fortemente tra i giorni. Per mostrare uno sviluppo più fluido, le righe mostrano il numero totale di casi durante una settimana per ogni giorno.
+  
   info_log_log_regional:
     - This plot shows the development of new cases based on total cases. The daily new cases, however, vary strongly between days. To show a smoother development, the lines show the total number of cases during a week to each day.
     - Dieses Diagramm zeigt die Entwicklung neuer Fälle basierend auf der Gesamtzahl der Fälle. Die täglichen Neuerkrankungen variieren jedoch stark zwischen den Tagen. Um eine geglättete Entwicklung zu zeigen, zeigen die Linien die Gesamtzahl der Fälle während einer Woche bis zu jedem Tag.

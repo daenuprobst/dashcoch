@@ -1,6 +1,6 @@
 geojson==2.5.0
 dash==1.13.4
-pandas==0.25.1
+pandas
 gunicorn==20.0.4
 pytz==2019.2
 python-i18n[YAML]==0.3.7

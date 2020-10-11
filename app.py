@@ -48,12 +48,13 @@ server = app.server
 app.title = cfg["i18n"]["title"][lang].get()
 style = StyleLoader(cfg)
 
+
 def get_data():
     global data
     try:
         data = DataLoader(cfg)
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 def update_data(period=int(cfg["settings"]["update_interval"].get())):
@@ -116,42 +117,54 @@ phase_shapes = [
     #     "layer": "below",
     #     "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
     # },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-05-11",
-        "y0": 0,
-        "x1": "2020-05-11",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-06-06",
-        "y0": 0,
-        "x1": "2020-06-06",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
-    {
-        "type": "line",
-        "xref": "x",
-        "yref": "paper",
-        "x0": "2020-06-22",
-        "y0": 0,
-        "x1": "2020-06-22",
-        "y1": 1,
-        "opacity": 1.0,
-        "layer": "below",
-        "line": {"width": 1.0, "color": "#ffffff", "dash": "dash",},
-    },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-05-11",
+    #     "y0": 0,
+    #     "x1": "2020-05-11",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {
+    #         "width": 1.0,
+    #         "color": "#ffffff",
+    #         "dash": "dash",
+    #     },
+    # },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-06-06",
+    #     "y0": 0,
+    #     "x1": "2020-06-06",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {
+    #         "width": 1.0,
+    #         "color": "#ffffff",
+    #         "dash": "dash",
+    #     },
+    # },
+    # {
+    #     "type": "line",
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "x0": "2020-06-22",
+    #     "y0": 0,
+    #     "x1": "2020-06-22",
+    #     "y1": 1,
+    #     "opacity": 1.0,
+    #     "layer": "below",
+    #     "line": {
+    #         "width": 1.0,
+    #         "color": "#ffffff",
+    #         "dash": "dash",
+    #     },
+    # },
 ]
 phase_annotations = [
     # {
@@ -160,7 +173,7 @@ phase_annotations = [
     #     "xref": "x",
     #     "yref": "paper",
     #     "text": "Soft Lockdown",
-    #     "font": {"color": "#ffffff"},
+    #     "font": {"color": "#ffffff", "size": 10},
     #     "align": "center",
     #     "showarrow": False,
     # },
@@ -170,74 +183,75 @@ phase_annotations = [
     #     "xref": "x",
     #     "yref": "paper",
     #     "text": "Phase I",
-    #     "font": {"color": "#ffffff"},
+    #     "font": {"color": "#ffffff", "size": 10},
     #     "align": "center",
     #     "showarrow": False,
     # },
-    {
-        "x": "2020-05-24",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase II",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-06-14",
-        "y": -0.12,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase III",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    }
+    # {
+    #     "x": "2020-05-24",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase II",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-06-14",
+    #     "y": -0.12,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase III",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
 ]
 
 phase_annotations_double_height = [
-    {
-        "x": "2020-04-06",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Soft Lockdown",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-05-04",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase I",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-05-24",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase II",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    },
-    {
-        "x": "2020-06-14",
-        "y": -0.06,
-        "xref": "x",
-        "yref": "paper",
-        "text": "Phase III",
-        "font": {"color": "#ffffff"},
-        "align": "center",
-        "showarrow": False,
-    }
+    # {
+    #     "x": "2020-04-06",
+    #     "y": -0.06,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Soft Lockdown",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-05-04",
+    #     "y": 1.0,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase I",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-05-24",
+    #     "y": -0.06,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase II",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
+    # {
+    #     "x": "2020-06-14",
+    #     "y": 1.0,
+    #     "xref": "x",
+    #     "yref": "paper",
+    #     "text": "Phase III",
+    #     "font": {"color": "#ffffff", "size": 10},
+    #     "align": "center",
+    #     "showarrow": False,
+    # },
 ]
+
 
 def get_layout():
     lang = get_lang()
@@ -269,7 +283,7 @@ def get_layout():
                             },
                         ),
                         html.H3(children=cfg["i18n"]["title"][lang].get()),
-                        #html.Div(id="muy-importante", children=[dcc.Markdown(cfg["i18n"]["important"][lang].get())]),
+                        # html.Div(id="muy-importante", children=[dcc.Markdown(cfg["i18n"]["important"][lang].get())]),
                         dbc.Button(
                             "Info",
                             id="info-button",
@@ -421,9 +435,7 @@ def get_layout():
                                     className=str(vals["Updated_Today"]),
                                     children=region
                                     + ": "
-                                    + date.fromisoformat(vals["Date"]).strftime(
-                                        "%d. %m."
-                                    )
+                                    + vals["Date"].strftime("%d. %m.")
                                     + " "
                                     + vals["Time"],
                                 )
@@ -518,12 +530,12 @@ def get_layout():
                         ),
                         dcc.Slider(
                             id="slider-date",
-                            min=0,
+                            min=len(data.swiss_cases["Date"]) - 15,
                             max=len(data.swiss_cases["Date"]) - 1,
                             marks={
-                                i: date.fromisoformat(d).strftime("%d. %m.")
+                                i: d.strftime("%d. %m.")
                                 for i, d in enumerate(data.swiss_cases["Date"])
-                                if date.fromisoformat(d).weekday() == 0
+                                if d.weekday() == 0
                             },
                             value=len(data.swiss_cases["Date"]) - 1,
                             updatemode="drag",
@@ -533,26 +545,35 @@ def get_layout():
             ]
         )
 
+    # Regional heatmap
     if cfg["show"]["region_overview"]:
-        content.extend([
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            html.Div(
-                                className="plot-title",
-                                children=cfg["i18n"]["plot_regional_overview_title"][lang].get()
-                            ),
-                            dcc.Graph(
-                                id="region-boxes", config={"displayModeBar": False}
-                            ),
-                        ],
-                        md=12,
-                        lg=12,
-                    )
-                ]
-            ),
-        ])
+        content.extend(
+            [
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                html.Div(
+                                    className="plot-title",
+                                    children=cfg["i18n"][
+                                        "plot_regional_overview_title"
+                                    ][lang].get(),
+                                ),
+                                dcc.Graph(
+                                    id="region-boxes",
+                                    config={
+                                        "displayModeBar": False,
+                                        "scrollZoom": True,
+                                    },
+                                ),
+                            ],
+                            md=12,
+                            lg=12,
+                        )
+                    ]
+                ),
+            ]
+        )
 
     # Links to regional websites
     if cfg["show"]["region_links"]:
@@ -565,7 +586,14 @@ def get_layout():
                 html.Div(
                     id="regional-links-container",
                     children=[
-                        html.A(children=region["region"], href=region["detail"])
+                        html.Span(
+                            children=[
+                                html.A(
+                                    children=region["region"], href=region["detail"]
+                                ),
+                                html.Span(children=" "),
+                            ]
+                        )
                         for region in cfg["regions"].get()
                         if "detail" in region
                     ],
@@ -813,14 +841,20 @@ def get_layout():
                                             {
                                                 "x": data.tests.index,
                                                 "y": data.tests["neg"],
-                                                "name": cfg["i18n"]["plot_tests_neg"][lang].get(),
+                                                "name": cfg["i18n"]["plot_tests_neg"][
+                                                    lang
+                                                ].get(),
                                                 "mode": "lines",
-                                                "marker": {"color": style.theme["green"]},
+                                                "marker": {
+                                                    "color": style.theme["green"]
+                                                },
                                             },
                                             {
                                                 "x": data.tests.index,
                                                 "y": data.tests["pos"],
-                                                "name": cfg["i18n"]["plot_tests_pos"][lang].get(),
+                                                "name": cfg["i18n"]["plot_tests_pos"][
+                                                    lang
+                                                ].get(),
                                                 "mode": "lines",
                                                 "marker": {"color": style.theme["red"]},
                                             },
@@ -830,30 +864,44 @@ def get_layout():
                                             "xaxis": {
                                                 "showgrid": True,
                                                 "color": "#ffffff",
-                                                "title": cfg["i18n"]["plot_tests_x"][lang].get(),
+                                                "title": cfg["i18n"]["plot_tests_x"][
+                                                    lang
+                                                ].get(),
                                             },
                                             "yaxis": {
                                                 "type": "linear",
                                                 "showgrid": True,
                                                 "color": "#ffffff",
                                                 "rangemode": "tozero",
-                                                "title": cfg["i18n"]["plot_tests_y"][lang].get(),
+                                                "title": cfg["i18n"]["plot_tests_y"][
+                                                    lang
+                                                ].get(),
                                             },
                                             "legend": {
                                                 "x": 0.015,
                                                 "y": 1,
                                                 "traceorder": "normal",
-                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "font": {
+                                                    "family": "sans-serif",
+                                                    "color": "white",
+                                                },
                                                 "bgcolor": style.theme["background"],
                                                 "bordercolor": style.theme["accent"],
                                                 "borderwidth": 1,
                                             },
                                             "dragmode": False,
                                             "hovermode": "x unified",
-                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "margin": {
+                                                "l": 60,
+                                                "r": 10,
+                                                "t": 30,
+                                                "b": 70,
+                                            },
                                             "plot_bgcolor": style.theme["background"],
                                             "paper_bgcolor": style.theme["background"],
-                                            "font": {"color": style.theme["foreground"]},
+                                            "font": {
+                                                "color": style.theme["foreground"]
+                                            },
                                             "shapes": phase_shapes,
                                             "annotations": phase_annotations,
                                         },
@@ -878,7 +926,10 @@ def get_layout():
                                                 "x": data.tests.index,
                                                 "y": data.tests["pos_rate"],
                                                 "type": "bar",
-                                                "marker": {"color": style.theme["foreground"], "opacity": 0.5},
+                                                "marker": {
+                                                    "color": style.theme["foreground"],
+                                                    "opacity": 0.5,
+                                                },
                                                 "hovertemplate": "%{y} %<extra></extra>",
                                                 "showlegend": False,
                                             },
@@ -886,42 +937,60 @@ def get_layout():
                                                 "x": data.tests.index,
                                                 "y": data.tests["pos_rate_rolling"],
                                                 "mode": "lines",
-                                                "marker": {"color": style.theme["foreground"]},
-                                                "name": cfg["i18n"]["moving_average"][lang].get(),
+                                                "marker": {
+                                                    "color": style.theme["foreground"]
+                                                },
+                                                "name": cfg["i18n"]["moving_average"][
+                                                    lang
+                                                ].get(),
                                                 "hovertemplate": "%{y} %<extra></extra>",
                                                 "showlegend": True,
                                                 "fill": "tozeroy",
-                                            }
+                                            },
                                         ],
                                         "layout": {
                                             "height": 400,
                                             "xaxis": {
                                                 "showgrid": True,
                                                 "color": "#ffffff",
-                                                "title": cfg["i18n"]["plot_tests_ratio_x"][lang].get(),
+                                                "title": cfg["i18n"][
+                                                    "plot_tests_ratio_x"
+                                                ][lang].get(),
                                             },
                                             "yaxis": {
                                                 "type": "linear",
                                                 "showgrid": True,
                                                 "color": "#ffffff",
                                                 "rangemode": "tozero",
-                                                "title": cfg["i18n"]["plot_tests_ratio_y"][lang].get(),
+                                                "title": cfg["i18n"][
+                                                    "plot_tests_ratio_y"
+                                                ][lang].get(),
                                             },
                                             "legend": {
                                                 "x": 0.015,
                                                 "y": 0.9,
                                                 "traceorder": "normal",
-                                                "font": {"family": "sans-serif", "color": "white"},
+                                                "font": {
+                                                    "family": "sans-serif",
+                                                    "color": "white",
+                                                },
                                                 "bgcolor": style.theme["background"],
                                                 "bordercolor": style.theme["accent"],
                                                 "borderwidth": 1,
                                             },
                                             "dragmode": False,
                                             "hovermode": "x unified",
-                                            "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+                                            "margin": {
+                                                "l": 60,
+                                                "r": 10,
+                                                "t": 30,
+                                                "b": 70,
+                                            },
                                             "plot_bgcolor": style.theme["background"],
                                             "paper_bgcolor": style.theme["background"],
-                                            "font": {"color": style.theme["foreground"]},
+                                            "font": {
+                                                "color": style.theme["foreground"]
+                                            },
                                             "shapes": phase_shapes,
                                             "annotations": phase_annotations,
                                         },
@@ -1009,7 +1078,7 @@ def get_layout():
                             ],
                             md=12,
                             lg=6,
-                        )
+                        ),
                     ],
                 ),
                 dbc.Row(
@@ -1018,15 +1087,15 @@ def get_layout():
                             [
                                 html.Div(
                                     className="plot-title",
-                                    children=cfg["i18n"]["plot_tests_vs_positivity_title"][
-                                        lang
-                                    ].get(),
+                                    children=cfg["i18n"][
+                                        "plot_tests_vs_positivity_title"
+                                    ][lang].get(),
                                 ),
                                 html.Div(
                                     className="info-container",
-                                    children=cfg["i18n"]["info_plot_tests_vs_positivity"][
-                                        lang
-                                    ].get(),
+                                    children=cfg["i18n"][
+                                        "info_plot_tests_vs_positivity"
+                                    ][lang].get(),
                                 ),
                                 dcc.Graph(
                                     id="tests-vs-positivity-world-graph",
@@ -1114,11 +1183,14 @@ def get_layout():
                         dbc.Col(
                             [
                                 html.Div(
-                                    id="age-dist-cases-title", className="plot-title",
+                                    id="age-dist-cases-title",
+                                    className="plot-title",
                                 ),
                                 dcc.Graph(
                                     id="cases-bag-graph",
-                                    config={"displayModeBar": False,},
+                                    config={
+                                        "displayModeBar": False,
+                                    },
                                 ),
                             ],
                             md=12,
@@ -1246,13 +1318,33 @@ def get_layout():
                                 ),
                                 dcc.Graph(
                                     id="case-graph-diff",
-                                    config={"displayModeBar": False},
+                                    config={
+                                        "displayModeBar": False,
+                                        "scrollZoom": True,
+                                    },
                                 ),
                             ]
                         )
                     ]
                 ),
-                html.Br(),
+                # dbc.Row(
+                #     [
+                #         dbc.Col(
+                #             [
+                #                 html.Div(
+                #                     className="info-container",
+                #                     children=cfg["i18n"]["info_polar_regional"][
+                #                         lang
+                #                     ].get(),
+                #                 ),
+                #                 dcc.Graph(
+                #                     id="case-polar-graph-regional",
+                #                     config={"displayModeBar": False},
+                #                 ),
+                #             ]
+                #         )
+                #     ]
+                # ),
             ]
         )
 
@@ -1299,9 +1391,9 @@ def get_layout():
                             min=0,
                             max=len(data.swiss_cases["Date"]) - 1,
                             marks={
-                                i: date.fromisoformat(d).strftime("%d. %m.")
+                                i: d.strftime("%d. %m.")
                                 for i, d in enumerate(data.swiss_cases["Date"])
-                                if date.fromisoformat(d).weekday() == 0
+                                if d.weekday() == 0
                             },
                             value=len(data.moving_total) - 1,
                             updatemode="drag",
@@ -1357,11 +1449,12 @@ except:
 try:
 
     @app.callback(
-        Output("date-container", "children"), [Input("slider-date", "value")],
+        Output("date-container", "children"),
+        [Input("slider-date", "value")],
     )
     def update_map_date(selected_date_index):
 
-        d = date.fromisoformat(data.swiss_cases["Date"].iloc[selected_date_index])
+        d = data.swiss_cases["Date"].iloc[selected_date_index]
         return d.strftime("%d. %m. %Y")
 
 
@@ -1375,7 +1468,8 @@ except:
 try:
 
     @app.callback(
-        Output("case-ch-graph", "figure"), [Input("radio-scale-switzerland", "value")],
+        Output("case-ch-graph", "figure"),
+        [Input("radio-scale-switzerland", "value")],
     )
     def update_case_ch_graph(selected_scale):
         lang = get_lang()
@@ -1598,7 +1692,8 @@ try:
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
-                "shapes": phase_shapes + [
+                "shapes": phase_shapes
+                + [
                     {
                         "type": "rect",
                         "xref": "x",
@@ -1613,7 +1708,8 @@ try:
                         "line": {"width": 0},
                     },
                 ],
-                "annotations": phase_annotations + [
+                "annotations": phase_annotations
+                + [
                     {
                         "x": data.swiss_cases_by_date_diff.index[-3],
                         "y": 0.95,
@@ -1698,7 +1794,8 @@ try:
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
                 "font": {"color": style.theme["foreground"]},
-                "shapes": phase_shapes + [
+                "shapes": phase_shapes
+                + [
                     {
                         "type": "rect",
                         "xref": "x",
@@ -1713,7 +1810,8 @@ try:
                         "line": {"width": 0},
                     },
                 ],
-                "annotations": phase_annotations + [
+                "annotations": phase_annotations
+                + [
                     {
                         "x": data.swiss_cases_by_date_diff.index[-3],
                         "y": 0.95,
@@ -1923,6 +2021,7 @@ except:
 # Log-Log Plot Country
 #
 try:
+
     @app.callback(
         Output("caseincrease-ch-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -1993,6 +2092,8 @@ try:
                 "font": {"color": style.theme["foreground"]},
             },
         }
+
+
 except:
     pass
 
@@ -2015,7 +2116,7 @@ try:
                     "name": country,
                     "line": {
                         "width": 1.0,
-                    }
+                    },
                 }
                 for country in data.world
             ],
@@ -2070,7 +2171,7 @@ try:
                     "name": country,
                     "line": {
                         "width": 1.0,
-                    }
+                    },
                 }
                 for country in data.world
             ],
@@ -2110,6 +2211,7 @@ except:
     pass
 
 try:
+
     @app.callback(
         Output("new-tests-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -2124,7 +2226,7 @@ try:
                     "name": country,
                     "line": {
                         "width": 1.0,
-                    }
+                    },
                 }
                 for country in data.world
             ],
@@ -2159,11 +2261,13 @@ try:
             },
         }
 
+
 except:
     pass
 
 
 try:
+
     @app.callback(
         Output("test-positivity-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -2179,7 +2283,7 @@ try:
                     "mode": "lines",
                     "line": {
                         "width": 1.0,
-                    }
+                    },
                 }
                 for country in data.world
             ],
@@ -2220,6 +2324,7 @@ except:
 
 
 try:
+
     @app.callback(
         Output("tests-vs-positivity-world-graph", "figure"),
         [Input("radio-scale-switzerland", "value")],
@@ -2229,7 +2334,9 @@ try:
         return {
             "data": [
                 {
-                    "x": data.world_no_na[country]["new_tests_smoothed_per_ten_thousand"].tail(7),
+                    "x": data.world_no_na[country][
+                        "new_tests_smoothed_per_ten_thousand"
+                    ].tail(7),
                     "y": data.world_no_na[country]["positive_rate"].tail(7) * 100,
                     "customdata": data.world_no_na[country]["date_label"].tail(7),
                     "name": country,
@@ -2238,12 +2345,17 @@ try:
                         "width": 1.0,
                     },
                     "showlegend": False,
-                    "hovertemplate": cfg["i18n"]["plot_tests_vs_positivity_hovertemplate"][lang].get(),
+                    "hovertemplate": cfg["i18n"][
+                        "plot_tests_vs_positivity_hovertemplate"
+                    ][lang].get(),
                 }
                 for country in data.world_no_na
-            ] + [
+            ]
+            + [
                 {
-                    "x": data.world_no_na[country]["new_tests_smoothed_per_ten_thousand"].tail(1),
+                    "x": data.world_no_na[country][
+                        "new_tests_smoothed_per_ten_thousand"
+                    ].tail(1),
                     "y": data.world_no_na[country]["positive_rate"].tail(1) * 100,
                     "customdata": data.world_no_na[country]["date_label"].tail(1),
                     "name": country,
@@ -2253,7 +2365,9 @@ try:
                         "color": "white",
                     },
                     "showlegend": False,
-                    "hovertemplate": cfg["i18n"]["plot_tests_vs_positivity_hovertemplate"][lang].get(),
+                    "hovertemplate": cfg["i18n"][
+                        "plot_tests_vs_positivity_hovertemplate"
+                    ][lang].get(),
                     "textposition": "top center",
                 }
                 for country in data.world_no_na
@@ -2281,6 +2395,8 @@ try:
                 "font": {"color": style.theme["foreground"]},
             },
         }
+
+
 except:
     pass
 
@@ -2478,6 +2594,7 @@ except:
 #     pass
 
 try:
+
     @app.callback(
         Output("region-boxes", "figure"),
         [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
@@ -2485,20 +2602,29 @@ try:
     def update_region_boxes(selected_regions, selected_scale):
         lang = get_lang()
         d = data.swiss_cases_by_date_diff
-        d_selected = d[selected_regions] / data.swiss_cases_updated_mask_by_date[selected_regions]
-        
-        region_order = d_selected.transpose().sum(axis=1).sort_values().transpose().index
-        
+        d_selected = (
+            d[selected_regions]
+            / data.swiss_cases_updated_mask_by_date[selected_regions]
+        )
+
+        region_order = (
+            d_selected.transpose().sum(axis=1).sort_values().transpose().index
+        )
+
         d_selected = d_selected[region_order]
         values = d_selected.values.transpose()
-        
+
         return {
             "data": [
                 {
                     "x": d.index,
                     "y": list(d_selected.columns),
                     "z": values,
-                    "customdata": d_selected.replace(np.nan, cfg["i18n"]["plot_regional_null"][lang].get(), regex=True).values.transpose(),
+                    "customdata": d_selected.replace(
+                        np.nan,
+                        cfg["i18n"]["plot_regional_null"][lang].get(),
+                        regex=True,
+                    ).values.transpose(),
                     "colorscale": "Portland",
                     "hovertemplate": "<br><span style='font-size:2.0em'><b>%{customdata}</b></span><b> %{y}</b><br>%{x}<extra></extra>",
                     "type": "heatmap",
@@ -2513,9 +2639,10 @@ try:
                 "yaxis": {
                     "showgrid": False,
                     "title": cfg["i18n"]["plot_regional_overview_y"][lang].get(),
+                    "fixedrange": True,
                 },
                 # "hovermode": "x unified",
-                "dragmode": False,
+                "dragmode": "pan",
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 80},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
@@ -2524,6 +2651,8 @@ try:
                 # "annotations": phase_annotations_double_height,
             },
         }
+
+
 except:
     pass
 
@@ -2628,39 +2757,17 @@ try:
     )
     def update_case_graph_diff(selected_regions, selected_scale):
         lang = get_lang()
-        data_non_nan = {}
-        data_non_nan["Date"] = data.swiss_cases_as_dict["Date"]
-
-        for region in data.swiss_cases_as_dict:
-            if region == "Date":
-                continue
-            values = []
-            last_value = 0
-            for _, v in enumerate(data.swiss_cases_as_dict[region]):
-                if math.isnan(float(v)):
-                    values.append(last_value)
-                else:
-                    last_value = v
-                    values.append(v)
-            data_non_nan[region] = values
 
         return {
             "data": [
                 {
-                    "x": data_non_nan["Date"],
-                    "y": [0]
-                    + [
-                        j - i
-                        for i, j in zip(
-                            data_non_nan[region][:-1], data_non_nan[region][1:]
-                        )
-                    ],
+                    "x": data.swiss_cases_by_date_diff.index,
+                    "y": data.swiss_cases_by_date_diff[region],
                     "name": region,
                     "marker": {"color": style.region_colors[region]},
                     "type": "bar",
                 }
-                for i, region in enumerate(data.swiss_cases_as_dict)
-                if region in selected_regions
+                for region in selected_regions
             ],
             "layout": {
                 "height": 750,
@@ -2674,9 +2781,10 @@ try:
                     "showgrid": True,
                     "color": "#ffffff",
                     "title": cfg["i18n"]["plot_cases_new_regional_y"][lang].get(),
+                    "fixedrange": True,
                 },
                 "hovermode": "x unified",
-                "dragmode": False,
+                "dragmode": "pan",
                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
                 "plot_bgcolor": style.theme["background"],
                 "paper_bgcolor": style.theme["background"],
@@ -2691,15 +2799,65 @@ try:
 except:
     pass
 
+
+# try:
+
+#     @app.callback(
+#         Output("case-polar-graph-regional", "figure"),
+#         [Input("dropdown-regions", "value"), Input("radio-scale-regions", "value")],
+#     )
+#     def update_case_polar_grpah_regional(selected_regions, selected_scale):
+#         lang = get_lang()
+
+#         return {
+#             "data": [
+#                 {
+#                     "theta": data.swiss_cases_by_date_diff["weekday"],
+#                     "r": data.swiss_cases_by_date_diff[region],
+#                     "name": region,
+#                     # "marker": {"color": style.region_colors[region]},
+#                     "type": "scatterpolar",
+#                     "mode": "markers",
+#                 }
+#                 for region in ["BE"]
+#             ],
+#             "layout": {
+#                 "height": 750,
+#                 "xaxis": {
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "title": cfg["i18n"]["plot_cases_new_regional_x"][lang].get(),
+#                 },
+#                 "yaxis": {
+#                     "type": "linear",
+#                     "showgrid": True,
+#                     "color": "#ffffff",
+#                     "title": cfg["i18n"]["plot_cases_new_regional_y"][lang].get(),
+#                 },
+#                 "polar": {
+#                     "angularaxis": {"rotation": 90, "direction": "clockwise"},
+#                     "bgcolor": "#121314",
+#                 },
+#                 "hovermode": "x unified",
+#                 "dragmode": False,
+#                 "margin": {"l": 60, "r": 10, "t": 30, "b": 70},
+#                 "plot_bgcolor": style.theme["background"],
+#                 "paper_bgcolor": style.theme["background"],
+#                 "font": {"color": style.theme["foreground"]},
+#             },
+#         }
+
+
+# except:
+#     pass
+
 #
 # Map (client-side)
 #
 
 try:
     app.clientside_callback(
-        ClientsideFunction(
-            namespace="clientside", function_name="update_map"
-        ),
+        ClientsideFunction(namespace="clientside", function_name="update_map"),
         Output("update-map", "figure"),
         [
             Input("map-radios", "value"),
@@ -2712,9 +2870,7 @@ except:
 
 try:
 
-    @app.callback(
-        Output("map-data", "children"), [Input("url", "pathname")]
-    )
+    @app.callback(Output("map-data", "children"), [Input("url", "pathname")])
     def store_map_data(value):
         settings = {
             "total_column_name": cfg["settings"]["total_column_name"].get(),
@@ -2724,18 +2880,14 @@ try:
                 "center": cfg["settings"]["choropleth"]["center"].get(),
                 "lataxis": cfg["settings"]["choropleth"]["lataxis"].get(),
                 "lonaxis": cfg["settings"]["choropleth"]["lonaxis"].get(),
-            }
+            },
         }
 
-        theme = {
-            "background": cfg["theme"]["background"].get()
-        }
+        theme = {"background": cfg["theme"]["background"].get()}
 
         return (
             '{"swiss_cases": '
-            + data.swiss_cases.to_json(
-                date_format="iso", orient="columns"
-            )
+            + data.swiss_cases.to_json(date_format="iso", orient="columns")
             + ', "swiss_cases_by_date_filled": '
             + data.swiss_cases_by_date_filled.to_json(
                 date_format="iso", orient="columns"
@@ -2749,9 +2901,7 @@ try:
                 date_format="iso", orient="columns"
             )
             + ', "swiss_cases_by_date_diff": '
-            + data.swiss_cases_by_date_diff.to_json(
-                date_format="iso", orient="columns"
-            )
+            + data.swiss_cases_by_date_diff.to_json(date_format="iso", orient="columns")
             + ', "swiss_fatalities_by_date_diff": '
             + data.swiss_fatalities_by_date_diff.to_json(
                 date_format="iso", orient="columns"
@@ -2780,8 +2930,10 @@ try:
             + json.dumps(data.region_labels)
             + ', "region_updates":'
             + json.dumps(data.last_updated["Updated_Today"].to_dict())
-            + '}'
+            + "}"
         )
+
+
 except:
     pass
 

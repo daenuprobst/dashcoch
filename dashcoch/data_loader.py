@@ -1,3 +1,4 @@
+import math
 from datetime import date, datetime, timedelta
 import confuse
 import numpy as np
@@ -20,11 +21,15 @@ class DataLoader:
                 cfg["urls"]["last_updated"].get(), index_col=[0]
             ).sort_values(by=["Date", "Time"], ascending=False)
 
+            self.last_updated["Date"] = pd.to_datetime(self.last_updated["Date"])
             self.last_updated = self.__get_iso(self.last_updated)
 
         # Load the data from the regions
         self.swiss_cases = pd.read_csv(cfg["urls"]["cases"].get())
         self.swiss_fatalities = pd.read_csv(cfg["urls"]["fatalities"].get())
+
+        self.swiss_cases["Date"] = pd.to_datetime(self.swiss_cases["Date"])
+        self.swiss_fatalities["Date"] = pd.to_datetime(self.swiss_fatalities["Date"])
 
         # Get Swiss demographical data
         self.regional_demography = pd.read_csv(
@@ -49,15 +54,38 @@ class DataLoader:
         )
 
         self.swiss_cases_by_date_diff.loc[
-            self.swiss_cases_by_date_diff.tail(7).index, self.total_column_name + "_rolling"
+            self.swiss_cases_by_date_diff.tail(7).index,
+            self.total_column_name + "_rolling",
         ] = np.nan
 
         self.swiss_cases_by_date_diff["date_label"] = [
-            date.fromisoformat(d).strftime("%d. %m.")
+            pd.to_datetime(str(d)).strftime("%d. %m.")
             for d in self.swiss_cases_by_date_diff.index.values
         ]
 
-        self.swiss_fatalities_by_date_diff = self.swiss_fatalities_by_date.diff().replace()
+        self.swiss_cases_by_date_diff["weekday_number"] = [
+            pd.to_datetime(str(d)).weekday()
+            for d in self.swiss_cases_by_date_diff.index.values
+        ]
+
+        weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+        self.swiss_cases_by_date_diff["weekday"] = [
+            weekdays[w] for w in self.swiss_cases_by_date_diff["weekday_number"]
+        ]
+
+        week = 0
+        weeks = []
+        for d in self.swiss_cases_by_date_diff["weekday_number"].values:
+            weeks.append(week)
+
+            if d == 6:
+                week += 1
+
+        self.swiss_cases_by_date_diff["week"] = weeks
+
+        self.swiss_fatalities_by_date_diff = (
+            self.swiss_fatalities_by_date.diff().replace()
+        )
 
         self.swiss_fatalities_by_date_diff[
             self.total_column_name + "_rolling"
@@ -69,7 +97,8 @@ class DataLoader:
         )
 
         self.swiss_fatalities_by_date_diff.loc[
-            self.swiss_fatalities_by_date_diff.tail(7).index, self.total_column_name + "_rolling"
+            self.swiss_fatalities_by_date_diff.tail(7).index,
+            self.total_column_name + "_rolling",
         ] = np.nan
 
         self.swiss_cases_by_date_filled = self.swiss_cases_by_date.fillna(
@@ -133,12 +162,12 @@ class DataLoader:
                 "Date"
             )
 
-            self.swiss_hospitalizations_by_date_diff = self.swiss_hospitalizations_by_date.diff().replace(
-                0, float("nan")
+            self.swiss_hospitalizations_by_date_diff = (
+                self.swiss_hospitalizations_by_date.diff().replace(0, float("nan"))
             )
 
-            self.swiss_hospitalizations_by_date_filled = self.swiss_hospitalizations_by_date.fillna(
-                method="ffill", axis=0
+            self.swiss_hospitalizations_by_date_filled = (
+                self.swiss_hospitalizations_by_date.fillna(method="ffill", axis=0)
             )
 
         if cfg["show"]["hospital_releases"]:
@@ -165,12 +194,14 @@ class DataLoader:
         #
         if cfg["show"]["tests"]:
             self.tests = pd.read_csv(cfg["urls"]["tests"].get(), index_col=[0])
-            self.tests = self.tests[self.tests.index >= cfg["settings"]["start_date"].get()]
+            self.tests = self.tests[
+                self.tests.index >= cfg["settings"]["start_date"].get()
+            ]
             self.tests["pos_rate"] = np.round(self.tests["pos_rate"] * 100, 2)
 
-            self.tests["pos_rate_rolling"] = self.tests["pos_rate"].rolling(
-                7, center=True
-            ).mean()
+            self.tests["pos_rate_rolling"] = (
+                self.tests["pos_rate"].rolling(7, center=True).mean()
+            )
 
         #
         # World related data
@@ -179,27 +210,55 @@ class DataLoader:
             # self.world_cases = self.__simplify_world_data(
             #     pd.read_csv(cfg["urls"]["world_cases"].get())
             # )
-            
-            self.world = pd.read_csv(cfg["urls"]["world"].get())
-            self.world = self.world[(self.world["location"].isin([*self.cfg["countries"].get()])) & (self.world["date"] >= "2020-05-31")]
-            
-            # Set new for last of May to zero, so all start at 0
-            self.world.loc[self.world["date"] == "2020-05-31", ["new_cases", "new_deaths", "new_tests"]] = 0
 
-            self.world["total_cases"] = self.world.groupby("location")["new_cases"].cumsum().fillna(0)
-            self.world["total_deaths"] = self.world.groupby("location")["new_deaths"].cumsum().fillna(0)
-            self.world["total_tests"] = self.world.groupby("location")["new_tests"].cumsum().fillna(0)
-            self.world["total_cases_per_ten_thousand"] = (self.world["total_cases"] / self.world["population"] * 10000).round(decimals=3)
-            self.world["total_deaths_per_ten_thousand"] = (self.world["total_deaths"] / self.world["population"] * 10000).round(decimals=3)
-            self.world["cfr"] = (self.world["total_deaths"] / self.world["total_cases"]).round(decimals=3)
-            self.world["new_tests_smoothed_per_ten_thousand"] = (self.world["new_tests_smoothed"] / self.world["population"] * 10000).round(decimals=3)
-            self.world["date_label"] = pd.to_datetime(self.world["date"]).dt.strftime("%d. %m.")
+            self.world = pd.read_csv(cfg["urls"]["world"].get())
+            self.world = self.world[
+                (self.world["location"].isin([*self.cfg["countries"].get()]))
+                & (self.world["date"] >= "2020-05-31")
+            ]
+
+            # Set new for last of May to zero, so all start at 0
+            self.world.loc[
+                self.world["date"] == "2020-05-31",
+                ["new_cases", "new_deaths", "new_tests"],
+            ] = 0
+
+            self.world["total_cases"] = (
+                self.world.groupby("location")["new_cases"].cumsum().fillna(0)
+            )
+            self.world["total_deaths"] = (
+                self.world.groupby("location")["new_deaths"].cumsum().fillna(0)
+            )
+            self.world["total_tests"] = (
+                self.world.groupby("location")["new_tests"].cumsum().fillna(0)
+            )
+            self.world["total_cases_per_ten_thousand"] = (
+                self.world["total_cases"] / self.world["population"] * 10000
+            ).round(decimals=3)
+            self.world["total_deaths_per_ten_thousand"] = (
+                self.world["total_deaths"] / self.world["population"] * 10000
+            ).round(decimals=3)
+            self.world["cfr"] = (
+                self.world["total_deaths"] / self.world["total_cases"]
+            ).round(decimals=3)
+            self.world["new_tests_smoothed_per_ten_thousand"] = (
+                self.world["new_tests_smoothed"] / self.world["population"] * 10000
+            ).round(decimals=3)
+            self.world["date_label"] = pd.to_datetime(self.world["date"]).dt.strftime(
+                "%d. %m."
+            )
             # Put in per-country dict to avoid doing this with every callback
             tmp = {}
             self.world_no_na = {}
             for country in self.world["location"].unique():
                 tmp[country] = self.world[self.world["location"] == country].copy()
-                self.world_no_na[country] = self.world[self.world["location"] == country].copy().dropna(subset=["new_tests_smoothed_per_ten_thousand", "positive_rate"])
+                self.world_no_na[country] = (
+                    self.world[self.world["location"] == country]
+                    .copy()
+                    .dropna(
+                        subset=["new_tests_smoothed_per_ten_thousand", "positive_rate"]
+                    )
+                )
             self.world = tmp
 
     def __get_iso(self, df):
@@ -213,7 +272,7 @@ class DataLoader:
             if len(t) == 5:
                 t += ":00"
 
-            iso = datetime.fromisoformat(row["Date"] + "T" + t)
+            iso = datetime.fromisoformat(str(row["Date"].date()) + "T" + t)
             isos.append(iso)
             updated_today.append(iso.date() == datetime.today().date())
 
@@ -243,10 +302,7 @@ class DataLoader:
         return tmp
 
     def __get_new_cases(self):
-        if (
-            date.fromisoformat(self.latest_date)
-            != datetime.now(timezone("Europe/Zurich")).date()
-        ):
+        if self.latest_date.date() != datetime.now(timezone("Europe/Zurich")).date():
             return 0
 
         l = len(self.swiss_cases_by_date_filled)
@@ -289,9 +345,7 @@ class DataLoader:
         df = df.groupby("Day").sum()
         df = df.T
         df.drop(
-            df.columns.difference(
-                [c for c in [*self.cfg["countries"].get()]]
-            ),
+            df.columns.difference([c for c in [*self.cfg["countries"].get()]]),
             1,
             inplace=True,
         )
@@ -352,7 +406,7 @@ class DataLoader:
         # Add the label for the date range (previous week)
         date_labels = []
         for d in df_moving_total.index.values:
-            today = date.fromisoformat(d)
+            today = pd.to_datetime(str(d))
             date_labels.append(
                 (today - timedelta(days=7)).strftime("%d. %m.")
                 + " – "
