@@ -6,6 +6,37 @@ import pandas as pd
 from pytz import timezone
 from scipy import stats
 
+COLS = [
+    "ZH",
+    "BE",
+    "LU",
+    "UR",
+    "SZ",
+    "OW",
+    "NW",
+    "GL",
+    "ZG",
+    "FR",
+    "SO",
+    "BS",
+    "BL",
+    "SH",
+    "AR",
+    "AI",
+    "SG",
+    "GR",
+    "AG",
+    "TG",
+    "TI",
+    "VD",
+    "VS",
+    "NE",
+    "GE",
+    "JU",
+    "CH",
+    "Date",
+]
+
 
 class DataLoader:
     def __init__(self, cfg: confuse.Configuration):
@@ -25,8 +56,10 @@ class DataLoader:
             self.last_updated = self.__get_iso(self.last_updated)
 
         # Load the data from the regions
-        self.swiss_cases = pd.read_csv(cfg["urls"]["cases"].get())
-        self.swiss_fatalities = pd.read_csv(cfg["urls"]["fatalities"].get())
+        self.swiss_cases = pd.read_csv(cfg["urls"]["cases"].get(), usecols=COLS)
+        self.swiss_fatalities = pd.read_csv(
+            cfg["urls"]["fatalities"].get(), usecols=COLS
+        )
 
         self.swiss_cases["Date"] = pd.to_datetime(self.swiss_cases["Date"])
         self.swiss_fatalities["Date"] = pd.to_datetime(self.swiss_fatalities["Date"])
@@ -154,10 +187,10 @@ class DataLoader:
         #
         if cfg["show"]["hospitalizations"]:
             self.swiss_hospitalizations = pd.read_csv(
-                cfg["urls"]["hospitalizations"].get()
+                cfg["urls"]["hospitalizations"].get(), usecols=COLS
             )
-            self.swiss_icu = pd.read_csv(cfg["urls"]["icu"].get())
-            self.swiss_vent = pd.read_csv(cfg["urls"]["vent"].get())
+            self.swiss_icu = pd.read_csv(cfg["urls"]["icu"].get(), usecols=COLS)
+            self.swiss_vent = pd.read_csv(cfg["urls"]["vent"].get(), usecols=COLS)
             self.swiss_hospitalizations_by_date = self.swiss_hospitalizations.set_index(
                 "Date"
             )
