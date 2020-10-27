@@ -266,9 +266,9 @@ i18n:
     - Veränderung Hospitalisierungen
     - Évolution des Hospitalisations
   total_hospitalizations:
-    - Change in Hospitalizations
-    - Veränderung Hospitalisierungen
-    - Évolution des Hospitalisations
+    - Current Hospitalizations
+    - Aktuelle Hospitalisierungen
+    - Hospitalisations en Cours
   new_fatalities:
     - New Fatalities
     - Neue Todesfälle
