@@ -5,7 +5,7 @@ gunicorn==20.0.4
 pytz==2019.2
 python-i18n[YAML]==0.3.7
 flask-caching==1.8.0
-scipy==1.4.1
+scipy==1.10.0
 numpy==1.18.1
 confuse==1.1.0
 gevent==20.9.0
